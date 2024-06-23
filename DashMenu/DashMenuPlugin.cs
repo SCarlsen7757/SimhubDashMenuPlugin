@@ -169,7 +169,11 @@ namespace DashMenu
         {
             for (int i = 0; i < fieldData.Length; i++)
             {
-                fieldData[i].Update(ref data);
+                //TODO: Find a better way to implent GameSupported. So it's called in the init method.
+                if (fieldData[i].GameSupported(pluginManager.GameName))
+                {
+                    fieldData[i].Update(ref data);
+                }
                 pluginManager.SetPropertyValue($"FieldData{i + 1}", GetType(), fieldData[i].Data);
             }
         }

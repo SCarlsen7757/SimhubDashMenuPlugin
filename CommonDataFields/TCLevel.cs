@@ -7,7 +7,11 @@ namespace CommonDataFields
     {
         public string Description { get => "TC Level."; }
 
-        public FieldData Data { get; private set; } = new FieldData() { Name = "TC", Value = "-", Color = "#00a3d9" };
+        public FieldData Data { get; private set; } = new FieldData()
+        {
+            Name = "TC",
+            Color = new FieldData.ColorScheme("#00a3d9", "#ffffff")
+        };
 
         public bool GameSupported(string game) => true;
 

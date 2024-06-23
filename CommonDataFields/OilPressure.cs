@@ -3,14 +3,14 @@ using GameReaderCommon;
 
 namespace CommonDataFields
 {
-    public class OilTemperature : IFieldData
+    public class OilPressure : IFieldData
     {
-        public string Description { get => "Oil temperature"; }
+        public string Description { get => "Oil pressure"; }
         public FieldData Data { get; } = new FieldData()
         {
-            Name = "Oil Temp",
+            Name = "Oil Press",
             Decimal = 0,
-            Color = new FieldData.ColorScheme("#ffffff", "#ffffff")
+            Color = new FieldData.ColorScheme("#ffffff", "ffffff")
         };
 
         public bool GameSupported(string game) => true;
@@ -18,13 +18,13 @@ namespace CommonDataFields
         public void Update(ref GameData data)
         {
             if (!data.GameRunning) return;
-            if (data.NewData.OilTemperature <= 0)
+            if (data.NewData.OilPressure <= 0)
             {
                 Data.Value = "-";
                 return;
             }
-            Data.Value = data.NewData.OilTemperature.ToString($"N{Data.Decimal}");
-            Data.Unit = "°" + data.NewData.TemperatureUnit[0];
+            Data.Value = data.NewData.OilPressure.ToString($"N{Data.Decimal}");
+            Data.Unit = data.NewData.OilPressureUnit;
         }
     }
 }

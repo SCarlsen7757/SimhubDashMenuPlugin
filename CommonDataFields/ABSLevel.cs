@@ -7,9 +7,12 @@ namespace CommonDataFields
     {
         public string Description { get => "ABS Level."; }
 
-        public FieldData Data { get; private set; } = new FieldData() { Name = "ABS", Value = "-", Color = "#00ff2a" };
+        public FieldData Data { get; private set; } = new FieldData()
+        {
+            Name = "ABS",
+            Color = new FieldData.ColorScheme("#00ff2a", "#ffffff")
+        };
 
-        private bool? gameSupported = null;
         public bool GameSupported(string name) => true;
         public void Update(ref GameData data)
         {

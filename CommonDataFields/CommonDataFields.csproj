@@ -49,6 +49,7 @@
     <Compile Include="ABSLevel.cs" />
     <Compile Include="BrakeBias.cs" />
     <Compile Include="EngineMap.cs" />
+    <Compile Include="OilPressure.cs" />
     <Compile Include="OilTemperature.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TCLevel.cs" />

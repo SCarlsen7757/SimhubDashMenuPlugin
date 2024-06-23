@@ -44,7 +44,7 @@ Available Actions:
 
 ## Using in Dashboard
 
-In Dash Studio the field can be accessed with the NCalc/Java script function/method `dashfielddata(fieldnumber)`. Unfortunately it can't be found in the NCalc Functions list :unamused: but it's available :sunglasses:!
+In Dash Studio the field can be accessed with the NCalc/JavaScript function/method `dashfielddata(fieldnumber)`. Unfortunately it can't be found in the NCalc Functions list :unamused: but it's available :sunglasses:!
 The easiest way is to create a widget and pass the field data as a variable.
 
 ![Write NCalc formula to get field data](./Image/PassFieldDataToWidget.png)
@@ -53,13 +53,17 @@ To display the values of the field data in a widget, use these JavaScript code s
 
 * `return $prop("variable.data").Name`
 * `return $prop("variable.data").Value`
-* `return $prop("variable.data").Color`
+* `return $prop("variable.data).Unit`
+* `return $prop("variable.data").Color.Primary`
+* `return $prop("variable.data").Color.Accent`
 
 ```mermaid
 erDiagram
     FieldData{
       string Name "Name of the data"
       string Value "Value of the data"
+      string Unit "Unit of the value"
+      int Decimal "How many decimal if the value is a decimal number"
       string Color "Color to be used for easy identification"
     }
 ```

@@ -7,7 +7,11 @@ namespace CommonDataFields
     {
         public string Description { get => "Brake bias."; }
 
-        public FieldData Data { get; private set; } = new FieldData() { Name = "BB", Value = "-", Color = "#d90028" };
+        public FieldData Data { get; private set; } = new FieldData()
+        {
+            Name = "BB",
+            Color = new FieldData.ColorScheme("#d90028", "#ffffff")
+        };
 
         public bool GameSupported(string game) => true;
         public void Update(ref GameData data)

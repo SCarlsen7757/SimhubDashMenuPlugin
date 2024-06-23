@@ -6,7 +6,11 @@ namespace CommonDataFields
     public class WaterTemperature : IFieldData
     {
         public string Description { get => "Water temperature"; }
-        public FieldData Data { get; } = new FieldData() { Name = "Water", Value = "-", Color = "#ffffff" };
+        public FieldData Data { get; } = new FieldData()
+        {
+            Name = "Water Temp",
+            Color = new FieldData.ColorScheme("#ffffff", "#ffffff")
+        };
 
         public bool GameSupported(string game) => true;
 
@@ -18,7 +22,8 @@ namespace CommonDataFields
                 Data.Value = "-";
                 return;
             }
-            Data.Value = data.NewData.WaterTemperature.ToString() + "°" + data.NewData.TemperatureUnit[0];
+            Data.Value = data.NewData.WaterTemperature.ToString($"N{Data.Decimal}");
+            Data.Unit = "°" + data.NewData.TemperatureUnit[0];
         }
     }
 }

@@ -6,7 +6,11 @@ namespace CommonDataFields
     public class EngineMap : IFieldData
     {
         public string Description { get => "Engine map"; }
-        public FieldData Data { get; private set; } = new FieldData() { Name = "MAP", Value = "-", Color = "#d9c000" };
+        public FieldData Data { get; private set; } = new FieldData()
+        {
+            Name = "MAP",
+            Color = new FieldData.ColorScheme("#d9c000", "#ffffff")
+        };
 
         public bool GameSupported(string game) => true;
 

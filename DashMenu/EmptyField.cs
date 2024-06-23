@@ -5,7 +5,12 @@ namespace DashMenu
     public class EmptyField : IFieldData
     {
         public string Description { get; } = "";
-        public FieldData Data { get; } = new FieldData() { Name = "", Value = "", Color = "#000000" };
+        public FieldData Data { get; } = new FieldData()
+        {
+            Name = "",
+            Value = "",
+            Color = new FieldData.ColorScheme("#ffffff", "#ffffff")
+        };
 
         public bool GameSupported(string name)
         {
