@@ -229,7 +229,18 @@ namespace DashMenu
         private static IEnumerable<Type> GetCustomFieldsType(string sub_dir)
         {
             string rootDirectory = Path.Combine(Path.GetDirectoryName((Assembly.GetExecutingAssembly().Location)), sub_dir);
-            string[] dllFiles = Directory.GetFiles(rootDirectory, "*.dll");
+            string[] dllFiles;
+            try
+            {
+                dllFiles = Directory.GetFiles(rootDirectory, "*.dll");
+
+            }
+            catch (DirectoryNotFoundException)
+            {
+                SimHub.Logging.Current.Info($"Creating custom field dll folder. {rootDirectory}");
+                Directory.CreateDirectory(rootDirectory);
+                yield break;
+            }
             Type interfaceType = typeof(IFieldData);
 
             // Iterate through each DLL file
