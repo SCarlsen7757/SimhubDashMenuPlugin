@@ -1,4 +1,5 @@
-﻿using GameReaderCommon;
+﻿using DashMenu.Data;
+using GameReaderCommon;
 using SimHub.Plugins;
 using SimHub.Plugins.OutputPlugins.Dash.TemplatingCommon;
 using System;
@@ -34,7 +35,7 @@ namespace DashMenu
             }
         }
         /// <summary>
-        /// Instance of the current plugin manager
+        /// Instance of the current plugin manager.
         /// </summary>
         public PluginManager PluginManager { get; set; }
         /// <summary>
@@ -46,22 +47,19 @@ namespace DashMenu
         /// </summary>
         public string LeftMenuTitle => null;
         /// <summary>
-        /// Returns the settings control, return null if no settings control is required
+        /// Returns the settings control, return null if no settings control is required.
         /// </summary>
         /// <param name="pluginManager"></param>
         /// <returns></returns>
-        public System.Windows.Controls.Control GetWPFSettingsControl(PluginManager pluginManager)
-        {
-            return new UI.SettingsControl();
-        }
+        public System.Windows.Controls.Control GetWPFSettingsControl(PluginManager pluginManager) => new UI.SettingsControl(this.Settings);
         /// <summary>
-        /// Called once after plugins startup
-        /// Plugins are rebuilt at game change
+        /// Called once after plugins startup.
+        /// Plugins are rebuilt at game change.
         /// </summary>
         /// <param name="pluginManager"></param>
         public void Init(PluginManager pluginManager)
         {
-            SimHub.Logging.Current.Info($"Starting plugin: {this.PluginName}, Version {Version.PluginVersion}");
+            SimHub.Logging.Current.Info($"{this.GetType().FullName}. Plugin: {this.PluginName}, Version {Version.PluginVersion}");
 
             allFieldData.Add(new FieldComponent(emptyField));
             Settings = this.ReadCommonSettings("DashMenuSettings", () => new Settings.Settings());
@@ -158,10 +156,9 @@ namespace DashMenu
         }
         /// <summary>
         /// Called one time per game data update, contains all normalized game data,
-        /// raw data are intentionnally "hidden" under a generic object type (A plugin SHOULD NOT USE IT)
-        ///
-        /// This method is on the critical path, it must execute as fast as possible and avoid throwing any error
-        ///
+        /// raw data are intentionnally "hidden" under a generic object type (A plugin SHOULD NOT USE IT).
+        /// 
+        /// This method is on the critical path, it must execute as fast as possible and avoid throwing any error.
         /// </summary>
         /// <param name="pluginManager"></param>
         /// <param name="data">Current game data, including current and previous data frame.</param>
@@ -178,8 +175,8 @@ namespace DashMenu
             }
         }
         /// <summary>
-        /// Called at plugin manager stop, close/dispose anything needed here !
-        /// Plugins are rebuilt at game change
+        /// Called at plugin manager stop, close/dispose anything needed here!
+        /// Plugins are rebuilt at game change.
         /// </summary>
         /// <param name="pluginManager"></param>
         public void End(PluginManager pluginManager)

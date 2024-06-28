@@ -1,4 +1,4 @@
-﻿using DashMenu;
+﻿using DashMenu.Data;
 using GameReaderCommon;
 
 namespace CommonDataFields
@@ -7,10 +7,10 @@ namespace CommonDataFields
     {
         public string Description { get => "ABS Level."; }
 
-        public FieldData Data { get; private set; } = new FieldData()
+        public FieldData Data { get; set; } = new FieldData()
         {
             Name = "ABS",
-            Color = new FieldData.ColorScheme("#00ff2a", "#ffffff")
+            Color = new ColorScheme("#00ff2a", "#ffffff")
         };
 
         public bool GameSupported(string name) => true;

@@ -1,0 +1,29 @@
+﻿<UserControl x:Class="DashMenu.UI.FieldDataSetting"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DashMenu.UI"
+             xmlns:settings="clr-namespace:DashMenu.Settings"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    
+    <UserControl.DataContext>
+        <settings:Fields />
+    </UserControl.DataContext>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/> <!--Enable field-->
+            <ColumnDefinition Width="*"/> <!--Full name Name-->
+            <ColumnDefinition Width="*"/> <!---->
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <CheckBox IsChecked="{Binding Enabled}" Grid.Column="0" Grid.Row="0"/>
+        <Label Content="{Binding FullName}" Grid.Column="1" Grid.Row="0" MinWidth="100"/>
+    </Grid>
+</UserControl>

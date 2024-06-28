@@ -1,4 +1,4 @@
-﻿using DashMenu;
+﻿using DashMenu.Data;
 using GameReaderCommon;
 
 namespace CommonDataFields
@@ -7,10 +7,10 @@ namespace CommonDataFields
     {
         public string Description { get => "Brake bias."; }
 
-        public FieldData Data { get; private set; } = new FieldData()
+        public FieldData Data { get; set; } = new FieldData()
         {
             Name = "BB",
-            Color = new FieldData.ColorScheme("#d90028", "#ffffff")
+            Color = new ColorScheme("#d90028", "#ffffff")
         };
 
         public bool GameSupported(string game) => true;
