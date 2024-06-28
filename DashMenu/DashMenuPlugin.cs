@@ -22,8 +22,8 @@ namespace DashMenu
         private MenuConfiguration MenuConfiguration { get; set; } = new MenuConfiguration() { MaxFields = 5 };
         private IFieldData[] fieldData;
         private readonly EmptyField emptyField = new EmptyField();
-        private List<FieldComponent> allFieldData = new List<FieldComponent>();
-        private List<IFieldData> availableFieldData = new List<IFieldData>();
+        private readonly List<FieldComponent> allFieldData = new List<FieldComponent>();
+        private readonly List<IFieldData> availableFieldData = new List<IFieldData>();
 
         public string PluginName
         {
