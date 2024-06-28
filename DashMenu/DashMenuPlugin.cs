@@ -67,7 +67,7 @@ namespace DashMenu
             Settings = this.ReadCommonSettings("DashMenuSettings", () => new Settings.Settings());
             GetCustomFields();
             UpdateAvailableFieldData();
-            LoadFields();
+            LoadDisplayedFields();
             for (int i = 0; i < fieldData.Length; i++)
             {
                 pluginManager.AddProperty($"FieldData{i + 1}", GetType(), fieldData[i].Data);
@@ -186,12 +186,12 @@ namespace DashMenu
         {
             if (Settings != null)
             {
-                SaveField();
+                SaveDisplayedField();
                 this.SaveCommonSettings("DashMenuSettings", Settings);
             }
         }
 
-        private void LoadFields()
+        private void LoadDisplayedFields()
         {
             //Create arrays
             fieldData = new IFieldData[Settings.MaxFields];
@@ -218,7 +218,7 @@ namespace DashMenu
             }
         }
 
-        private void SaveField()
+        private void SaveDisplayedField()
         {
             for (int i = 0; i < fieldData.Length; i++)
             {
