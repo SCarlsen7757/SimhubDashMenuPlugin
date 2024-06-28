@@ -7,10 +7,15 @@ namespace DashMenu.UI
     /// </summary>
     public partial class FieldDataSetting : UserControl
     {
-        internal FieldDataSetting(Settings.Fields fields)
+        internal FieldDataSetting(FieldComponent fields)
         {
-            this.Content = fields;
             InitializeComponent();
+            DataContext = fields;
+            //Can't disable empty field plugin.
+            if (fields.FullName == typeof(EmptyField).FullName)
+            {
+                EnabledCheckBox.IsEnabled = false;
+            }
         }
     }
 }

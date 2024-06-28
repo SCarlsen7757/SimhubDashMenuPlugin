@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Collections.ObjectModel;
+using System.Windows.Controls;
 
 namespace DashMenu.UI
 {
@@ -7,11 +8,11 @@ namespace DashMenu.UI
     /// </summary>
     public partial class SettingsControl : UserControl
     {
-        internal SettingsControl(Settings.Settings settings)
+        internal SettingsControl(Settings.Settings settings, ObservableCollection<FieldComponent> allFieldData)
         {
             InitializeComponent();
 
-            foreach (Settings.Fields field in settings.Fields)
+            foreach (FieldComponent field in allFieldData)
             {
                 this.AllFields.Children.Add(new FieldDataSetting(field));
             }

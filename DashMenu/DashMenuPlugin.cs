@@ -4,6 +4,7 @@ using SimHub.Plugins;
 using SimHub.Plugins.OutputPlugins.Dash.TemplatingCommon;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -22,8 +23,14 @@ namespace DashMenu
         private Settings.Settings Settings { get; set; }
         private MenuConfiguration MenuConfiguration { get; set; } = new MenuConfiguration() { MaxFields = 5 };
         private IFieldDataComponent[] fieldData;
-        private readonly EmptyField emptyField = new EmptyField();
-        private readonly List<FieldComponent> allFieldData = new List<FieldComponent>();
+        private static readonly EmptyField emptyField = new EmptyField();
+        /// <summary>
+        /// List of all field data, used in the settings UI.
+        /// </summary>
+        private readonly ObservableCollection<FieldComponent> allFieldData = new ObservableCollection<FieldComponent>();
+        /// <summary>
+        /// List of available fields that can be used in the displayed fields.
+        /// </summary>
         private readonly List<IFieldDataComponent> availableFieldData = new List<IFieldDataComponent>();
 
         public string PluginName
@@ -51,7 +58,7 @@ namespace DashMenu
         /// </summary>
         /// <param name="pluginManager"></param>
         /// <returns></returns>
-        public System.Windows.Controls.Control GetWPFSettingsControl(PluginManager pluginManager) => new UI.SettingsControl(this.Settings);
+        public System.Windows.Controls.Control GetWPFSettingsControl(PluginManager pluginManager) => new UI.SettingsControl(this.Settings, allFieldData);
         /// <summary>
         /// Called once after plugins startup.
         /// Plugins are rebuilt at game change.
@@ -184,6 +191,7 @@ namespace DashMenu
             if (Settings != null)
             {
                 SaveDisplayedField();
+                Settings.Fields = allFieldData.Cast<Settings.IFields>().ToList();
                 this.SaveCommonSettings("DashMenuSettings", Settings);
             }
         }
