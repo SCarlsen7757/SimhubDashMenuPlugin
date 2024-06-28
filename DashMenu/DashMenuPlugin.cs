@@ -21,10 +21,10 @@ namespace DashMenu
 
         private Settings.Settings Settings { get; set; }
         private MenuConfiguration MenuConfiguration { get; set; } = new MenuConfiguration() { MaxFields = 5 };
-        private IFieldData[] fieldData;
+        private IFieldDataComponent[] fieldData;
         private readonly EmptyField emptyField = new EmptyField();
         private readonly List<FieldComponent> allFieldData = new List<FieldComponent>();
-        private readonly List<IFieldData> availableFieldData = new List<IFieldData>();
+        private readonly List<IFieldDataComponent> availableFieldData = new List<IFieldDataComponent>();
 
         public string PluginName
         {
@@ -191,7 +191,7 @@ namespace DashMenu
         private void LoadDisplayedFields()
         {
             //Create arrays
-            fieldData = new IFieldData[Settings.MaxFields];
+            fieldData = new IFieldDataComponent[Settings.MaxFields];
             if (Settings.DisplayedFields == null || Settings.DisplayedFields.Length != Settings.MaxFields)
             {
                 Settings.DisplayedFields = new string[Settings.MaxFields];
@@ -238,7 +238,7 @@ namespace DashMenu
                 Directory.CreateDirectory(rootDirectory);
                 yield break;
             }
-            Type interfaceType = typeof(IFieldData);
+            Type interfaceType = typeof(IFieldDataComponent);
 
             // Iterate through each DLL file
             foreach (string dllFile in dllFiles)
@@ -280,8 +280,8 @@ namespace DashMenu
                     this.Settings.Fields.Add(field);
                 }
 
-                var fieldDataInstance = (IFieldData)Activator.CreateInstance(type);
-                FieldComponent fieldComponent = new FieldComponent() { Enabled = enabled, FieldData = fieldDataInstance };
+                var fieldDataInstance = (IFieldDataComponent)Activator.CreateInstance(type);
+                FieldComponent fieldComponent = new FieldComponent(fieldDataInstance) { Enabled = enabled };
                 allFieldData.Add(fieldComponent);
             }
         }
@@ -294,11 +294,11 @@ namespace DashMenu
             }
         }
 
-        private int CurrentFieldIndex(IFieldData fieldData)
+        private int CurrentFieldIndex(IFieldDataComponent fieldData)
         {
             return availableFieldData.FindIndex(f => f == fieldData);
         }
-        private IFieldData NextField(IFieldData currentField)
+        private IFieldDataComponent NextField(IFieldDataComponent currentField)
         {
             int maxIndex = allFieldData.Count - 1;
             int currentIndex = CurrentFieldIndex(currentField);
@@ -306,7 +306,7 @@ namespace DashMenu
             return availableFieldData[nextIndex];
         }
 
-        private IFieldData PrevField(IFieldData currentField)
+        private IFieldDataComponent PrevField(IFieldDataComponent currentField)
         {
             int maxIndex = allFieldData.Count - 1;
             int currentIndex = CurrentFieldIndex(currentField);

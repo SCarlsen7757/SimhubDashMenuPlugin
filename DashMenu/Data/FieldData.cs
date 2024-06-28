@@ -3,7 +3,7 @@
     /// <summary>
     /// Data type to be used in the dash. 
     /// </summary>
-    public class FieldData
+    public class FieldData : IFieldData
     {
         //TODO : Make it possible to override the Name and Color values from UI.
 

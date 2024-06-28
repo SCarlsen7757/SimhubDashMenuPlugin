@@ -3,7 +3,7 @@ using GameReaderCommon;
 
 namespace CommonDataFields
 {
-    public class OilPressure : IFieldData
+    public class OilPressure : IFieldDataComponent
     {
         public string Description { get => "Oil pressure"; }
         public FieldData Data { get; set; } = new FieldData()

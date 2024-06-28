@@ -3,7 +3,7 @@ using GameReaderCommon;
 
 namespace DashMenu
 {
-    public class EmptyField : IFieldData
+    internal class EmptyField : IFieldDataComponent
     {
         public string Description { get; } = "";
         public FieldData Data { get; set; } = new FieldData()

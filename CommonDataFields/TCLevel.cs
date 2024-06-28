@@ -3,7 +3,7 @@ using GameReaderCommon;
 
 namespace CommonDataFields
 {
-    public class TCLevel : IFieldData
+    public class TCLevel : IFieldDataComponent
     {
         public string Description { get => "TC Level."; }
 

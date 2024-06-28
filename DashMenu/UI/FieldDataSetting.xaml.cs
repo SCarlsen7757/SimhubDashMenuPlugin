@@ -7,7 +7,7 @@ namespace DashMenu.UI
     /// </summary>
     public partial class FieldDataSetting : UserControl
     {
-        public FieldDataSetting(Settings.Fields fields)
+        internal FieldDataSetting(Settings.Fields fields)
         {
             this.Content = fields;
             InitializeComponent();

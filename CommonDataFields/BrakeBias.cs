@@ -3,7 +3,7 @@ using GameReaderCommon;
 
 namespace CommonDataFields
 {
-    public class BrakeBias : IFieldData
+    public class BrakeBias : IFieldDataComponent
     {
         public string Description { get => "Brake bias."; }
 

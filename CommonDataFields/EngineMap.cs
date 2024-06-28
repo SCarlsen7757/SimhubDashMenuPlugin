@@ -3,7 +3,7 @@ using GameReaderCommon;
 
 namespace CommonDataFields
 {
-    public class EngineMap : IFieldData
+    public class EngineMap : IFieldDataComponent
     {
         public string Description { get => "Engine map"; }
         public FieldData Data { get; set; } = new FieldData()

@@ -1,28 +1,15 @@
-﻿using GameReaderCommon;
-
-namespace DashMenu.Data
+﻿namespace DashMenu.Data
 {
+    /// <summary>
+    /// Interface for field data.
+    /// </summary>
     public interface IFieldData
     {
-        /// <summary>
-        /// Description of the field.
-        /// </summary>
-        string Description { get; }
-        /// <summary>
-        /// Field data.
-        /// </summary>
-        FieldData Data { get; set; }
-        /// <summary>
-        /// Update field.
-        /// </summary>
-        /// <param name="data"></param>
-        void Update(ref GameData data);
-
-        /// <summary>
-        /// Does the field support this game? With this field break or make expections if this fields is run with the game?
-        /// </summary>
-        /// <param name="game">Name of the game.</param>
-        /// <returns>Game support.</returns>
-        bool GameSupported(string game);
+        ColorScheme Color { get; set; }
+        int Decimal { get; set; }
+        bool IsDecimalNumber { get; set; }
+        string Name { get; set; }
+        string Unit { get; set; }
+        string Value { get; set; }
     }
 }

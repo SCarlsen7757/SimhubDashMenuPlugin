@@ -3,7 +3,7 @@ using GameReaderCommon;
 
 namespace CommonDataFields
 {
-    public class ABSLevel : IFieldData
+    public class ABSLevel : IFieldDataComponent
     {
         public string Description { get => "ABS Level."; }
 

@@ -7,7 +7,7 @@ namespace DashMenu.UI
     /// </summary>
     public partial class SettingsControl : UserControl
     {
-        public SettingsControl(Settings.Settings settings)
+        internal SettingsControl(Settings.Settings settings)
         {
             InitializeComponent();
 
