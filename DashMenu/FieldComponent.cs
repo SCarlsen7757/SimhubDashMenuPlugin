@@ -1,4 +1,6 @@
-﻿namespace DashMenu
+﻿using DashMenu.Data;
+
+namespace DashMenu
 {
     public class FieldComponent
     {

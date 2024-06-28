@@ -1,4 +1,4 @@
-﻿using DashMenu;
+﻿using DashMenu.Data;
 using GameReaderCommon;
 
 namespace CommonDataFields
@@ -6,10 +6,10 @@ namespace CommonDataFields
     public class EngineMap : IFieldData
     {
         public string Description { get => "Engine map"; }
-        public FieldData Data { get; private set; } = new FieldData()
+        public FieldData Data { get; set; } = new FieldData()
         {
             Name = "MAP",
-            Color = new FieldData.ColorScheme("#d9c000", "#ffffff")
+            Color = new ColorScheme("#d9c000", "#ffffff")
         };
 
         public bool GameSupported(string game) => true;

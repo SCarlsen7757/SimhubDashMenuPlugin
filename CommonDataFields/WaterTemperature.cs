@@ -1,4 +1,4 @@
-﻿using DashMenu;
+﻿using DashMenu.Data;
 using GameReaderCommon;
 
 namespace CommonDataFields
@@ -6,10 +6,12 @@ namespace CommonDataFields
     public class WaterTemperature : IFieldData
     {
         public string Description { get => "Water temperature"; }
-        public FieldData Data { get; } = new FieldData()
+        public FieldData Data { get; set; } = new FieldData()
         {
             Name = "Water Temp",
-            Color = new FieldData.ColorScheme("#ffffff", "#ffffff")
+            IsDecimalNumber = true,
+            Decimal = 0,
+            Color = new ColorScheme("#ffffff", "#ffffff")
         };
 
         public bool GameSupported(string game) => true;

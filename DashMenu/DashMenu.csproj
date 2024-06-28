@@ -64,10 +64,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DashMenuPlugin.cs" />
+    <Compile Include="Data\ColorScheme.cs" />
     <Compile Include="EmptyField.cs" />
     <Compile Include="FieldComponent.cs" />
-    <Compile Include="FieldData.cs" />
-    <Compile Include="IFieldData.cs" />
+    <Compile Include="Data\FieldData.cs" />
+    <Compile Include="Data\IFieldData.cs" />
     <Compile Include="MenuConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -77,6 +78,9 @@
     </Compile>
     <Compile Include="Settings\Fields.cs" />
     <Compile Include="Settings\Settings.cs" />
+    <Compile Include="UI\FieldDataSetting.xaml.cs">
+      <DependentUpon>FieldDataSetting.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\SettingsControl.xaml.cs">
       <DependentUpon>SettingsControl.xaml</DependentUpon>
     </Compile>
@@ -96,6 +100,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="UI\FieldDataSetting.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI\SettingsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

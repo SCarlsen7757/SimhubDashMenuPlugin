@@ -4,6 +4,7 @@ namespace DashMenu.Settings
 {
     public class Settings
     {
+        //TODO: Add INotifyPropertyChanged to settings class, to make the UI work properly.
         /// <summary>
         /// Max amount of fields that can be displayed.
         /// </summary>
