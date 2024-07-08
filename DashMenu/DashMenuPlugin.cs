@@ -5,6 +5,7 @@ using SimHub.Plugins.OutputPlugins.Dash.TemplatingCommon;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -67,11 +68,12 @@ namespace DashMenu
         public void Init(PluginManager pluginManager)
         {
             SimHub.Logging.Current.Info($"{this.GetType().FullName}. Plugin: {this.PluginName}, Version {Version.PluginVersion}");
+            allFieldData.CollectionChanged += AllFieldData_CollectionChanged;
 
             allFieldData.Add(new FieldComponent(emptyField));
             Settings = this.ReadCommonSettings("DashMenuSettings", () => new Settings.Settings());
+
             GetCustomFields();
-            UpdateAvailableFieldData();
             LoadDisplayedFields();
             for (int i = 0; i < fieldData.Length; i++)
             {
@@ -129,7 +131,6 @@ namespace DashMenu
                 fieldData[MenuConfiguration.ActiveField] = NextField(currentField);
             }));
 
-
             pluginManager.AddAction<DashMenuPlugin>("ChangeFieldTypePrev", (Action<PluginManager, string>)((pm, a) =>
             {
                 if (!MenuConfiguration.ConfigurationMode) return;
@@ -156,8 +157,6 @@ namespace DashMenu
                 throw;
 #endif
             }
-
-
             pluginManager.AddProperty<bool>("PluginRunning", this.GetType(), true);
             SimHub.Logging.Current.Info("Plugin started");
         }
@@ -171,6 +170,7 @@ namespace DashMenu
         /// <param name="data">Current game data, including current and previous data frame.</param>
         public void DataUpdate(PluginManager pluginManager, ref GameData data)
         {
+            //TODO: use DayNightMode for the colors at some point. var mode = SimHub.Plugins.BrightnessControl.BrightnessConfiguration.CurrentMode;
             for (int i = 0; i < fieldData.Length; i++)
             {
                 //TODO: Find a better way to implent GameSupported. So it's called in the init method.
@@ -195,7 +195,24 @@ namespace DashMenu
                 this.SaveCommonSettings("DashMenuSettings", Settings);
             }
         }
-
+        private void AllFieldData_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                if (e.NewItems != null && e.NewItems.Count > 0)
+                {
+                    foreach (FieldComponent newItem in e.NewItems)
+                    {
+                        newItem.PropertyChanged += FieldComponent_PropertyChanged;
+                        UpdateAvailableFieldData(newItem);
+                    }
+                }
+            }
+        }
+        private void FieldComponent_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            UpdateAvailableFieldData((FieldComponent)sender);
+        }
         private void LoadDisplayedFields()
         {
             //Create arrays
@@ -222,7 +239,6 @@ namespace DashMenu
                 fieldData[i] = availableFieldData.FirstOrDefault(f => f.GetType().FullName == Settings.DisplayedFields[i]);
             }
         }
-
         private void SaveDisplayedField()
         {
             for (int i = 0; i < fieldData.Length; i++)
@@ -230,7 +246,6 @@ namespace DashMenu
                 Settings.DisplayedFields[i] = fieldData[i].GetType().FullName;
             }
         }
-
         private static IEnumerable<Type> GetCustomFieldsType(string sub_dir)
         {
             string rootDirectory = Path.Combine(Path.GetDirectoryName((Assembly.GetExecutingAssembly().Location)), sub_dir);
@@ -274,7 +289,6 @@ namespace DashMenu
                 }
             }
         }
-
         private void GetCustomFields()
         {
             foreach (Type type in GetCustomFieldsType("DashMenuCustomFields"))
@@ -293,22 +307,41 @@ namespace DashMenu
                 allFieldData.Add(fieldComponent);
             }
         }
-
         private void UpdateAvailableFieldData()
         {
+            availableFieldData.Clear();
             foreach (var fieldComponent in allFieldData)
             {
                 if (fieldComponent.Enabled) availableFieldData.Add(fieldComponent.FieldData);
             }
         }
-
+        private void UpdateAvailableFieldData(FieldComponent fieldComponent)
+        {
+            if (fieldComponent.Enabled)
+            {
+                availableFieldData.Add(fieldComponent.FieldData);
+            }
+            else
+            {
+                //Check if the field data is in the displayed fields, and change it to empty field.
+                //Then remove it from the available field data list.
+                for (int i = 0; i < fieldData.Length; i++)
+                {
+                    if (fieldComponent.FieldData.GetType().FullName == fieldData[i].GetType().FullName)
+                    {
+                        fieldData[i] = availableFieldData.FirstOrDefault(f => f.GetType().FullName == emptyField.GetType().FullName);
+                    }
+                }
+                availableFieldData.Remove(fieldComponent.FieldData);
+            }
+        }
         private int CurrentFieldIndex(IFieldDataComponent fieldData)
         {
             return availableFieldData.FindIndex(f => f == fieldData);
         }
         private IFieldDataComponent NextField(IFieldDataComponent currentField)
         {
-            int maxIndex = allFieldData.Count - 1;
+            int maxIndex = availableFieldData.Count - 1;
             int currentIndex = CurrentFieldIndex(currentField);
             int nextIndex = (currentIndex >= maxIndex) ? 0 : currentIndex + 1;
             return availableFieldData[nextIndex];
@@ -316,7 +349,7 @@ namespace DashMenu
 
         private IFieldDataComponent PrevField(IFieldDataComponent currentField)
         {
-            int maxIndex = allFieldData.Count - 1;
+            int maxIndex = availableFieldData.Count - 1;
             int currentIndex = CurrentFieldIndex(currentField);
             int prevIndex = (currentIndex <= 0) ? maxIndex : currentIndex - 1;
             return availableFieldData[prevIndex];
