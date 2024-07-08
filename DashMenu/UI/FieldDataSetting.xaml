@@ -24,6 +24,7 @@
         </Grid.RowDefinitions>
 
         <CheckBox x:Name="EnabledCheckBox" IsChecked="{Binding Enabled}" Grid.Column="0" Grid.Row="0"/>
-        <Label Content="{Binding FullName}" Grid.Column="1" Grid.Row="0" MinWidth="100" MinHeight="100"/>
+        <Label Content="{Binding FullName}" Grid.Column="1" Grid.Row="0"/>
+        
     </Grid>
 </UserControl>
