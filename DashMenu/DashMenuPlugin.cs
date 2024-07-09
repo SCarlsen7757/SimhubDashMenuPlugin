@@ -23,8 +23,8 @@ namespace DashMenu
 
         private Settings.Settings Settings { get; set; }
         private MenuConfiguration MenuConfiguration { get; set; } = new MenuConfiguration() { MaxFields = 5 };
-        private IFieldDataComponent[] fieldData;
         private static readonly EmptyField emptyField = new EmptyField();
+        private IFieldDataComponent[] fieldData = new IFieldDataComponent[1] { emptyField };
         /// <summary>
         /// List of all field data, used in the settings UI.
         /// </summary>
@@ -306,6 +306,7 @@ namespace DashMenu
                 FieldComponent fieldComponent = new FieldComponent(fieldDataInstance) { Enabled = enabled };
                 allFieldData.Add(fieldComponent);
             }
+            UpdateAvailableFieldData();
         }
         private void UpdateAvailableFieldData()
         {
