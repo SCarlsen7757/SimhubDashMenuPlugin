@@ -1,7 +1,6 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using DashMenu.Settings.DisplayedFields;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -9,64 +8,98 @@ namespace DashMenu.Settings
 {
     internal class Settings : INotifyPropertyChanged
     {
-        //TODO: Add INotifyPropertyChanged to settings class, to make the UI work properly.
-        private int maxFields = 5;
+        private int defaultMaxFields = 5;
         /// <summary>
         /// Max amount of fields that can be displayed.
         /// </summary>
-        public int MaxFields
+        public int DefaultMaxFields
         {
-            get => maxFields; set
+            get => defaultMaxFields; set
             {
-                if (value == maxFields) return;
-                maxFields = value;
+                if (value == defaultMaxFields) return;
+                defaultMaxFields = value;
                 OnPropertyChanged();
             }
         }
         /// <summary>
         /// Fields displayed.
         /// </summary>
-        public string[] DisplayedFields { get; set; }
+        public Dictionary<string, DisplayedFields.GameSettings> GameSettings { get; set; } = new Dictionary<string, DisplayedFields.GameSettings>();
+        /// <summary>
+        /// Add or update displayed fields settings for the car.
+        /// </summary>
+        /// <param name="gameName">Name of the game.</param>
+        /// <param name="carName">Name of the car.</param>
+        /// <param name="displayedFields">Displayed fields settings. Can be null then it create default displayed fields settings.</param>
+        internal void UpdateDisplayedField(string gameName, string carName, string[] displayedFields = null)
+        {
+            if (displayedFields == null)
+            {
+                for (int i = 0; i < displayedFields.Length; i++)
+                {
+                    displayedFields[i] = EmptyField.FullName;
+                }
+            }
+            if (GameSettings.TryGetValue(gameName, out var gameSettings))
+            {
+                if (gameSettings.CarSettings.TryGetValue(carName, out var carSettings))
+                {
+                    carSettings.DisplayedFields = displayedFields;
+                }
+                else
+                {
+                    carSettings = new CarSettings
+                    {
+                        DisplayedFields = displayedFields
+                    };
+                    gameSettings.CarSettings.Add(carName, carSettings);
+                }
+            }
+            else
+            {
+                gameSettings = new GameSettings();
+                GameSettings.Add(gameName, gameSettings);
+                UpdateDisplayedField(gameName, carName, displayedFields);
+            }
+        }
+        /// <summary>
+        /// Get displayed fields settings for the car.
+        /// </summary>
+        /// <param name="gameName">Game of the game.</param>
+        /// <param name="carName">Game of the car.</param>
+        /// <returns></returns>
+        internal string[] GetDisplayedField(string gameName, string carName)
+        {
+
+            if (GameSettings.TryGetValue(gameName, out var gameSettings))
+            {
+                if (gameSettings.CarSettings.TryGetValue(carName, out var carSettings))
+                {
+                    return carSettings.DisplayedFields;
+                }
+                else
+                {
+                    var displayedFields = new string[DefaultMaxFields];
+                    for (int i = 0; i < displayedFields.Length; i++)
+                    {
+                        displayedFields[i] = EmptyField.FullName;
+                    }
+                    return displayedFields;
+                }
+            }
+            else
+            {
+                gameSettings = new GameSettings();
+                GameSettings.Add(gameName, gameSettings);
+                return GetDisplayedField(gameName, carName);
+            }
+        }
         /// <summary>
         /// All fields. Used for enabling and disabling the fields to be able to select them.
         /// </summary> 
-        [JsonConverter(typeof(IFieldConverter))]
-        public List<IFields> Fields { get; set; } = new List<IFields>();
+        public ObservableCollection<Fields> Fields { get; set; } = new ObservableCollection<Fields>();
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-
-
-        public class IFieldConverter : JsonConverter
-        {
-            public override bool CanConvert(Type objectType)
-            {
-                return objectType.IsGenericType && objectType.GetGenericTypeDefinition() == typeof(List<>);
-            }
-
-            public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-            {
-                JArray array = JArray.Load(reader);
-                var list = new List<IFields>();
-
-                foreach (JToken item in array)
-                {
-                    // Deserialize each item to Fields
-                    var fieldsObject = item.ToObject<Fields>(serializer);
-
-                    // Cast Fields to TInterface
-                    var interfaceObject = (IFields)fieldsObject;
-
-                    list.Add(interfaceObject);
-                }
-
-                return list;
-            }
-
-            public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-            {
-                serializer.Serialize(writer, value);
-            }
-        }
     }
 }

@@ -80,8 +80,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Settings\DayNightColorScheme.cs" />
+    <Compile Include="Settings\DisplayedFields\CarSettings.cs" />
+    <Compile Include="Settings\DisplayedFields\GameSettings.cs" />
     <Compile Include="Settings\Fields.cs" />
-    <Compile Include="Settings\IFields.cs" />
     <Compile Include="Settings\PropertyOverrideBase.cs" />
     <Compile Include="Settings\Settings.cs" />
     <Compile Include="UI\FieldDataSetting.xaml.cs">

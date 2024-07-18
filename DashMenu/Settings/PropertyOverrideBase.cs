@@ -10,7 +10,7 @@ namespace DashMenu.Settings
     /// <typeparam name="T">Type of the property value.</typeparam>
     internal class PropertyOverride<T> : INotifyPropertyChanged
     {
-        private T defaultValue = default(T);
+        private T defaultValue = default;
         /// <summary>
         /// Default value of the property.
         /// </summary>
@@ -31,7 +31,7 @@ namespace DashMenu.Settings
         /// <summary>
         /// Override value of the property.
         /// </summary>
-        public T OverrideValue { get; set; } = default(T);
+        public T OverrideValue { get; set; } = default;
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 

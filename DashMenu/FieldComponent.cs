@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace DashMenu
 {
-    internal class FieldComponent : Settings.IFields, INotifyPropertyChanged
+    internal class FieldComponent : INotifyPropertyChanged
     {
         public FieldComponent() { }
         public FieldComponent(Data.IFieldDataComponent fieldData)
@@ -39,11 +39,8 @@ namespace DashMenu
         }
         public Data.IFieldDataComponent FieldData { get; set; }
         public PropertyOverride<string> NameOverride { get; set; } = new PropertyOverride<string>();
-        PropertyOverride<string> IFields.NameOverride { get => NameOverride; set { NameOverride = value; } }
         public PropertyOverride<ColorScheme> ColorSchemeOverride { get; set; } = new PropertyOverride<ColorScheme>();
-        PropertyOverride<ColorScheme> IFields.ColorSchemeOverride { get => ColorSchemeOverride; set { ColorSchemeOverride = value; } }
         public PropertyOverride<int> DecimalOverride { get; set; } = new PropertyOverride<int>();
-        PropertyOverride<int> IFields.DecimalOverride { get => DecimalOverride; set { DecimalOverride = value; } }
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

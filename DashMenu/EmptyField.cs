@@ -22,5 +22,23 @@ namespace DashMenu
         {
             return;
         }
+
+        private static EmptyField field = new EmptyField();
+        /// <summary>
+        /// Empty field
+        /// </summary>
+        public static EmptyField Field { get { return field; } }
+        private static string fullname = null;
+        public static string FullName
+        {
+            get
+            {
+                if (fullname == null)
+                {
+                    fullname = Field.GetType().FullName;
+                }
+                return fullname;
+            }
+        }
     }
 }

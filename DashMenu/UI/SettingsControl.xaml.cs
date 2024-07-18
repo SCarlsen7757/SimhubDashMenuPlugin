@@ -12,7 +12,7 @@ namespace DashMenu.UI
         {
             InitializeComponent();
 
-            foreach (FieldComponent field in allFieldData)
+            foreach (DashMenu.Settings.Fields field in settings.Fields)
             {
                 this.AllFields.Children.Add(new FieldDataSetting(field));
             }
