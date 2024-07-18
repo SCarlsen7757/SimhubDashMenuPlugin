@@ -1,8 +1,10 @@
-﻿namespace DashMenu.Settings.DisplayedFields
+﻿using System.Collections.Generic;
+
+namespace DashMenu.Settings.DisplayedFields
 {
     internal class CarSettings
     {
-        public string[] DisplayedFields { get; set; }
+        public List<string> DisplayedFields { get; set; }
         public CarSettings() { }
     }
 }

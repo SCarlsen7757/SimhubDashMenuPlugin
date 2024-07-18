@@ -31,13 +31,14 @@ namespace DashMenu.Settings
         /// <param name="gameName">Name of the game.</param>
         /// <param name="carName">Name of the car.</param>
         /// <param name="displayedFields">Displayed fields settings. Can be null then it create default displayed fields settings.</param>
-        internal void UpdateDisplayedField(string gameName, string carName, string[] displayedFields = null)
+        internal void UpdateDisplayedField(string gameName, string carName, List<string> displayedFields = null)
         {
             if (displayedFields == null)
             {
-                for (int i = 0; i < displayedFields.Length; i++)
+                displayedFields = new List<string>();
+                for (int i = 0; i < DefaultMaxFields; i++)
                 {
-                    displayedFields[i] = EmptyField.FullName;
+                    displayedFields.Add(EmptyField.FullName);
                 }
             }
             if (GameSettings.TryGetValue(gameName, out var gameSettings))
@@ -68,7 +69,7 @@ namespace DashMenu.Settings
         /// <param name="gameName">Game of the game.</param>
         /// <param name="carName">Game of the car.</param>
         /// <returns></returns>
-        internal string[] GetDisplayedField(string gameName, string carName)
+        internal List<string> GetDisplayedField(string gameName, string carName)
         {
 
             if (GameSettings.TryGetValue(gameName, out var gameSettings))
@@ -79,10 +80,10 @@ namespace DashMenu.Settings
                 }
                 else
                 {
-                    var displayedFields = new string[DefaultMaxFields];
-                    for (int i = 0; i < displayedFields.Length; i++)
+                    var displayedFields = new List<string>();
+                    for (int i = 0; i < DefaultMaxFields; i++)
                     {
-                        displayedFields[i] = EmptyField.FullName;
+                        displayedFields.Add(EmptyField.FullName);
                     }
                     return displayedFields;
                 }

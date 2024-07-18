@@ -22,9 +22,9 @@ namespace DashMenu
         public DashMenuPlugin() { }
 
         private Settings.Settings Settings { get; set; }
-        private MenuConfiguration MenuConfiguration { get; set; } = new MenuConfiguration() { MaxFields = 5 };
+        private MenuConfiguration MenuConfiguration { get; set; } = new MenuConfiguration();
         //private static readonly EmptyField emptyField = new EmptyField();
-        private IFieldDataComponent[] fieldData;
+        private List<IFieldDataComponent> fieldData = new List<IFieldDataComponent>();
         /// <summary>
         /// List of all field data, used in the settings UI.
         /// </summary>
@@ -78,8 +78,9 @@ namespace DashMenu
             pluginManager.AddProperty("ConfigMode", this.GetType(), MenuConfiguration.ConfigurationMode, "When in configuration mode, it's possible to change the displayed data.");
             pluginManager.AddProperty("ActiveConfigField", this.GetType(), MenuConfiguration.ActiveField, "Active field in the dash menu config screen.");
 
-            pluginManager.AddAction<DashMenuPlugin>("ToggleConfigMode", (Action<PluginManager, string>)((pm, a) =>
+            pluginManager.AddAction<DashMenuPlugin>("ToggleConfigMode", (pm, a) =>
             {
+                if (fieldData.Count == 0) return;
                 MenuConfiguration.ConfigurationMode = !MenuConfiguration.ConfigurationMode;
 
                 //When entering configuration mode, reset the active field to 1.
@@ -87,13 +88,12 @@ namespace DashMenu
 
                 pluginManager.SetPropertyValue("ConfigMode", GetType(), MenuConfiguration.ConfigurationMode);
                 pluginManager.SetPropertyValue("ActiveConfigField", GetType(), MenuConfiguration.ActiveField + 1);
+            });
 
-            }));
-
-            pluginManager.AddAction<DashMenuPlugin>("ConfigNextField", (Action<PluginManager, string>)((pm, a) =>
+            pluginManager.AddAction<DashMenuPlugin>("ConfigNextField", (pm, a) =>
             {
                 if (!MenuConfiguration.ConfigurationMode) return;
-                if (MenuConfiguration.ActiveField < MenuConfiguration.MaxFields - 1)
+                if (MenuConfiguration.ActiveField < fieldData.Count - 1)
                 {
                     MenuConfiguration.ActiveField++;
                 }
@@ -103,9 +103,9 @@ namespace DashMenu
                 }
                 pluginManager.SetPropertyValue("ActiveConfigField", GetType(), MenuConfiguration.ActiveField + 1);
                 SimHub.Logging.Current.Debug("Dash menu action ConfigNextField");
-            }));
+            });
 
-            pluginManager.AddAction<DashMenuPlugin>("ConfigPrevField", (Action<PluginManager, string>)((pm, a) =>
+            pluginManager.AddAction<DashMenuPlugin>("ConfigPrevField", (pm, a) =>
             {
                 if (!MenuConfiguration.ConfigurationMode) return;
                 if (MenuConfiguration.ActiveField > 0)
@@ -114,29 +114,41 @@ namespace DashMenu
                 }
                 else
                 {
-                    MenuConfiguration.ActiveField = MenuConfiguration.MaxFields - 1;
+                    MenuConfiguration.ActiveField = fieldData.Count - 1;
                 }
                 pluginManager.SetPropertyValue("ActiveConfigField", GetType(), MenuConfiguration.ActiveField + 1);
                 SimHub.Logging.Current.Debug("Dash menu action ConfigPrevField");
+            });
 
-            }));
-
-            pluginManager.AddAction<DashMenuPlugin>("ChangeFieldTypeNext", (Action<PluginManager, string>)((pm, a) =>
+            pluginManager.AddAction<DashMenuPlugin>("ChangeFieldTypeNext", (pm, a) =>
             {
                 if (!MenuConfiguration.ConfigurationMode) return;
                 var currentField = fieldData[MenuConfiguration.ActiveField];
                 fieldData[MenuConfiguration.ActiveField] = NextField(currentField);
                 SimHub.Logging.Current.Debug("Dash menu action ChangeFieldTypeNext");
-            }));
+            });
 
-            pluginManager.AddAction<DashMenuPlugin>("ChangeFieldTypePrev", (Action<PluginManager, string>)((pm, a) =>
+            pluginManager.AddAction<DashMenuPlugin>("ChangeFieldTypePrev", (pm, a) =>
             {
                 if (!MenuConfiguration.ConfigurationMode) return;
                 var currentField = fieldData[MenuConfiguration.ActiveField];
                 fieldData[MenuConfiguration.ActiveField] = PrevField(currentField);
                 SimHub.Logging.Current.Debug("Dash menu action ChangeFieldTypePrev");
+            });
 
-            }));
+            pluginManager.AddAction<DashMenuPlugin>("IncreaseNumberOfFieldData", (pm, a) =>
+            {
+                if (!MenuConfiguration.ConfigurationMode) return;
+                if (fieldData.Count <= 0) return;
+                fieldData.Add(EmptyField.Field);
+            });
+
+            pluginManager.AddAction<DashMenuPlugin>("DecreaseNumberOfFieldData", (pm, a) =>
+            {
+                if (!MenuConfiguration.ConfigurationMode) return;
+                if (fieldData.Count <= 1) return;
+                fieldData.RemoveAt(fieldData.Count - 1);
+            });
 
             //Add NCalc method
             //NCalc Methods are normaly added when Simhub starts. So when this plugin is initialize after the first time, due to settings change or other game selected.
@@ -149,6 +161,13 @@ namespace DashMenu
                         "field",
                         "Returns the data of the specified field.",
                         engine => (Func<int, object>)(field => GetField(field)));
+                }
+                if (!NCalcEngineMethodsRegistry.GenericMethodsProvider.ContainsKey("dashfieldamount".ToLower()))
+                {
+                    NCalcEngineMethodsRegistry.AddMethod("dashfieldamount",
+                        "",
+                        "Returns the data of the specified field.",
+                        engine => (Func<int>)(() => fieldData.Count));
                 }
             }
             catch (System.ArgumentException)
@@ -172,8 +191,8 @@ namespace DashMenu
         public void DataUpdate(PluginManager pluginManager, ref GameData data)
         {
             //TODO: use DayNightMode for the colors at some point. var mode = SimHub.Plugins.BrightnessControl.BrightnessConfiguration.CurrentMode;
-            if (fieldData == null) return;
-            for (int i = 0; i < fieldData.Length; i++)
+            if (fieldData.Count == 0) return;
+            for (int i = 0; i < fieldData.Count; i++)
             {
                 //TODO: Find a better way to implent GameSupported. So it's called in the init method.
                 if (fieldData[i].GameSupported(pluginManager.GameName))
@@ -197,9 +216,8 @@ namespace DashMenu
 
         internal FieldData GetField(int index)
         {
-            if (fieldData == null) return null;
-            if (index < 0 && index >= fieldData.Length) return null;
-            return fieldData[index].Data;
+            if (index <= 0 || index > fieldData.Count) return null;
+            return fieldData[index - 1].Data;
         }
         private void CarChanged(object sender, EventArgs e)
         {
@@ -210,23 +228,19 @@ namespace DashMenu
             }
 
             //Create arrays
-            fieldData = new IFieldDataComponent[Settings.DefaultMaxFields];
-            var test = Settings.GetDisplayedField(PluginManager.GameName, PluginManager.LastCarId);
+            fieldData = new List<IFieldDataComponent>();
+            var fieldDataSettings = Settings.GetDisplayedField(PluginManager.GameName, PluginManager.LastCarId);
             //Assign data from settings
-            for (int i = 0; i < fieldData.Length; i++)
+            for (int i = 0; i < fieldDataSettings.Count; i++)
             {
                 //Check if DisplayField is valid
-                if (string.IsNullOrEmpty(test[i]))
+                if (string.IsNullOrEmpty(fieldDataSettings[i]) || !availableFieldData.Any(f => fieldDataSettings[i] == f.GetType().FullName))
                 {
-                    test[i] = EmptyField.Field.GetType().FullName;
-                }
-                else if (!availableFieldData.Any(f => test[i] == f.GetType().FullName))
-                {
-                    test[i] = EmptyField.Field.GetType().FullName;
+                    fieldDataSettings[i] = EmptyField.FullName;
                 }
 
                 //Asign data
-                fieldData[i] = availableFieldData.FirstOrDefault(f => f.GetType().FullName == test[i]);
+                fieldData.Add(availableFieldData.FirstOrDefault(f => f.GetType().FullName == fieldDataSettings[i]));
             }
 
             oldCar = PluginManager.LastCarId;
@@ -252,10 +266,10 @@ namespace DashMenu
         private void SaveDisplayedField(string car)
         {
             if (string.IsNullOrWhiteSpace(car)) return;
-            var fieldDataSettings = new string[fieldData.Length];
-            for (int i = 0; i < fieldData.Length; i++)
+            var fieldDataSettings = new List<string>();
+            for (int i = 0; i < fieldData.Count; i++)
             {
-                fieldDataSettings[i] = fieldData[i].GetType().FullName;
+                fieldDataSettings.Add(fieldData[i].GetType().FullName);
             }
             Settings.UpdateDisplayedField(PluginManager.GameName, car, fieldDataSettings);
         }
@@ -361,7 +375,7 @@ namespace DashMenu
             {
                 //Check if the field data is in the displayed fields, and change it to empty field.
                 //Then remove it from the available field data list.
-                for (int i = 0; i < fieldData.Length; i++)
+                for (int i = 0; i < fieldData.Count; i++)
                 {
                     if (fieldComponent.FieldData.GetType().FullName == fieldData[i].GetType().FullName)
                     {
