@@ -77,7 +77,7 @@ namespace DashMenu
 
             pluginManager.AddProperty("ConfigMode", this.GetType(), MenuConfiguration.ConfigurationMode, "When in configuration mode, it's possible to change the displayed data.");
             pluginManager.AddProperty("ActiveConfigField", this.GetType(), MenuConfiguration.ActiveField, "Active field in the dash menu config screen.");
-
+            pluginManager.AddProperty("AmountOfFields", GetType(), fieldData.Count, "Amount of fields for the current car.");
             pluginManager.AddAction<DashMenuPlugin>("ToggleConfigMode", (pm, a) =>
             {
                 if (fieldData.Count == 0) return;
@@ -141,6 +141,7 @@ namespace DashMenu
                 if (!MenuConfiguration.ConfigurationMode) return;
                 if (fieldData.Count <= 0) return;
                 fieldData.Add(EmptyField.Field);
+                pluginManager.SetPropertyValue("AmountOfFields", GetType(), fieldData.Count);
             });
 
             pluginManager.AddAction<DashMenuPlugin>("DecreaseNumberOfFieldData", (pm, a) =>
@@ -148,6 +149,7 @@ namespace DashMenu
                 if (!MenuConfiguration.ConfigurationMode) return;
                 if (fieldData.Count <= 1) return;
                 fieldData.RemoveAt(fieldData.Count - 1);
+                pluginManager.SetPropertyValue("AmountOfFields", GetType(), fieldData.Count);
             });
 
             //Add NCalc method
@@ -161,13 +163,6 @@ namespace DashMenu
                         "field",
                         "Returns the data of the specified field.",
                         engine => (Func<int, object>)(field => GetField(field)));
-                }
-                if (!NCalcEngineMethodsRegistry.GenericMethodsProvider.ContainsKey("dashfieldamount".ToLower()))
-                {
-                    NCalcEngineMethodsRegistry.AddMethod("dashfieldamount",
-                        "",
-                        "Returns the data of the specified field.",
-                        engine => (Func<int>)(() => fieldData.Count));
                 }
             }
             catch (System.ArgumentException)
@@ -243,6 +238,7 @@ namespace DashMenu
                 fieldData.Add(availableFieldData.FirstOrDefault(f => f.GetType().FullName == fieldDataSettings[i]));
             }
 
+            PluginManager.SetPropertyValue("AmountOfFields", GetType(), fieldData.Count);
             oldCar = PluginManager.LastCarId;
         }
         private void AllFieldData_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

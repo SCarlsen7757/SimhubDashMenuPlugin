@@ -39,6 +39,8 @@ Available Actions:
 | `ConfigPrevField` | :heavy_check_mark: | Select previous field when in configuration mode |
 | `ChangeFieldTypeNext` | :heavy_check_mark: | Change field type of the selected field when in configuration mode |
 | `ChangeFieldTypePrev` | :heavy_check_mark: | Change field type of the selected field when in configuration mode |
+| `IncreaseNumberOfFieldData` | :x: | Increase number of fields for the current car |
+| `DecreaseNumberOfFieldData` | :x: | Decrease number of fields for the current car (minimum 1) |
 
 ![Select "Controls and events" menu then "Controls" tab and click the "New mapping" button.](./Image/ControlsAndEvents.png)
 
@@ -48,6 +50,8 @@ In Dash Studio the field can be accessed with the NCalc/JavaScript function/meth
 The easiest way is to create a widget and pass the field data as a variable.
 
 ![Write NCalc formula to get field data](./Image/PassFieldDataToWidget.png)
+
+To get the number of fields for the current car, use the property `AmountOfFields`.
 
 To display the values of the field data in a widget, use these JavaScript code snippets for the binding property:
 
@@ -64,8 +68,15 @@ erDiagram
       string Value "Value of the data"
       string Unit "Unit of the value"
       int Decimal "How many decimal if the value is a decimal number"
-      string Color "Color to be used for easy identification"
+      ColorScheme Color "Color to be used for easy identification"
     }
+
+    ColorScheme{
+      string Primary "Primary color"
+      string Accent "Accent color"
+    }
+
+    FieldData ||--|| ColorScheme : contains
 ```
 
 ### Config screen
@@ -81,6 +92,10 @@ It's possible to make a configuration screen by using the the following properti
 
 Changes are automatically saved, and it is not possible to undo changes to the configuration except by manually reverting the changes yourself.
 
+## Change amount of fields
+
+You can change the number of fields for the current car by assigning the `IncreaseNumberOfFieldData` and `DecreaseNumberOfFieldData` actions. When using a new car, the fields will be created with the default number of fields.
+
 ## FieldData class structure
 
 ```mermaid
@@ -88,12 +103,13 @@ classDiagram
     class DashMenuPlugin{
       +bool ConfigMode
       +int ActiveConfigField
+      +int AmountOfFields
       +FieldData()
     }
 ```
 
 ## Future features
 
-* [ ] Enabled and disable data fields, that can be selected.
 * [ ] Make it possible to overwrite name and color of a field.
+* [ ] Change color scheme base on DayNightMode.
 * [ ] Sort the data fields to make cycling through them easier.
