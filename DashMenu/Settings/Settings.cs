@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace DashMenu.Settings
@@ -12,7 +13,7 @@ namespace DashMenu.Settings
         /// <summary>
         /// Max amount of fields that can be displayed.
         /// </summary>
-        public int DefaultMaxFields
+        public int DefaultAmountOfFields
         {
             get => defaultMaxFields; set
             {
@@ -25,6 +26,10 @@ namespace DashMenu.Settings
         /// Fields displayed.
         /// </summary>
         public Dictionary<string, DisplayedFields.GameSettings> GameSettings { get; set; } = new Dictionary<string, DisplayedFields.GameSettings>();
+        private List<string> DefaultFieldData()
+        {
+            return Enumerable.Repeat(EmptyField.FullName, DefaultAmountOfFields).ToList();
+        }
         /// <summary>
         /// Add or update displayed fields settings for the car.
         /// </summary>
@@ -35,11 +40,7 @@ namespace DashMenu.Settings
         {
             if (displayedFields == null)
             {
-                displayedFields = new List<string>();
-                for (int i = 0; i < DefaultMaxFields; i++)
-                {
-                    displayedFields.Add(EmptyField.FullName);
-                }
+                displayedFields = DefaultFieldData();
             }
             if (GameSettings.TryGetValue(gameName, out var gameSettings))
             {
@@ -80,12 +81,7 @@ namespace DashMenu.Settings
                 }
                 else
                 {
-                    var displayedFields = new List<string>();
-                    for (int i = 0; i < DefaultMaxFields; i++)
-                    {
-                        displayedFields.Add(EmptyField.FullName);
-                    }
-                    return displayedFields;
+                    return DefaultFieldData();
                 }
             }
             else
