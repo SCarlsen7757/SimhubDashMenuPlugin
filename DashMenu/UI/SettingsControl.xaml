@@ -5,10 +5,120 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DashMenu.UI"
              xmlns:settings="clr-namespace:DashMenu.Settings"
+             xmlns:ui="clr-namespace:SimHub.Plugins.UI;assembly=SimHub.Plugins"
+             xmlns:styles="clr-namespace:SimHub.Plugins.Styles;assembly=SimHub.Plugins"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.DataContext>
         <settings:Settings />
     </UserControl.DataContext>
-    <StackPanel x:Name="AllFields"/>
+    <styles:SHTabControl>
+        <styles:SHTabItem Header="General settings">
+            <styles:SHSection Title="General settings">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="600"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Column="0" Grid.Row="0"> <!--Default amount of fields-->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+
+                            <ui:TitledSlider Title="Default amount of fields"
+                                             Maximum="20" 
+                                             Minimum="1"
+                                             Value="{Binding DefaultAmountOfFields}"/>
+                        </Grid>
+                    </StackPanel>
+                    <StackPanel Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"> <!--Field data settings-->
+                        <Grid >
+                            <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                            <styles:SHSubSectionTitle Content="Field data" 
+                                                      Grid.Column="0" 
+                                                      Grid.Row="0" 
+                                                      Grid.ColumnSpan="2"/>
+                            <styles:SHListBox Name="FieldDataSettings" 
+                                              Margin="0,0,4,0" 
+                                              ItemsSource="{Binding Path=Fields}"
+                                              Grid.Column="0"
+                                              Grid.Row="1">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <AutoGrid Margin="0,0" Columns="1,*">
+                                            <Border Background="Green"
+                                                    Margin="-4,-4,1,-4"
+                                                    Visibility="{Binding Path=Enabled, Converter={SHBoolToVisibilityConverter Hide=true}}"/>
+                                            <StackPanel Margin="0,0,0,0">
+                                                <Label Padding="0" Content="{Binding Path=FullName}"/>
+                                            </StackPanel>
+                                        </AutoGrid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </styles:SHListBox>
+                        <Border BorderThickness="1" 
+                                    BorderBrush="#33000000" 
+                                    Background="{DynamicResource GrayBrush10}" 
+                                    Margin="4"
+                                    Visibility="{Binding ElementName=FieldDataSettings, Path=SelectedValue, Converter={IsNotNullToCollapsedConverter}}"
+                                    >
+                            <StackPanel VerticalAlignment="Center">
+                                    <Label VerticalAlignment="Center" 
+                                           HorizontalAlignment="Center"
+                                           Content="Select a field data to edit it"/>
+                                </StackPanel>
+                            </Border>
+                            <local:FieldDataSettingItem Visibility="{Binding ElementName=FieldDataSettings, Path=SelectedValue, Converter={IsNullToCollapsedConverter}}" 
+                                                        DataContext="{Binding ElementName=FieldDataSettings, Path=SelectedValue}"
+                                                        Grid.Column="1"
+                                                        Grid.Row="1"/>
+                        </Grid>
+                    </StackPanel>
+                </Grid>
+            </styles:SHSection>
+        </styles:SHTabItem>
+        <styles:SHTabItem Header="Car settings">
+            <styles:SHSection Title="Car settings">
+                <StackPanel>
+                    <styles:SHButtonPrimary Click="ButtonForgetAllCars_Click" VerticalAlignment="Center" HorizontalAlignment="Left" Content="Forget all cars"/>
+                    <StackPanel>
+                        <styles:SHListBox Name="firstCarSetting" Margin="0,0,4,0" ItemsSource="{Binding GameSettings[PluginManager.GameName]}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <AutoGrid Margin="0,0" Columns="1,*">
+                                        <Border Background="Green"
+                                                Margin="-4,-4,1,-4"
+                                                Visibility="{Binding Path=IsActive, Converter={SHBoolToVisibilityConverter Hide=true}}"/>
+                                        <StackPanel Margin="0,0,0,0">
+                                            <Label Padding="0" Content="{Binding Path=CarModel}"/>
+                                            <Label Padding="0" FontSize="10" Content="{Binding Path=CarId}"/>
+                                        </StackPanel>
+                                    </AutoGrid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </styles:SHListBox>
+                    </StackPanel>
+                </StackPanel>
+            </styles:SHSection>
+        </styles:SHTabItem>
+    </styles:SHTabControl>
 </UserControl>

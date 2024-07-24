@@ -5,7 +5,6 @@ using SimHub.Plugins.OutputPlugins.Dash.TemplatingCommon;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -34,7 +33,8 @@ namespace DashMenu
         /// </summary>
         private readonly List<IFieldDataComponent> availableFieldData = new List<IFieldDataComponent>();
 
-        private string oldCar = null;
+        private string oldCarId = null;
+        private string oldCarModel = null;
         public string PluginName
         {
             get
@@ -60,7 +60,7 @@ namespace DashMenu
         /// </summary>
         /// <param name="pluginManager"></param>
         /// <returns></returns>
-        public System.Windows.Controls.Control GetWPFSettingsControl(PluginManager pluginManager) => new UI.SettingsControl(this.Settings, allFieldData);
+        public System.Windows.Controls.Control GetWPFSettingsControl(PluginManager pluginManager) => new UI.SettingsControl(PluginManager, Settings);
         /// <summary>
         /// Called once after plugins startup.
         /// Plugins are rebuilt at game change.
@@ -139,7 +139,7 @@ namespace DashMenu
             pluginManager.AddAction<DashMenuPlugin>("IncreaseNumberOfFieldData", (pm, a) =>
             {
                 if (!MenuConfiguration.ConfigurationMode) return;
-                if (fieldData.Count <= 0) return;
+                if (fieldData.Count <= 0 || fieldData.Count >= 20) return;
                 fieldData.Add(EmptyField.Field);
                 pluginManager.SetPropertyValue("AmountOfFields", GetType(), fieldData.Count);
             });
@@ -205,7 +205,7 @@ namespace DashMenu
         {
             PluginManagerEvents.Instance.ActiveCarChanged -= CarChanged;
 
-            SaveDisplayedField(PluginManager.LastCarId);
+            SaveDisplayedField(PluginManager.LastCarId, oldCarModel);
             this.SaveCommonSettings("DashMenuSettings", Settings);
         }
 
@@ -217,9 +217,9 @@ namespace DashMenu
         private void CarChanged(object sender, EventArgs e)
         {
             //Save field for previues car before loading new car field data settings
-            if (!string.IsNullOrWhiteSpace(oldCar))
+            if (!string.IsNullOrWhiteSpace(oldCarId) || !string.IsNullOrWhiteSpace(oldCarModel))
             {
-                SaveDisplayedField(oldCar);
+                SaveDisplayedField(oldCarId, oldCarModel);
             }
 
             //Create arrays
@@ -239,35 +239,22 @@ namespace DashMenu
             }
 
             PluginManager.SetPropertyValue("AmountOfFields", GetType(), fieldData.Count);
-            oldCar = PluginManager.LastCarId;
-        }
-        private void AllFieldData_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (e.Action == NotifyCollectionChangedAction.Add)
-            {
-                if (e.NewItems != null && e.NewItems.Count > 0)
-                {
-                    foreach (FieldComponent newItem in e.NewItems)
-                    {
-                        newItem.PropertyChanged += FieldComponent_PropertyChanged;
-                        UpdateAvailableFieldData(newItem);
-                    }
-                }
-            }
+            oldCarId = PluginManager.LastCarId;
+            oldCarModel = PluginManager.GameManager.CarManager.LastCarSettings.CarModel;
         }
         private void FieldComponent_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             UpdateAvailableFieldData((FieldComponent)sender);
         }
-        private void SaveDisplayedField(string car)
+        private void SaveDisplayedField(string carId, string carModel)
         {
-            if (string.IsNullOrWhiteSpace(car)) return;
+            if (string.IsNullOrWhiteSpace(carId) || string.IsNullOrWhiteSpace(carModel)) return;
             var fieldDataSettings = new List<string>();
             for (int i = 0; i < fieldData.Count; i++)
             {
                 fieldDataSettings.Add(fieldData[i].GetType().FullName);
             }
-            Settings.UpdateDisplayedField(PluginManager.GameName, car, fieldDataSettings);
+            Settings.UpdateDisplayedField(PluginManager.GameName, carId, carModel, fieldDataSettings);
         }
         private static IEnumerable<Type> GetCustomFieldsType(string sub_dir)
         {

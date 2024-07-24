@@ -5,9 +5,13 @@ namespace DashMenu.UI
     /// <summary>
     /// Interaction logic for FieldDataSetting.xaml
     /// </summary>
-    public partial class FieldDataSetting : UserControl
+    public partial class FieldDataSettingItem : UserControl
     {
-        internal FieldDataSetting(DashMenu.Settings.Fields fields)
+        public FieldDataSettingItem()
+        {
+            InitializeComponent();
+        }
+        internal FieldDataSettingItem(DashMenu.Settings.Fields fields)
         {
             InitializeComponent();
             DataContext = fields;

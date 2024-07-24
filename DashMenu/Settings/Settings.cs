@@ -34,9 +34,10 @@ namespace DashMenu.Settings
         /// Add or update displayed fields settings for the car.
         /// </summary>
         /// <param name="gameName">Name of the game.</param>
-        /// <param name="carName">Name of the car.</param>
+        /// <param name="carId">Id of the car</param>
+        /// <param name="carModel">Name of the car.</param>
         /// <param name="displayedFields">Displayed fields settings. Can be null then it create default displayed fields settings.</param>
-        internal void UpdateDisplayedField(string gameName, string carName, List<string> displayedFields = null)
+        internal void UpdateDisplayedField(string gameName, string carId, string carModel, List<string> displayedFields = null)
         {
             if (displayedFields == null)
             {
@@ -44,38 +45,35 @@ namespace DashMenu.Settings
             }
             if (GameSettings.TryGetValue(gameName, out var gameSettings))
             {
-                if (gameSettings.CarSettings.TryGetValue(carName, out var carSettings))
+                if (gameSettings.CarSettings.TryGetValue(carId, out var carSettings))
                 {
                     carSettings.DisplayedFields = displayedFields;
                 }
                 else
                 {
-                    carSettings = new CarSettings
-                    {
-                        DisplayedFields = displayedFields
-                    };
-                    gameSettings.CarSettings.Add(carName, carSettings);
+                    carSettings = new CarSettings(carId, carModel, displayedFields);
+                    gameSettings.CarSettings.Add(carId, carSettings);
                 }
             }
             else
             {
                 gameSettings = new GameSettings();
                 GameSettings.Add(gameName, gameSettings);
-                UpdateDisplayedField(gameName, carName, displayedFields);
+                UpdateDisplayedField(gameName, carId, carModel, displayedFields);
             }
         }
         /// <summary>
         /// Get displayed fields settings for the car.
         /// </summary>
         /// <param name="gameName">Game of the game.</param>
-        /// <param name="carName">Game of the car.</param>
+        /// <param name="carId">ID of the car.</param>
         /// <returns></returns>
-        internal List<string> GetDisplayedField(string gameName, string carName)
+        internal List<string> GetDisplayedField(string gameName, string carId)
         {
 
             if (GameSettings.TryGetValue(gameName, out var gameSettings))
             {
-                if (gameSettings.CarSettings.TryGetValue(carName, out var carSettings))
+                if (gameSettings.CarSettings.TryGetValue(carId, out var carSettings))
                 {
                     return carSettings.DisplayedFields;
                 }
@@ -88,7 +86,29 @@ namespace DashMenu.Settings
             {
                 gameSettings = new GameSettings();
                 GameSettings.Add(gameName, gameSettings);
-                return GetDisplayedField(gameName, carName);
+                return GetDisplayedField(gameName, carId);
+            }
+        }
+        /// <summary>
+        /// Remove specified displayed field settings.
+        /// </summary>
+        /// <param name="gameName">Name of the game</param>
+        /// <param name="carId">ID of the car</param>
+        internal void RemoveDisplayedField(string gameName, string carId)
+        {
+            if (GameSettings.TryGetValue(gameName, out var gameSettings))
+            {
+                if (gameSettings.CarSettings.TryGetValue(carId, out var carSettings))
+                {
+                    gameSettings.CarSettings.Remove(carId);
+                }
+            }
+        }
+        internal void RemoveAllDisplayedFields(string gameName)
+        {
+            if (GameSettings.TryGetValue(gameName, out var gameSettings))
+            {
+                GameSettings.Remove(gameName);
             }
         }
         /// <summary>
