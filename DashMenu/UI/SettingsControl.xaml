@@ -42,7 +42,6 @@
                         </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                             <RowDefinition Height="auto"/>
-                            <RowDefinition Height="auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                             <styles:SHSubSectionTitle Content="Field data" 
@@ -61,20 +60,19 @@
                                                     Margin="-4,-4,1,-4"
                                                     Visibility="{Binding Path=Enabled, Converter={SHBoolToVisibilityConverter Hide=true}}"/>
                                             <StackPanel Margin="0,0,0,0">
-                                                <Label Padding="0" Content="{Binding Path=FullName}"/>
+                                                <Label Padding="4,1,1,1" Content="{Binding Path=FullName}"/>
                                             </StackPanel>
                                         </AutoGrid>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </styles:SHListBox>
-                        <Border BorderThickness="1" 
-                                    BorderBrush="#33000000" 
-                                    Background="{DynamicResource GrayBrush10}" 
-                                    Margin="4"
-                                    Grid.Column="1"
-                                    Grid.Row="1"
-                                    Visibility="{Binding ElementName=FieldDataSettings, Path=SelectedValue, Converter={IsNotNullToCollapsedConverter}}"
-                                    >
+                        <Border CornerRadius="6"
+                                BorderBrush="#33000000" 
+                                Background="{DynamicResource GrayBrush10}" 
+                                Margin="4"
+                                Grid.Column="1"
+                                Grid.Row="1"
+                                Visibility="{Binding ElementName=FieldDataSettings, Path=SelectedValue, Converter={IsNotNullToCollapsedConverter}}">
                             <StackPanel VerticalAlignment="Center">
                                     <Label VerticalAlignment="Center" 
                                            HorizontalAlignment="Center"
