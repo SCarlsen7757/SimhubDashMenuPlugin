@@ -83,6 +83,10 @@
     <Reference Include="WoteverCommon">
       <HintPath>Libs\WoteverCommon.dll</HintPath>
     </Reference>
+    <Reference Include="WoteverLocalization, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Libs\WoteverLocalization.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DashMenuPlugin.cs" />
@@ -119,6 +123,7 @@
     <Content Include="Libs\SimHub.Logging.dll" />
     <Content Include="Libs\SimHub.Plugins.dll" />
     <Content Include="Libs\WoteverCommon.dll" />
+    <Content Include="Libs\WoteverLocalization.dll" />
     <Content Include="Resources\sdkmenuicon.png" />
   </ItemGroup>
   <ItemGroup>
@@ -153,6 +158,7 @@ copy /Y "$(SimhubDir)log4net.dll" "$(ProjectDir)Libs\log4net.dll"
 copy /Y "$(SimhubDir)SimHub.Logging.dll" "$(ProjectDir)Libs\SimHub.Logging.dll"
 copy /Y "$(SimhubDir)SimHub.Plugins.dll" "$(ProjectDir)Libs\SimHub.Plugins.dll"
 copy /Y "$(SimhubDir)WoteverCommon.dll" "$(ProjectDir)Libs\WoteverCommon.dll"
+copy /Y "$(SimhubDir)WoteverLocalization.dll" "$(ProjectDir)Libs\WoteverLocalization.dll"
 )</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>

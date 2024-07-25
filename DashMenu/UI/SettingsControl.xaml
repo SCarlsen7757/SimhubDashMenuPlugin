@@ -15,17 +15,8 @@
     <styles:SHTabControl>
         <styles:SHTabItem Header="General settings">
             <styles:SHSection Title="General settings">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="600"/>
-                        <ColumnDefinition Width="auto"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <StackPanel Grid.Column="0" Grid.Row="0"> <!--Default amount of fields-->
+                <StackPanel>
+                    <StackPanel> <!--Default amount of fields-->
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -39,14 +30,15 @@
                             <ui:TitledSlider Title="Default amount of fields"
                                              Maximum="20" 
                                              Minimum="1"
+                                             MaxWidth="600"
                                              Value="{Binding DefaultAmountOfFields}"/>
                         </Grid>
                     </StackPanel>
-                    <StackPanel Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"> <!--Field data settings-->
-                        <Grid >
+                    <StackPanel> <!--Field data settings-->
+                        <Grid>
                             <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="400"/>
+                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                             <RowDefinition Height="auto"/>
@@ -79,6 +71,8 @@
                                     BorderBrush="#33000000" 
                                     Background="{DynamicResource GrayBrush10}" 
                                     Margin="4"
+                                    Grid.Column="1"
+                                    Grid.Row="1"
                                     Visibility="{Binding ElementName=FieldDataSettings, Path=SelectedValue, Converter={IsNotNullToCollapsedConverter}}"
                                     >
                             <StackPanel VerticalAlignment="Center">
@@ -93,7 +87,7 @@
                                                         Grid.Row="1"/>
                         </Grid>
                     </StackPanel>
-                </Grid>
+                </StackPanel>
             </styles:SHSection>
         </styles:SHTabItem>
         <styles:SHTabItem Header="Car settings">
