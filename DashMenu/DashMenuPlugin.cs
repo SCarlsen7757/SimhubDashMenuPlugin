@@ -70,8 +70,18 @@ namespace DashMenu
         {
             SimHub.Logging.Current.Info($"{this.GetType().FullName}. Plugin: {this.PluginName}, Version {Version.PluginVersion}");
 
-            allFieldData.Add(new FieldComponent(EmptyField.Field));
+            //Get field settings else create field settings
             Settings = this.ReadCommonSettings("DashMenuSettings", () => new Settings.Settings());
+
+            //Check if Empty field is in settings else add it
+            var fieldSetting = Settings.Fields.FirstOrDefault(s => s.FullName == EmptyField.FullName);
+            if (fieldSetting == null)
+            {
+                fieldSetting = new Settings.Fields() { Enabled = true, FullName = EmptyField.FullName };
+                Settings.Fields.Add(fieldSetting);
+            }
+            allFieldData.Add(new FieldComponent(EmptyField.Field));
+
             GetCustomFields();
             //TODO : Make UI to be able to disable and enable Data field.
 
@@ -308,7 +318,7 @@ namespace DashMenu
                 if (fieldSetting == null)
                 {
                     fieldSetting = new Settings.Fields() { Enabled = true, FullName = type.FullName };
-                    this.Settings.Fields.Add(fieldSetting);
+                    Settings.Fields.Add(fieldSetting);
                 }
 
                 var fieldDataInstance = (IFieldDataComponent)Activator.CreateInstance(type);
