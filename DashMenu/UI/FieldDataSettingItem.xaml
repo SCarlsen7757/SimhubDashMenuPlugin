@@ -9,7 +9,8 @@
              xmlns:styles="clr-namespace:SimHub.Plugins.Styles;assembly=SimHub.Plugins"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800" 
+             DataContextChanged="UserControl_DataContextChanged">
     <UserControl.DataContext>
         <settings:Fields />
     </UserControl.DataContext>
@@ -28,8 +29,8 @@
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Label FontWeight="Bold" FontSize="16" Margin="0,0,0,0" Padding="0" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Content="{Binding Path=FullName}"/>
-                <styles:SHToggleButton x:Name="EnabledCheckBox" IsChecked="{Binding Path=Enabled}" Grid.Column="0" Grid.Row="1" Margin="20,0"/>
+                <Label FontWeight="Bold" FontSize="16" Margin="0,0,0,0" Padding="0,0,0,0" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Content="{Binding Path=FullName}"/>
+                <styles:SHToggleButton x:Name="EnabledCheckBox" IsChecked="{Binding Path=Enabled}" Grid.Column="0" Grid.Row="1" Margin="5,0,20,0"/>
                 <Label Content="{Binding Path=FullName}" Grid.Column="1" Grid.Row="1"/>
             </Grid>
         </StackPanel>

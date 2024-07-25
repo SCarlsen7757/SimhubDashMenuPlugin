@@ -11,15 +11,14 @@ namespace DashMenu.UI
         {
             InitializeComponent();
         }
-        internal FieldDataSettingItem(DashMenu.Settings.Fields fields)
+
+        private void UserControl_DataContextChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
         {
-            InitializeComponent();
-            DataContext = fields;
+            var field = DataContext as DashMenu.Settings.Fields;
+            if (field == null) return;
             //Can't disable empty field plugin.
-            if (fields.FullName == typeof(EmptyField).FullName)
-            {
-                EnabledCheckBox.IsEnabled = false;
-            }
+
+            EnabledCheckBox.IsEnabled = !(field.FullName == typeof(EmptyField).FullName);
         }
     }
 }
