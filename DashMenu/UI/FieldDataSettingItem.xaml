@@ -14,25 +14,39 @@
     <UserControl.DataContext>
         <settings:Fields />
     </UserControl.DataContext>
-    <Border BorderThickness="0" CornerRadius="6" BorderBrush="#33000000"
-            Background="{DynamicResource GrayBrush10}" Margin="4">
-        <StackPanel Margin="10">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <Label FontWeight="Bold" FontSize="16" Margin="0,0,0,0" Padding="0,0,0,0" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Content="{Binding Path=FullName}"/>
-                <styles:SHToggleButton x:Name="EnabledCheckBox" IsChecked="{Binding Path=Enabled}" Grid.Column="0" Grid.Row="1" Margin="5,0,20,0"/>
-                <Label Content="{Binding Path=FullName}" Grid.Column="1" Grid.Row="1"/>
-            </Grid>
-        </StackPanel>
+    <Border BorderThickness="0"
+            CornerRadius="6"
+            BorderBrush="#33000000"
+            Background="{DynamicResource GrayBrush10}"
+            Margin="4">
+        <styles:SHSection Title="{Binding Path=FullName}">
+            <AutoGrid Columns="auto,*">
+                <StackPanel Margin="0,0,20,0"><!--General settings-->
+                    <styles:SHSubSectionTitle Content="General settings"/>
+                    <AutoGrid Columns="auto,*" Margin="12,0,0,0">
+                        <styles:SHToggleCheckbox x:Name="EnabledCheckBox" 
+                                               IsChecked="{Binding Path=Enabled}"/>
+                        <Label Content="Enable field extension, to be selectable."/>
+                    </AutoGrid>
+                </StackPanel>
+                <StackPanel>
+                    <!--Override settings-->
+                    <styles:SHSubSectionTitle Content="Override settings"/>
+                    <AutoGrid Columns="auto,*" Margin="12,0">
+                        <Label Content="Name" Grid.ColumnSpan="2"/>
+                        <styles:SHToggleCheckbox IsChecked="{Binding Path=NameOverride.Override}"/>
+                        <TextBox Text="{Binding Path=NameOverride.OverrideValue, UpdateSourceTrigger=PropertyChanged}"/>
+                        <styles:SHSectionSeparator Grid.ColumnSpan="2" Margin="-24,0"/>
+                        <Label Content="Decimal" Grid.ColumnSpan="2"/>
+                        <styles:SHToggleCheckbox IsChecked="{Binding Path=DecimalOverride.Override}" IsEnabled="{Binding Path=IsDecimal}"/>
+                        <ui:TitledSlider Title="Number of decimals shown" 
+                                         Value="{Binding Path=DecimalOverride.OverrideValue}" 
+                                         IsEnabled="{Binding Path=IsDecimal}"
+                                         Minimum="0" 
+                                         Maximum="3"/>
+                    </AutoGrid>
+                </StackPanel>
+            </AutoGrid>
+        </styles:SHSection>
     </Border>
 </UserControl>

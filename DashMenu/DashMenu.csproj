@@ -107,7 +107,7 @@
     <Compile Include="Settings\DisplayedFields\CarSettings.cs" />
     <Compile Include="Settings\DisplayedFields\GameSettings.cs" />
     <Compile Include="Settings\Fields.cs" />
-    <Compile Include="Settings\PropertyOverrideBase.cs" />
+    <Compile Include="Settings\PropertyOverride.cs" />
     <Compile Include="Settings\Settings.cs" />
     <Compile Include="UI\FieldDataSettingItem.xaml.cs">
       <DependentUpon>FieldDataSettingItem.xaml</DependentUpon>

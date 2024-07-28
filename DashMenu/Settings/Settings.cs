@@ -1,4 +1,5 @@
 ﻿using DashMenu.Settings.DisplayedFields;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -9,6 +10,13 @@ namespace DashMenu.Settings
 {
     internal class Settings : INotifyPropertyChanged
     {
+        public Settings()
+        {
+            Fields.CollectionChanged += Fields_CollectionChanged;
+        }
+
+
+
         private int defaultMaxFields = 5;
         /// <summary>
         /// Max amount of fields that can be displayed.
@@ -118,5 +126,30 @@ namespace DashMenu.Settings
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        private void PropertyOverride_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            OnPropertyChanged(sender.GetType().Name); // Raise PropertyChanged for the PropertyOverride property
+        }
+        private void Fields_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (!(sender is Fields fields)) return;
+            switch (e.Action)
+            {
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
+                    fields.PropertyChanged += PropertyOverride_PropertyChanged;
+                    break;
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
+                    fields.PropertyChanged -= PropertyOverride_PropertyChanged;
+                    break;
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Replace:
+                    throw new NotImplementedException();
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Move:
+                    throw new NotImplementedException();
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Reset:
+                    throw new NotImplementedException();
+                default:
+                    throw new NotImplementedException();
+            }
+        }
     }
 }

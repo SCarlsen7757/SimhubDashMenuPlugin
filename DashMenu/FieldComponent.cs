@@ -1,6 +1,4 @@
-﻿using DashMenu.Data;
-using DashMenu.Settings;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace DashMenu
@@ -12,9 +10,6 @@ namespace DashMenu
         {
             FieldData = fieldData;
             FullName = FieldData.GetType().FullName;
-            NameOverride.DefaultValue = FieldData.Data.Name;
-            ColorSchemeOverride.DefaultValue = FieldData.Data.Color;
-            DecimalOverride.DefaultValue = FieldData.Data.Decimal;
         }
         private string fullName = string.Empty;
         public string FullName
@@ -38,9 +33,6 @@ namespace DashMenu
             }
         }
         public Data.IFieldDataComponent FieldData { get; set; }
-        public PropertyOverride<string> NameOverride { get; set; } = new PropertyOverride<string>();
-        public PropertyOverride<ColorScheme> ColorSchemeOverride { get; set; } = new PropertyOverride<ColorScheme>();
-        public PropertyOverride<int> DecimalOverride { get; set; } = new PropertyOverride<int>();
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

@@ -7,17 +7,18 @@ namespace DashMenu.UI
     /// </summary>
     public partial class FieldDataSettingItem : UserControl
     {
+        private readonly bool contentInitialized = false;
         public FieldDataSettingItem()
         {
             InitializeComponent();
+            contentInitialized = true;
         }
 
         private void UserControl_DataContextChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
         {
-            var field = DataContext as DashMenu.Settings.Fields;
-            if (field == null) return;
+            if (!contentInitialized) return;
+            if (!(DataContext is Settings.Fields field)) return;
             //Can't disable empty field plugin.
-
             EnabledCheckBox.IsEnabled = !(field.FullName == typeof(EmptyField).FullName);
         }
     }

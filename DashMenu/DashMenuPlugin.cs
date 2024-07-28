@@ -74,13 +74,7 @@ namespace DashMenu
             Settings = this.ReadCommonSettings("DashMenuSettings", () => new Settings.Settings());
 
             //Check if Empty field is in settings else add it
-            var fieldSetting = Settings.Fields.FirstOrDefault(s => s.FullName == EmptyField.FullName);
-            if (fieldSetting == null)
-            {
-                fieldSetting = new Settings.Fields() { Enabled = true, FullName = EmptyField.FullName };
-                Settings.Fields.Add(fieldSetting);
-            }
-            allFieldData.Add(new FieldComponent(EmptyField.Field));
+            SaveFieldSettingsAndAddFieldComponent(typeof(EmptyField));
 
             GetCustomFields();
             //TODO : Make UI to be able to disable and enable Data field.
@@ -313,32 +307,85 @@ namespace DashMenu
         {
             foreach (Type type in GetCustomFieldsType("DashMenuCustomFields"))
             {
-                //Get field settings else create field settings
-                var fieldSetting = Settings.Fields.FirstOrDefault(s => s.FullName == type.FullName);
-                if (fieldSetting == null)
-                {
-                    fieldSetting = new Settings.Fields() { Enabled = true, FullName = type.FullName };
-                    Settings.Fields.Add(fieldSetting);
-                }
-
-                var fieldDataInstance = (IFieldDataComponent)Activator.CreateInstance(type);
-                FieldComponent fieldComponent = new FieldComponent(fieldDataInstance) { Enabled = fieldSetting.Enabled };
-                allFieldData.Add(fieldComponent);
+                SaveFieldSettingsAndAddFieldComponent(type);
             }
-
-            foreach (var item in Settings.Fields)
-            {
-                item.PropertyChanged += FieldSetting_PropertyChanged;
-            }
-
             UpdateAvailableFieldData();
         }
 
+        private void SaveFieldSettingsAndAddFieldComponent(Type type)
+        {
+            var fieldDataInstance = (IFieldDataComponent)Activator.CreateInstance(type);
+
+            //Get field settings else create field settings
+            var fieldSetting = Settings.Fields.FirstOrDefault(s => s.FullName == type.FullName);
+            if (fieldSetting == null)
+            {
+                fieldSetting = new Settings.Fields
+                {
+                    Enabled = true,
+                    FullName = type.FullName,
+                    NameOverride = new Settings.PropertyOverride<string>(fieldDataInstance.Data.Name),
+                    DecimalOverride = new Settings.PropertyOverride<int>(fieldDataInstance.Data.Decimal),
+                    IsDecimal = fieldDataInstance.Data.IsDecimalNumber,
+                    DayNightColorScheme = new Settings.DayNightColorScheme(fieldDataInstance.Data.Color)
+                };
+                Settings.Fields.Add(fieldSetting);
+            }
+            fieldSetting.PropertyChanged += FieldSetting_PropertyChanged;
+            fieldSetting.NameOverridePropertyChanged += NameOverride_PropertyChanged;
+            fieldSetting.DecimalOverridePropertyChanged += DecimalOverride_PropertyChanged;
+            FieldComponent fieldComponent = new FieldComponent(fieldDataInstance)
+            {
+                Enabled = fieldSetting.Enabled
+            };
+            allFieldData.Add(fieldComponent);
+            UpdateNameOverride(fieldSetting);
+            UpdateDecimalOverride(fieldSetting);
+        }
+        private void NameOverride_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (!(sender is Settings.Fields fieldSettings)) return;
+            UpdateNameOverride(fieldSettings);
+        }
+        private void UpdateNameOverride(Settings.Fields fieldSettings)
+        {
+            var fieldData = allFieldData.FirstOrDefault(x => x.FullName == fieldSettings.FullName);
+            if (fieldData == null) return;
+
+            if (fieldSettings.NameOverride.Override)
+            {
+                fieldData.FieldData.Data.Name = fieldSettings.NameOverride.OverrideValue;
+            }
+            else
+            {
+                fieldData.FieldData.Data.Name = fieldSettings.NameOverride.DefaultValue;
+            }
+        }
+        private void DecimalOverride_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (!(sender is Settings.Fields fieldSettings)) return;
+            UpdateDecimalOverride(fieldSettings);
+        }
+        private void UpdateDecimalOverride(Settings.Fields fieldSettings)
+        {
+            var fieldData = allFieldData.FirstOrDefault(x => x.FullName == fieldSettings.FullName);
+            if (fieldData == null) return;
+
+            if (fieldSettings.DecimalOverride.Override)
+            {
+                fieldData.FieldData.Data.Decimal = fieldSettings.DecimalOverride.OverrideValue;
+            }
+            else
+            {
+                fieldData.FieldData.Data.Decimal = fieldSettings.DecimalOverride.DefaultValue;
+            }
+        }
         private void FieldSetting_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (sender is Settings.Fields settingsfield)
-                if (e.PropertyName == nameof(settingsfield.Enabled))
-                {
+            if (!(sender is Settings.Fields settingsfield)) return;
+            switch (e.PropertyName)
+            {
+                case nameof(settingsfield.Enabled):
                     var fieldComponent = allFieldData.FirstOrDefault(f => f.FullName == settingsfield.FullName);
                     if (fieldComponent == null)
                     {
@@ -347,7 +394,10 @@ namespace DashMenu
                     }
                     fieldComponent.Enabled = settingsfield.Enabled;
                     UpdateAvailableFieldData(fieldComponent);
-                }
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void UpdateAvailableFieldData()
