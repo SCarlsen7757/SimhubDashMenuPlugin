@@ -4,8 +4,8 @@ namespace DashMenu.Settings
 {
     internal class DayNightColorScheme
     {
-        public PropertyOverride<ColorScheme> DayModeColor { get; set; } = default;
-        public PropertyOverride<ColorScheme> NightModeColor { get; set; } = default;
+        public PropertyOverride<ColorScheme> DayModeColor { get; set; } = new PropertyOverride<ColorScheme>();
+        public PropertyOverride<ColorScheme> NightModeColor { get; set; } = new PropertyOverride<ColorScheme>();
         public DayNightColorScheme() { }
         public DayNightColorScheme(ColorScheme defaultColor)
         {
