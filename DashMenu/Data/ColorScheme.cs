@@ -7,14 +7,15 @@
             Primary = primary;
             Accent = accent;
         }
-
+        private string primary = "#FFFFFF";
         /// <summary>
         /// Primary color.
         /// </summary>
-        public string Primary { get; set; } = "#ffffff";
+        public string Primary { get => primary; set => primary = value.ToUpper(); }
+        private string accent = "#000000";
         /// <summary>
         /// Accent color.
         /// </summary>
-        public string Accent { get; set; } = "#000000";
+        public string Accent { get => accent; set => accent = value.ToUpper(); }
     }
 }

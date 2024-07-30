@@ -103,12 +103,16 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Settings\ColorSchemePropertyOverride.cs" />
     <Compile Include="Settings\DayNightColorScheme.cs" />
     <Compile Include="Settings\DisplayedFields\CarSettings.cs" />
     <Compile Include="Settings\DisplayedFields\GameSettings.cs" />
     <Compile Include="Settings\Fields.cs" />
     <Compile Include="Settings\PropertyOverride.cs" />
     <Compile Include="Settings\Settings.cs" />
+    <Compile Include="UI\ColorSchemeItem.xaml.cs">
+      <DependentUpon>ColorSchemeItem.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\FieldDataSettingItem.xaml.cs">
       <DependentUpon>FieldDataSettingItem.xaml</DependentUpon>
     </Compile>
@@ -137,6 +141,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <ContainsDesignTimeResources>true</ContainsDesignTimeResources>
+    </Page>
+    <Page Include="UI\ColorSchemeItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\FieldDataSettingItem.xaml">
       <SubType>Designer</SubType>

@@ -78,7 +78,6 @@ namespace DashMenu
 
             GetCustomFields();
             //TODO : Make UI to be able to disable and enable Data field.
-
             pluginManager.AddProperty("ConfigMode", this.GetType(), MenuConfiguration.ConfigurationMode, "When in configuration mode, it's possible to change the displayed data.");
             pluginManager.AddProperty("ActiveConfigField", this.GetType(), MenuConfiguration.ActiveField, "Active field in the dash menu config screen.");
             pluginManager.AddProperty("AmountOfFields", GetType(), fieldData.Count, "Amount of fields for the current car.");

@@ -1,0 +1,30 @@
+﻿<UserControl x:Class="DashMenu.UI.ColorSchemeItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DashMenu.UI"
+             xmlns:settings="clr-namespace:DashMenu.Settings"
+             xmlns:ui="clr-namespace:SimHub.Plugins.UI;assembly=SimHub.Plugins"
+             xmlns:styles="clr-namespace:SimHub.Plugins.Styles;assembly=SimHub.Plugins"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.DataContext>
+        <settings:ColorSchemePropertyOverride/>
+    </UserControl.DataContext>
+    <AutoGrid Columns="auto,auto">
+        <Label Content="Primary"/>
+        <TextBox Text="{Binding Path=OverrideValue.Primary}"
+                 Margin="2"
+                 IsEnabled="{Binding Path=Override}"
+                 Width="80"
+                 FontFamily="Consolas"/>
+        <Label Content="Accent"/>
+        <TextBox Text="{Binding Path=OverrideValue.Accent}"
+                 Margin="2"
+                 IsEnabled="{Binding Path=Override}"
+                 Width="80"
+                 FontFamily="Consolas"/>
+    </AutoGrid>
+</UserControl>

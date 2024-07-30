@@ -5,7 +5,7 @@ namespace DashMenu.Settings
 {
     internal class Fields : INotifyPropertyChanged
     {
-        internal Fields()
+        public Fields()
         {
             NameOverride.PropertyChanged += NameOverride_PropertyChanged;
             DecimalOverride.PropertyChanged += DecimalOverride_PropertyChanged;
