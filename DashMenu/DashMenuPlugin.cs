@@ -18,7 +18,7 @@ namespace DashMenu
     [PluginDescription("Plugin to manage dash menus.")]
     [PluginAuthor("Mark Carlsen")]
     [PluginName("Dash menu")]
-    public class DashMenuPlugin : IPlugin, IDataPlugin, IWPFSettingsV2
+    public class DashMenuPlugin : IPlugin, IDataPlugin, IWPFSettingsV2, ISettingPlugin
     {
         public DashMenuPlugin() { }
 
@@ -71,9 +71,7 @@ namespace DashMenu
         public void Init(PluginManager pluginManager)
         {
             SimHub.Logging.Current.Info($"{this.GetType().FullName}. Plugin: {this.PluginName}, Version {Version.PluginVersion}");
-
-            //Get field settings else create field settings
-            Settings = this.ReadCommonSettings("DashMenuSettings", () => new Settings.Settings());
+            LoadSettings();
 
             //Check if Empty field is in settings else add it
             SaveFieldSettingsAndAddFieldComponent(typeof(EmptyField));
@@ -210,7 +208,14 @@ namespace DashMenu
         public void End(PluginManager pluginManager)
         {
             PluginManagerEvents.Instance.ActiveCarChanged -= CarChanged;
-
+        }
+        private void LoadSettings()
+        {
+            //Get field settings else create field settings
+            Settings = this.ReadCommonSettings("DashMenuSettings", () => new Settings.Settings());
+        }
+        public void SaveSettings()
+        {
             SaveDisplayedField(PluginManager.LastCarId, oldCarModel);
             this.SaveCommonSettings("DashMenuSettings", Settings);
         }
