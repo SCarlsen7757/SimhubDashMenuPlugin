@@ -15,13 +15,13 @@
     </UserControl.DataContext>
     <AutoGrid Columns="auto,auto">
         <Label Content="Primary"/>
-        <TextBox Text="{Binding Path=OverrideValue.Primary}"
+        <TextBox Text="{Binding Path=OverrideValue.Primary, UpdateSourceTrigger=PropertyChanged}"
                  Margin="2"
                  IsEnabled="{Binding Path=Override}"
                  Width="80"
                  FontFamily="Consolas"/>
         <Label Content="Accent"/>
-        <TextBox Text="{Binding Path=OverrideValue.Accent}"
+        <TextBox Text="{Binding Path=OverrideValue.Accent, UpdateSourceTrigger=PropertyChanged}"
                  Margin="2"
                  IsEnabled="{Binding Path=Override}"
                  Width="80"

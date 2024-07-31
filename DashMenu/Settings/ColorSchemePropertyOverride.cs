@@ -4,6 +4,10 @@ namespace DashMenu.Settings
 {
     internal class ColorSchemePropertyOverride : PropertyOverride<ColorScheme>
     {
-        public ColorSchemePropertyOverride() { }
+        public ColorSchemePropertyOverride()
+        {
+            DefaultValue = new ColorScheme();
+            OverrideValue = new ColorScheme();
+        }
     }
 }

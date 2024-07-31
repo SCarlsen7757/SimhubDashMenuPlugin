@@ -7,8 +7,13 @@ namespace DashMenu.Settings
     {
         public Fields()
         {
+            DayNightColorScheme = new DayNightColorScheme();
             NameOverride.PropertyChanged += NameOverride_PropertyChanged;
             DecimalOverride.PropertyChanged += DecimalOverride_PropertyChanged;
+            DayNightColorScheme.DayModeColor.PropertyChanged += ColorSchemeOverride_PropertyChanged;
+            DayNightColorScheme.DayModeColor.OverrideValue.PropertyChanged += ColorSchemeOverride_PropertyChanged;
+            DayNightColorScheme.NightModeColor.PropertyChanged += ColorSchemeOverride_PropertyChanged;
+            DayNightColorScheme.NightModeColor.OverrideValue.PropertyChanged += ColorSchemeOverride_PropertyChanged;
         }
         private string fullName = string.Empty;
         /// <summary>
@@ -59,9 +64,12 @@ namespace DashMenu.Settings
         public event PropertyChangedEventHandler PropertyChanged;
         public event PropertyChangedEventHandler NameOverridePropertyChanged;
         public event PropertyChangedEventHandler DecimalOverridePropertyChanged;
+        public event PropertyChangedEventHandler ColorSchemeOverridePropertyChanged;
+
         internal void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        private void OnNameOverridePropertyChanged([CallerMemberName] string propertyName = "") => NameOverridePropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        private void OnDecimalOveridePropertyChanged([CallerMemberName] string propertyName = "") => DecimalOverridePropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        private void OnNameOverridePropertyChanged(string propertyName) => NameOverridePropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        private void OnDecimalOveridePropertyChanged(string propertyName) => DecimalOverridePropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        private void OnColorSchemeOverridePropertyChanged(string propertyName) => ColorSchemeOverridePropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         private void NameOverride_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             OnNameOverridePropertyChanged(nameof(NameOverride));
@@ -69,6 +77,10 @@ namespace DashMenu.Settings
         private void DecimalOverride_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             OnDecimalOveridePropertyChanged(nameof(DecimalOverride));
+        }
+        private void ColorSchemeOverride_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            OnColorSchemeOverridePropertyChanged(nameof(DayNightColorScheme));
         }
     }
 }

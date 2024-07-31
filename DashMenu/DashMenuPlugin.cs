@@ -1,6 +1,8 @@
 ﻿using DashMenu.Data;
+using DashMenu.Settings;
 using GameReaderCommon;
 using SimHub.Plugins;
+using SimHub.Plugins.BrightnessControl;
 using SimHub.Plugins.OutputPlugins.Dash.TemplatingCommon;
 using System;
 using System.Collections.Generic;
@@ -176,6 +178,7 @@ namespace DashMenu
             }
             pluginManager.AddProperty<bool>("PluginRunning", this.GetType(), true);
             PluginManagerEvents.Instance.ActiveCarChanged += CarChanged;
+            BrightnessConfiguration.Configuration.PropertyChanged += DayNightMode_PropertyChanged;
             SimHub.Logging.Current.Info("Plugin started");
         }
         /// <summary>
@@ -333,14 +336,17 @@ namespace DashMenu
             fieldSetting.PropertyChanged += FieldSetting_PropertyChanged;
             fieldSetting.NameOverridePropertyChanged += NameOverride_PropertyChanged;
             fieldSetting.DecimalOverridePropertyChanged += DecimalOverride_PropertyChanged;
+            fieldSetting.ColorSchemeOverridePropertyChanged += FieldSetting_ColorSchemeOverridePropertyChanged;
             FieldComponent fieldComponent = new FieldComponent(fieldDataInstance)
             {
                 Enabled = fieldSetting.Enabled
             };
             allFieldData.Add(fieldComponent);
             UpdateNameOverride(fieldSetting);
+            UpdateColorOveride(fieldSetting);
             UpdateDecimalOverride(fieldSetting);
         }
+
         private void NameOverride_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (!(sender is Settings.Fields fieldSettings)) return;
@@ -360,6 +366,31 @@ namespace DashMenu
                 fieldData.FieldData.Data.Name = fieldSettings.NameOverride.DefaultValue;
             }
         }
+        private void FieldSetting_ColorSchemeOverridePropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (!(sender is Settings.Fields fieldSettings)) return;
+            UpdateColorOveride(fieldSettings);
+        }
+
+        private void UpdateColorOveride(Fields fieldSettings)
+        {
+            var fieldData = allFieldData.FirstOrDefault(x => x.FullName == fieldSettings.FullName);
+            if (fieldData == null) return;
+
+            if (!fieldSettings.DayNightColorScheme.DayModeColor.Override)
+            {
+                fieldData.FieldData.Data.Color = fieldSettings.DayNightColorScheme.DayModeColor.DefaultValue;
+                return;
+            }
+
+            if (BrightnessConfiguration.Configuration.IsNightMode && fieldSettings.DayNightColorScheme.NightModeColor.Override)
+            {
+                fieldData.FieldData.Data.Color = fieldSettings.DayNightColorScheme.NightModeColor.OverrideValue;
+                return;
+            }
+            fieldData.FieldData.Data.Color = fieldSettings.DayNightColorScheme.DayModeColor.OverrideValue;
+        }
+
         private void DecimalOverride_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (!(sender is Settings.Fields fieldSettings)) return;
@@ -396,6 +427,15 @@ namespace DashMenu
                     break;
                 default:
                     break;
+            }
+        }
+        private void DayNightMode_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            foreach (var field in availableFieldData)
+            {
+                var fieldSettings = Settings.Fields.FirstOrDefault(x => x.FullName == field.GetType().FullName);
+                if (fieldSettings == null) continue;
+                UpdateColorOveride(fieldSettings);
             }
         }
 
