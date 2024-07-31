@@ -24,7 +24,6 @@ namespace DashMenu
 
         private Settings.Settings Settings { get; set; }
         private MenuConfiguration MenuConfiguration { get; set; } = new MenuConfiguration();
-        //private static readonly EmptyField emptyField = new EmptyField();
         private List<IFieldDataComponent> fieldData = new List<IFieldDataComponent>();
         /// <summary>
         /// List of all field data, used in the settings UI.
@@ -338,6 +337,9 @@ namespace DashMenu
                 };
                 Settings.Fields.Add(fieldSetting);
             }
+            fieldSetting.NameSpace = type.Namespace;
+            fieldSetting.Name = type.Name;
+
             fieldSetting.PropertyChanged += FieldSetting_PropertyChanged;
             fieldSetting.NameOverridePropertyChanged += NameOverride_PropertyChanged;
             fieldSetting.DecimalOverridePropertyChanged += DecimalOverride_PropertyChanged;

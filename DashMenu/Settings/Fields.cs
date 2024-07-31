@@ -15,6 +15,8 @@ namespace DashMenu.Settings
             DayNightColorScheme.NightModeColor.PropertyChanged += ColorSchemeOverride_PropertyChanged;
             DayNightColorScheme.NightModeColor.OverrideValue.PropertyChanged += ColorSchemeOverride_PropertyChanged;
         }
+        internal string NameSpace { get; set; }
+        internal string Name { get; set; }
         private string fullName = string.Empty;
         /// <summary>
         /// Full name of the field class with namespace.

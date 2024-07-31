@@ -14,9 +14,6 @@ namespace DashMenu.Settings
         {
             Fields.CollectionChanged += Fields_CollectionChanged;
         }
-
-
-
         private int defaultMaxFields = 5;
         /// <summary>
         /// Max amount of fields that can be displayed.
@@ -31,9 +28,9 @@ namespace DashMenu.Settings
             }
         }
         /// <summary>
-        /// Fields displayed.
+        /// Fields displayed. Per game and car.
         /// </summary>
-        public Dictionary<string, DisplayedFields.GameSettings> GameSettings { get; set; } = new Dictionary<string, DisplayedFields.GameSettings>();
+        public Dictionary<string, GameSettings> GameSettings { get; set; } = new Dictionary<string, GameSettings>();
         private List<string> DefaultFieldData()
         {
             return Enumerable.Repeat(EmptyField.FullName, DefaultAmountOfFields).ToList();
