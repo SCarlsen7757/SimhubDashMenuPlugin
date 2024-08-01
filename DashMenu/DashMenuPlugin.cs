@@ -326,19 +326,20 @@ namespace DashMenu
             var fieldSetting = Settings.Fields.FirstOrDefault(s => s.FullName == type.FullName);
             if (fieldSetting == null)
             {
-                fieldSetting = new Settings.Fields
+                fieldSetting = new Fields
                 {
                     Enabled = true,
                     FullName = type.FullName,
-                    NameOverride = new Settings.PropertyOverride<string>(fieldDataInstance.Data.Name),
-                    DecimalOverride = new Settings.PropertyOverride<int>(fieldDataInstance.Data.Decimal),
+                    NameOverride = new PropertyOverride<string>(fieldDataInstance.Data.Name),
+                    DecimalOverride = new PropertyOverride<int>(fieldDataInstance.Data.Decimal),
                     IsDecimal = fieldDataInstance.Data.IsDecimalNumber,
-                    DayNightColorScheme = new Settings.DayNightColorScheme(fieldDataInstance.Data.Color)
+                    DayNightColorScheme = new DayNightColorScheme(fieldDataInstance.Data.Color)
                 };
                 Settings.Fields.Add(fieldSetting);
             }
-            fieldSetting.NameSpace = type.Namespace;
+            fieldSetting.Namespace = type.Namespace;
             fieldSetting.Name = type.Name;
+            fieldSetting.FullName = type.FullName;
 
             fieldSetting.PropertyChanged += FieldSetting_PropertyChanged;
             fieldSetting.NameOverridePropertyChanged += NameOverride_PropertyChanged;

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Newtonsoft.Json;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace DashMenu.Settings
@@ -15,22 +16,11 @@ namespace DashMenu.Settings
             DayNightColorScheme.NightModeColor.PropertyChanged += ColorSchemeOverride_PropertyChanged;
             DayNightColorScheme.NightModeColor.OverrideValue.PropertyChanged += ColorSchemeOverride_PropertyChanged;
         }
-        internal string NameSpace { get; set; }
-        internal string Name { get; set; }
-        private string fullName = string.Empty;
-        /// <summary>
-        /// Full name of the field class with namespace.
-        /// </summary>
-        public string FullName
-        {
-            get => fullName;
-            set
-            {
-                if (value == fullName) return;
-                fullName = value;
-                OnPropertyChanged();
-            }
-        }
+        [JsonIgnore]
+        public string Namespace { get; internal set; }
+        [JsonIgnore]
+        public string Name { get; internal set; }
+        public string FullName { get; internal set; }
         private bool enabled = true;
         /// <summary>
         /// Is the field enabled.
@@ -49,7 +39,7 @@ namespace DashMenu.Settings
         /// <summary>
         /// Is field value a decimal number
         /// </summary>
-        public bool IsDecimal
+        internal bool IsDecimal
         {
             get => isDecimal;
             set

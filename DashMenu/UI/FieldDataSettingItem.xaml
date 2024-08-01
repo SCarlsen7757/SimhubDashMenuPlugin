@@ -1,15 +1,16 @@
 ﻿<UserControl x:Class="DashMenu.UI.FieldDataSettingItem"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:DashMenu.UI"
              xmlns:settings="clr-namespace:DashMenu.Settings"
              xmlns:ui="clr-namespace:SimHub.Plugins.UI;assembly=SimHub.Plugins"
              xmlns:styles="clr-namespace:SimHub.Plugins.Styles;assembly=SimHub.Plugins"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800" 
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
              DataContextChanged="UserControl_DataContextChanged">
     <UserControl.DataContext>
         <settings:Fields />
@@ -21,53 +22,55 @@
             Margin="4">
         <styles:SHSection Title="{Binding Path=FullName}">
             <AutoGrid Columns="auto,*">
-                <StackPanel Margin="0,0,20,0"><!--General settings-->
-                    <styles:SHSubSectionTitle Content="General settings"/>
-                    <AutoGrid Columns="auto,*" 
+                <StackPanel Margin="0,0,20,0">
+                    <!--General settings-->
+                    <styles:SHSubSectionTitle Content="General settings" />
+                    <AutoGrid Columns="auto,*"
                               Margin="12,0,0,0">
-                        <styles:SHToggleCheckbox x:Name="EnabledCheckBox"  
-                                                 IsChecked="{Binding Path=Enabled}"/>
-                        <Label Content="Enable field extension, to be selectable."/>
+                        <styles:SHToggleCheckbox x:Name="EnabledCheckBox"
+                                                 IsChecked="{Binding Path=Enabled}" />
+                        <Label Content="Enable field extension, to be selectable." />
                     </AutoGrid>
                 </StackPanel>
                 <StackPanel Visibility="{Binding Path=Enabled, Converter={SHBoolToVisibilityConverter Hide=False}}">
                     <!--Override settings-->
-                    <styles:SHSubSectionTitle Content="Override settings"/>
-                    <AutoGrid Columns="auto,*" 
+                    <styles:SHSubSectionTitle Content="Override settings" />
+                    <AutoGrid Columns="auto,*"
                               Margin="12,0">
                         <!--Name override-->
-                        <Label Content="Override displayed field name" 
-                               Grid.ColumnSpan="2"/>
-                        <styles:SHToggleCheckbox IsChecked="{Binding Path=NameOverride.Override}"/>
+                        <Label Content="Override displayed field name"
+                               Grid.ColumnSpan="2" />
+                        <styles:SHToggleCheckbox IsChecked="{Binding Path=NameOverride.Override}" />
                         <TextBox Text="{Binding Path=NameOverride.OverrideValue, UpdateSourceTrigger=PropertyChanged}"
-                                 IsEnabled="{Binding Path=NameOverride.Override}"/>
+                                 IsEnabled="{Binding Path=NameOverride.Override}" />
                         <!--Color override-->
-                        <styles:SHSectionSeparator Grid.ColumnSpan="2" Margin="-24,0"/>
+                        <styles:SHSectionSeparator Grid.ColumnSpan="2"
+                                                   Margin="-24,0" />
                         <Label Content="Override default/day mode color"
-                               Grid.ColumnSpan="2"/>
-                        <styles:SHToggleCheckbox IsChecked="{Binding Path=DayNightColorScheme.DayModeColor.Override}"/>
-                        <local:ColorSchemeItem DataContext="{Binding Path=DayNightColorScheme.DayModeColor}"/>
+                               Grid.ColumnSpan="2" />
+                        <styles:SHToggleCheckbox IsChecked="{Binding Path=DayNightColorScheme.DayModeColor.Override}" />
+                        <local:ColorSchemeItem DataContext="{Binding Path=DayNightColorScheme.DayModeColor}" />
                         <Label Content="Override night mode color"
-                               Grid.ColumnSpan="2"/>
+                               Grid.ColumnSpan="2" />
                         <styles:SHToggleCheckbox IsChecked="{Binding Path=DayNightColorScheme.NightModeColor.Override}"
-                                                 IsEnabled="{Binding Path=DayNightColorScheme.DayModeColor.Override}"/>
-                        <local:ColorSchemeItem DataContext="{Binding Path=DayNightColorScheme.NightModeColor}"/>
+                                                 IsEnabled="{Binding Path=DayNightColorScheme.DayModeColor.Override}" />
+                        <local:ColorSchemeItem DataContext="{Binding Path=DayNightColorScheme.NightModeColor}" />
                         <!--Decimal override-->
-                        <styles:SHSectionSeparator Grid.ColumnSpan="2" 
+                        <styles:SHSectionSeparator Grid.ColumnSpan="2"
                                                    Margin="-24,0"
-                                                   Visibility="{Binding Path=IsDecimal, Converter={SHBoolToVisibilityConverter Hide=False}}"/>
-                        <Label Content="Override number of decimal in the field value" 
+                                                   Visibility="{Binding Path=IsDecimal, Converter={SHBoolToVisibilityConverter Hide=False}}" />
+                        <Label Content="Override number of decimal in the field value"
                                Grid.ColumnSpan="2"
-                               Visibility="{Binding Path=IsDecimal, Converter={SHBoolToVisibilityConverter Hide=False}}"/>
-                        <styles:SHToggleCheckbox IsChecked="{Binding Path=DecimalOverride.Override}" 
-                                                 IsEnabled="{Binding Path=IsDecimal}" 
-                                                 Visibility="{Binding Path=IsDecimal, Converter={SHBoolToVisibilityConverter Hide=False}}"/>
-                        <ui:TitledSlider Title="Number of decimals shown" 
-                                         Value="{Binding Path=DecimalOverride.OverrideValue}" 
+                               Visibility="{Binding Path=IsDecimal, Converter={SHBoolToVisibilityConverter Hide=False}}" />
+                        <styles:SHToggleCheckbox IsChecked="{Binding Path=DecimalOverride.Override}"
+                                                 IsEnabled="{Binding Path=IsDecimal}"
+                                                 Visibility="{Binding Path=IsDecimal, Converter={SHBoolToVisibilityConverter Hide=False}}" />
+                        <ui:TitledSlider Title="Number of decimals shown"
+                                         Value="{Binding Path=DecimalOverride.OverrideValue}"
                                          IsEnabled="{Binding Path=IsDecimal}"
-                                         Minimum="0" 
+                                         Minimum="0"
                                          Maximum="3"
-                                         Visibility="{Binding Path=IsDecimal, Converter={SHBoolToVisibilityConverter Hide=False}}"/>
+                                         Visibility="{Binding Path=IsDecimal, Converter={SHBoolToVisibilityConverter Hide=False}}" />
                     </AutoGrid>
                 </StackPanel>
             </AutoGrid>

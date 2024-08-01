@@ -4,6 +4,7 @@ namespace DashMenu.Settings.DisplayedFields
 {
     internal class CarSettings
     {
+        //TODO: Add INotifyPropertyChanged
         public string CarId;
         public string CarModel;
         public List<string> DisplayedFields { get; set; }
