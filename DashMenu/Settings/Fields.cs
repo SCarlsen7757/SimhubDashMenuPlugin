@@ -20,7 +20,7 @@ namespace DashMenu.Settings
         public string Namespace { get; internal set; }
         [JsonIgnore]
         public string Name { get; internal set; }
-        public string FullName { get; internal set; }
+        public string FullName { get; set; }
         private bool enabled = true;
         /// <summary>
         /// Is the field enabled.
