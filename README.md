@@ -1,4 +1,4 @@
-﻿# Dash menu
+# Dash menu
 
 This plugin allows you to create and display customizable data fields on the dashboard. These fields are easy to change, even during a race, eliminating the need for multiple dashboards for different car types.
 
@@ -110,6 +110,5 @@ classDiagram
 
 ## Future features
 
-* [ ] Make it possible to overwrite name and color of a field.
-* [ ] Change color scheme base on DayNightMode.
 * [ ] Sort the data fields to make cycling through them easier.
+* [ ] Add extension for gauges.
