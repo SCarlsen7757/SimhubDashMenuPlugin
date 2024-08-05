@@ -1,6 +1,8 @@
-# Dash menu
+﻿# Dash menu
 
 This plugin allows you to create and display customizable data fields on the dashboard. These fields are easy to change, even during a race, eliminating the need for multiple dashboards for different car types.
+
+![Demo that shows fields can be changed and amount of fields can be changes as well](./Image/Demo.gif)
 
 ## Install plugin
 
