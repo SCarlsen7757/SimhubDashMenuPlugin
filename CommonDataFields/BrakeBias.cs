@@ -10,6 +10,8 @@ namespace CommonDataFields
         public FieldData Data { get; set; } = new FieldData()
         {
             Name = "BB",
+            IsDecimalNumber = true,
+            Decimal = 1,
             Color = new ColorScheme("#d90028", "#ffffff")
         };
 
