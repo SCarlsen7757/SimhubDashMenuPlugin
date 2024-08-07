@@ -20,7 +20,8 @@ namespace DashMenu.Settings
         public string Namespace { get; internal set; }
         [JsonIgnore]
         public string Name { get; internal set; }
-        public string FullName { get; set; }
+        [JsonIgnore]
+        public string FullName { get; internal set; }
         private bool enabled = true;
         /// <summary>
         /// Is the field enabled.
@@ -39,7 +40,7 @@ namespace DashMenu.Settings
         /// <summary>
         /// Is field value a decimal number
         /// </summary>
-        internal bool IsDecimal
+        public bool IsDecimal
         {
             get => isDecimal;
             set
@@ -58,7 +59,7 @@ namespace DashMenu.Settings
         public event PropertyChangedEventHandler DecimalOverridePropertyChanged;
         public event PropertyChangedEventHandler ColorSchemeOverridePropertyChanged;
 
-        internal void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        private void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         private void OnNameOverridePropertyChanged(string propertyName) => NameOverridePropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         private void OnDecimalOveridePropertyChanged(string propertyName) => DecimalOverridePropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         private void OnColorSchemeOverridePropertyChanged(string propertyName) => ColorSchemeOverridePropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

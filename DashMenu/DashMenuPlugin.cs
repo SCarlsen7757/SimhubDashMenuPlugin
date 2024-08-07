@@ -321,21 +321,18 @@ namespace DashMenu
         private void SaveFieldSettingsAndAddFieldComponent(Type type)
         {
             var fieldDataInstance = (IFieldDataComponent)Activator.CreateInstance(type);
-
             //Get field settings else create field settings
-            var fieldSetting = Settings.Fields.FirstOrDefault(s => s.FullName == type.FullName);
-            if (fieldSetting == null)
+            if (!(Settings.Fields.TryGetValue(type.FullName, out Fields fieldSetting)))
             {
                 fieldSetting = new Fields
                 {
                     Enabled = true,
-                    FullName = type.FullName,
                     NameOverride = new PropertyOverride<string>(fieldDataInstance.Data.Name),
                     DecimalOverride = new PropertyOverride<int>(fieldDataInstance.Data.Decimal),
                     IsDecimal = fieldDataInstance.Data.IsDecimalNumber,
                     DayNightColorScheme = new DayNightColorScheme(fieldDataInstance.Data.Color)
                 };
-                Settings.Fields.Add(fieldSetting);
+                Settings.Fields.Add(type.FullName, fieldSetting);
             }
             fieldSetting.Namespace = type.Namespace;
             fieldSetting.Name = type.Name;
@@ -441,8 +438,7 @@ namespace DashMenu
         {
             foreach (var field in availableFieldData)
             {
-                var fieldSettings = Settings.Fields.FirstOrDefault(x => x.FullName == field.GetType().FullName);
-                if (fieldSettings == null) continue;
+                if (!(Settings.Fields.TryGetValue(field.GetType().FullName, out var fieldSettings))) continue;
                 UpdateColorOveride(fieldSettings);
             }
         }

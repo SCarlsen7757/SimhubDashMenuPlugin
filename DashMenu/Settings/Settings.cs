@@ -1,10 +1,10 @@
 ﻿using DashMenu.Settings.DisplayedFields;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using WoteverCommon.WPF;
 
 namespace DashMenu.Settings
 {
@@ -119,7 +119,7 @@ namespace DashMenu.Settings
         /// <summary>
         /// All fields. Used for enabling and disabling the fields to be able to select them.
         /// </summary> 
-        public ObservableCollection<Fields> Fields { get; set; } = new ObservableCollection<Fields>();
+        public ObservableDictionary<string, Fields> Fields { get; set; } = new ObservableDictionary<string, Fields>();
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

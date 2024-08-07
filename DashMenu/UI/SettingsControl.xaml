@@ -53,7 +53,7 @@
                                                       Grid.ColumnSpan="2" />
                             <styles:SHListBox Name="FieldDataSettings"
                                               Margin="0,0,4,0"
-                                              ItemsSource="{Binding Path=Fields}"
+                                              ItemsSource="{Binding Path=Fields.Values}"
                                               Grid.Column="0"
                                               Grid.Row="1">
                                 <ItemsControl.ItemTemplate>
