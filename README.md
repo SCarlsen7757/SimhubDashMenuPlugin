@@ -100,6 +100,38 @@ In the General settings tab, you can adjust the default amount of fields to use 
 
 You can change the number of fields for the current car by assigning the `IncreaseNumberOfFieldData` and `DecreaseNumberOfFieldData` actions. When using a new car, the fields will be created with the default number of fields.
 
+## Configuring Fields
+
+You can change or configure various settings for the fields.
+
+![Configuration of fields](./Image/FieldSettings.png)
+
+### General settings
+
+#### Enable
+
+The field data extension can be enabled to make it selectable or disabled to reduce the number of selectable fields.
+
+### Override
+
+You can override some of the default behavior of the field.
+
+#### Name
+
+Override the displayed name of the field data.
+
+#### Color
+
+Simhub includes a built-in function for day/night settings, allowing you to configure a color scheme for both day and night. This ensures that the field colors change appropriately with the day/night mode.
+
+##### Day Night mode
+
+Simhub includes a built-in function for day/night settings, allowing you to configure a color scheme for both day and night. This ensures that the field colors change appropriately with the day/night mode.
+
+### Decimal
+
+If the field value is a decimal number, you can adjust the number of decimal places displayed. This setting is only visible if the field value can be a decimal number.
+
 ## FieldData class structure
 
 ```mermaid
