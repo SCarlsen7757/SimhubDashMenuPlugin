@@ -1,4 +1,4 @@
-﻿# Dash menu
+# Dash menu
 
 This plugin allows you to create and display customizable data fields on the dashboard. These fields are easy to change, even during a race, eliminating the need for multiple dashboards for different car types.
 
@@ -95,6 +95,8 @@ It's possible to make a configuration screen by using the the following properti
 Changes are automatically saved, and it is not possible to undo changes to the configuration except by manually reverting the changes yourself.
 
 ## Change amount of fields
+
+In the General settings tab, you can adjust the default amount of fields to use when setting up a new car.
 
 You can change the number of fields for the current car by assigning the `IncreaseNumberOfFieldData` and `DecreaseNumberOfFieldData` actions. When using a new car, the fields will be created with the default number of fields.
 
