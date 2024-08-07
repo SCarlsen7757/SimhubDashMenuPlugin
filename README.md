@@ -5,6 +5,12 @@ This plugin allows you to create and display customizable data fields on the das
 ![Demo that shows fields can be changed and amount of fields can be changes as well](./Image/Demo.gif)
 *Demo of the testing dashboard found in the [repo](./Dash%20menu%20test.simhubdash).*
 
+## Using
+
+When using a car for the first time, a default number of empty fields will be created. These fields can then be adjusted to display the relevant data for the car. The number of fields can also be changed as needed.
+
+When using a car that has already been set up, it will use the latest settings for that car.
+
 ## Install plugin
 
 To install the plugin:
