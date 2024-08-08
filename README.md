@@ -1,4 +1,4 @@
-# Dash menu
+﻿# Dash menu
 
 This plugin allows you to create and display customizable data fields on the dashboard. These fields are easy to change, even during a race, eliminating the need for multiple dashboards for different car types.
 
@@ -48,7 +48,7 @@ Available Actions:
 | `ConfigPrevField` | :heavy_check_mark: | Select previous field when in configuration mode |
 | `ChangeFieldTypeNext` | :heavy_check_mark: | Change field type of the selected field when in configuration mode |
 | `ChangeFieldTypePrev` | :heavy_check_mark: | Change field type of the selected field when in configuration mode |
-| `IncreaseNumberOfFieldData` | :x: | Increase number of fields for the current car |
+| `IncreaseNumberOfFieldData` | :x: | Increase number of fields for the current car (maximum 20) |
 | `DecreaseNumberOfFieldData` | :x: | Decrease number of fields for the current car (minimum 1) |
 
 ![Select "Controls and events" menu then "Controls" tab and click the "New mapping" button.](./Image/ControlsAndEvents.png)
@@ -103,7 +103,7 @@ Changes are automatically saved, and it is not possible to undo changes to the c
 
 ## Change amount of fields
 
-In the General settings tab, you can adjust the default amount of fields to use when setting up a new car.
+In the General settings tab, you can adjust the default amount of fields to use when setting up a new car. You can choose any number between 1 and 20.
 
 You can change the number of fields for the current car by assigning the `IncreaseNumberOfFieldData` and `DecreaseNumberOfFieldData` actions. When using a new car, the fields will be created with the default number of fields.
 
