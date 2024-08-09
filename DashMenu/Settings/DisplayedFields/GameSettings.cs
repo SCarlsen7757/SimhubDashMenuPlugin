@@ -1,14 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using DashMenu.UI;
 
 namespace DashMenu.Settings.DisplayedFields
 {
     internal class GameSettings
     {
-        //TODO: Add INotifyPropertyChanged
-        public Dictionary<string, CarSettings> CarSettings { get; set; }
+        public ObservableDictionary<string, CarFields> CarFields { get; set; }
         public GameSettings()
         {
-            CarSettings = new Dictionary<string, CarSettings>();
+            CarFields = new ObservableDictionary<string, CarFields>();
         }
     }
 }

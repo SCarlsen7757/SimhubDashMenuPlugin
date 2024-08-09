@@ -1,10 +1,12 @@
-﻿using DashMenu.Settings.DisplayedFields;
+﻿using DashMenu.Extensions;
+using DashMenu.Settings.DisplayedFields;
+using DashMenu.UI;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using WoteverCommon.WPF;
+
 
 namespace DashMenu.Settings
 {
@@ -30,7 +32,7 @@ namespace DashMenu.Settings
         /// <summary>
         /// Fields displayed. Per game and car.
         /// </summary>
-        public Dictionary<string, GameSettings> GameSettings { get; set; } = new Dictionary<string, GameSettings>();
+        public ObservableDictionary<string, GameSettings> GameSettings { get; set; } = new ObservableDictionary<string, GameSettings>();
         private List<string> DefaultFieldData()
         {
             return Enumerable.Repeat(EmptyField.FullName, DefaultAmountOfFields).ToList();
@@ -50,14 +52,14 @@ namespace DashMenu.Settings
             }
             if (GameSettings.TryGetValue(gameName, out var gameSettings))
             {
-                if (gameSettings.CarSettings.TryGetValue(carId, out var carSettings))
+                if (gameSettings.CarFields.TryGetValue(carId, out var carSettings))
                 {
-                    carSettings.DisplayedFields = displayedFields;
+                    carSettings.DisplayedFields = displayedFields.ToObservableCollection();
                 }
                 else
                 {
-                    carSettings = new CarSettings(carId, carModel, displayedFields);
-                    gameSettings.CarSettings.Add(carId, carSettings);
+                    carSettings = new CarFields(carId, carModel, displayedFields);
+                    gameSettings.CarFields.Add(carId, carSettings);
                 }
             }
             else
@@ -75,12 +77,11 @@ namespace DashMenu.Settings
         /// <returns></returns>
         internal List<string> GetDisplayedField(string gameName, string carId)
         {
-
             if (GameSettings.TryGetValue(gameName, out var gameSettings))
             {
-                if (gameSettings.CarSettings.TryGetValue(carId, out var carSettings))
+                if (gameSettings.CarFields.TryGetValue(carId, out var carSettings))
                 {
-                    return carSettings.DisplayedFields;
+                    return carSettings.DisplayedFields.ToList();
                 }
                 else
                 {
@@ -103,9 +104,9 @@ namespace DashMenu.Settings
         {
             if (GameSettings.TryGetValue(gameName, out var gameSettings))
             {
-                if (gameSettings.CarSettings.TryGetValue(carId, out var carSettings))
+                if (gameSettings.CarFields.TryGetValue(carId, out var carSettings))
                 {
-                    gameSettings.CarSettings.Remove(carId);
+                    gameSettings.CarFields.Remove(carId);
                 }
             }
         }
@@ -113,7 +114,7 @@ namespace DashMenu.Settings
         {
             if (GameSettings.TryGetValue(gameName, out var gameSettings))
             {
-                GameSettings.Remove(gameName);
+                gameSettings.CarFields.Clear();
             }
         }
         /// <summary>

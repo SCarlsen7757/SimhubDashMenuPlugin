@@ -40,6 +40,7 @@ namespace DashMenu.Settings
         /// <summary>
         /// Is field value a decimal number
         /// </summary>
+        [JsonIgnore]
         public bool IsDecimal
         {
             get => isDecimal;

@@ -69,6 +69,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.5.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
     </Reference>
@@ -93,6 +94,7 @@
     <Compile Include="Data\ColorScheme.cs" />
     <Compile Include="Data\IFieldData.cs" />
     <Compile Include="EmptyField.cs" />
+    <Compile Include="Extensions\ListExtensions.cs" />
     <Compile Include="FieldComponent.cs" />
     <Compile Include="Data\FieldData.cs" />
     <Compile Include="Data\IFieldDataComponent.cs" />
@@ -105,17 +107,21 @@
     </Compile>
     <Compile Include="Settings\ColorSchemePropertyOverride.cs" />
     <Compile Include="Settings\DayNightColorScheme.cs" />
-    <Compile Include="Settings\DisplayedFields\CarSettings.cs" />
+    <Compile Include="Settings\DisplayedFields\CarFields.cs" />
     <Compile Include="Settings\DisplayedFields\GameSettings.cs" />
     <Compile Include="Settings\Fields.cs" />
     <Compile Include="Settings\PropertyOverride.cs" />
     <Compile Include="Settings\Settings.cs" />
+    <Compile Include="UI\CarFieldsItem.xaml.cs">
+      <DependentUpon>CarFieldsItem.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\ColorSchemeItem.xaml.cs">
       <DependentUpon>ColorSchemeItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\FieldDataSettingItem.xaml.cs">
       <DependentUpon>FieldDataSettingItem.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\ObservableDictionary.cs" />
     <Compile Include="UI\SettingsControl.xaml.cs">
       <DependentUpon>SettingsControl.xaml</DependentUpon>
     </Compile>
@@ -142,6 +148,10 @@
       <Generator>MSBuild:Compile</Generator>
       <ContainsDesignTimeResources>true</ContainsDesignTimeResources>
     </Page>
+    <Page Include="UI\CarFieldsItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI\ColorSchemeItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -157,6 +167,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="NewFolder1\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

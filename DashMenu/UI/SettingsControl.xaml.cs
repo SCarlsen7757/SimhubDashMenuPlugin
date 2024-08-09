@@ -12,9 +12,10 @@ namespace DashMenu.UI
         private PluginManager PluginManager { get; set; }
         internal SettingsControl(PluginManager pluginManager, Settings.Settings settings)
         {
-            InitializeComponent();
             PluginManager = pluginManager;
-            this.DataContext = settings;
+            InitializeComponent();
+            DataContext = settings;
+            FirstCarDataFieldSetting.ItemsSource = settings.GameSettings[pluginManager.GameName].CarFields;
         }
         private void ButtonForgetAllCars_Click(object sender, RoutedEventArgs e)
         {

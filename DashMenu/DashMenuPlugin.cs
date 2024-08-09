@@ -127,6 +127,7 @@ namespace DashMenu
                 if (!MenuConfiguration.ConfigurationMode) return;
                 var currentField = fieldData[MenuConfiguration.ActiveField];
                 fieldData[MenuConfiguration.ActiveField] = NextField(currentField);
+                SaveDisplayedField(PluginManager.LastCarId, PluginManager.GameManager.CarManager.LastCarSettings.CarModel);
                 SimHub.Logging.Current.Debug("Dash menu action ChangeFieldTypeNext");
             });
 
@@ -135,6 +136,7 @@ namespace DashMenu
                 if (!MenuConfiguration.ConfigurationMode) return;
                 var currentField = fieldData[MenuConfiguration.ActiveField];
                 fieldData[MenuConfiguration.ActiveField] = PrevField(currentField);
+                SaveDisplayedField(PluginManager.LastCarId, PluginManager.GameManager.CarManager.LastCarSettings.CarModel);
                 SimHub.Logging.Current.Debug("Dash menu action ChangeFieldTypePrev");
             });
 
@@ -143,6 +145,7 @@ namespace DashMenu
                 if (!MenuConfiguration.ConfigurationMode) return;
                 if (fieldData.Count <= 0 || fieldData.Count >= 20) return;
                 fieldData.Add(EmptyField.Field);
+                SaveDisplayedField(PluginManager.LastCarId, PluginManager.GameManager.CarManager.LastCarSettings.CarModel);
                 pluginManager.SetPropertyValue("AmountOfFields", GetType(), fieldData.Count);
             });
 
@@ -151,6 +154,7 @@ namespace DashMenu
                 if (!MenuConfiguration.ConfigurationMode) return;
                 if (fieldData.Count <= 1) return;
                 fieldData.RemoveAt(fieldData.Count - 1);
+                SaveDisplayedField(PluginManager.LastCarId, PluginManager.GameManager.CarManager.LastCarSettings.CarModel);
                 pluginManager.SetPropertyValue("AmountOfFields", GetType(), fieldData.Count);
             });
 
@@ -167,7 +171,7 @@ namespace DashMenu
                         engine => (Func<int, object>)(field => GetField(field)));
                 }
             }
-            catch (System.ArgumentException)
+            catch (ArgumentException)
             {
 #if DEBUG
                 throw;
@@ -176,8 +180,11 @@ namespace DashMenu
             pluginManager.AddProperty<bool>("PluginRunning", this.GetType(), true);
             PluginManagerEvents.Instance.ActiveCarChanged += CarChanged;
             BrightnessConfiguration.Configuration.PropertyChanged += DayNightMode_PropertyChanged;
+
+
             SimHub.Logging.Current.Info("Plugin started");
         }
+
         /// <summary>
         /// Called one time per game data update, contains all normalized game data,
         /// raw data are intentionnally "hidden" under a generic object type (A plugin SHOULD NOT USE IT).
@@ -207,12 +214,21 @@ namespace DashMenu
         public void End(PluginManager pluginManager)
         {
             PluginManagerEvents.Instance.ActiveCarChanged -= CarChanged;
+            BrightnessConfiguration.Configuration.PropertyChanged -= DayNightMode_PropertyChanged;
+
         }
         private void LoadSettings()
         {
             //Get field settings else create field settings
             Settings = this.ReadCommonSettings("DashMenuSettings", () => new Settings.Settings());
+
+            if (!Settings.GameSettings.ContainsKey(PluginManager.GameName))
+            {
+                Settings.GameSettings.Add(PluginManager.GameName, new Settings.DisplayedFields.GameSettings());
+            }
         }
+
+
         public void SaveSettings()
         {
             SaveDisplayedField(PluginManager.LastCarId, oldCarModel);
@@ -247,6 +263,7 @@ namespace DashMenu
                 //Asign data
                 fieldData.Add(availableFieldData.FirstOrDefault(f => f.GetType().FullName == fieldDataSettings[i]));
             }
+            SaveDisplayedField(PluginManager.LastCarId, PluginManager.GameManager.CarManager.LastCarSettings.CarModel);
 
             PluginManager.SetPropertyValue("AmountOfFields", GetType(), fieldData.Count);
             oldCarId = PluginManager.LastCarId;
@@ -329,7 +346,6 @@ namespace DashMenu
                     Enabled = true,
                     NameOverride = new PropertyOverride<string>(fieldDataInstance.Data.Name),
                     DecimalOverride = new PropertyOverride<int>(fieldDataInstance.Data.Decimal),
-                    IsDecimal = fieldDataInstance.Data.IsDecimalNumber,
                     DayNightColorScheme = new DayNightColorScheme(fieldDataInstance.Data.Color)
                 };
                 Settings.Fields.Add(type.FullName, fieldSetting);
@@ -337,6 +353,7 @@ namespace DashMenu
             fieldSetting.Namespace = type.Namespace;
             fieldSetting.Name = type.Name;
             fieldSetting.FullName = type.FullName;
+            fieldSetting.IsDecimal = fieldDataInstance.Data.IsDecimalNumber;
 
             fieldSetting.PropertyChanged += FieldSetting_PropertyChanged;
             fieldSetting.NameOverridePropertyChanged += NameOverride_PropertyChanged;
@@ -417,7 +434,7 @@ namespace DashMenu
         }
         private void FieldSetting_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (!(sender is Settings.Fields settingsfield)) return;
+            if (!(sender is Fields settingsfield)) return;
             switch (e.PropertyName)
             {
                 case nameof(settingsfield.Enabled):
