@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using System.Web.UI.WebControls;
 using System.Windows;
 
 namespace DashMenu.UI
@@ -33,6 +34,10 @@ namespace DashMenu.UI
         {
             CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(action, item));
         }
+        private void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+        {
+            CollectionChanged?.Invoke(this, e);
+        }
 
         public void Add(TKey key, TValue value)
         {
@@ -46,7 +51,7 @@ namespace DashMenu.UI
             });
         }
 
-        public bool Remove(TKey key)
+        public bool RemoveOld(TKey key)
         {
             if (_dictionary.TryGetValue(key, out var value) && _dictionary.Remove(key))
             {
@@ -57,6 +62,37 @@ namespace DashMenu.UI
             }
             return false;
         }
+
+        public bool Remove(TKey key)
+        {
+            if (_dictionary.TryGetValue(key, out TValue value))
+            {
+                // Find the index of the item before removing it
+                int index = _dictionary.Keys.ToList().IndexOf(key);
+
+                // Remove the item from the dictionary
+                bool removed = _dictionary.Remove(key);
+
+                if (removed)
+                {
+                    // Notify the collection changed with the item and its position
+                    OnCollectionChanged(new NotifyCollectionChangedEventArgs(
+                        NotifyCollectionChangedAction.Remove,
+                        new KeyValuePair<TKey, TValue>(key, value),
+                        index
+                    ));
+
+                    // Raise property changed notifications
+                    OnPropertyChanged(nameof(Count));
+                    OnPropertyChanged("Item[]");
+
+                    return true;
+                }
+            }
+            return false;
+        }
+
+
 
         public bool TryGetValue(TKey key, out TValue value) => _dictionary.TryGetValue(key, out value);
 

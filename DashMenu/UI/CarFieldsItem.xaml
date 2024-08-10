@@ -36,6 +36,12 @@
                        ContentStringFormat="ID : {0}"
                        Padding="0" />
             </StackPanel>
+            <styles:SHLinkButton VerticalAlignment="Top"
+                                 Margin="4"
+                                 Height="15"
+                                 HorizontalAlignment="Right"
+                                 Content="Forget this car"
+                                 Click="ForgetCar_Click" />
         </AutoGrid>
     </Border>
 </UserControl>

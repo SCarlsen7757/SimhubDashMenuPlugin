@@ -61,7 +61,7 @@ namespace DashMenu
         /// </summary>
         /// <param name="pluginManager"></param>
         /// <returns></returns>
-        public System.Windows.Controls.Control GetWPFSettingsControl(PluginManager pluginManager) => new UI.SettingsControl(PluginManager, Settings);
+        public System.Windows.Controls.Control GetWPFSettingsControl(PluginManager pluginManager) => new UI.SettingsControl(Settings);
         /// <summary>
         /// Called once after plugins startup.
         /// Plugins are rebuilt at game change.
