@@ -61,7 +61,7 @@
                                     <DataTemplate>
                                         <AutoGrid Margin="0,0"
                                                   Columns="1,*">
-                                            <Border Background="Green"
+                                            <Border Background="{DynamicResource AccentColorBrush}"
                                                     Margin="-4,-4,1,-4"
                                                     Visibility="{Binding Path=Enabled, Converter={SHBoolToVisibilityConverter Hide=true}}" />
                                             <StackPanel Margin="0,0,0,0">
