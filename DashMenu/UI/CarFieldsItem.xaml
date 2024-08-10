@@ -42,6 +42,25 @@
                                  HorizontalAlignment="Right"
                                  Content="Forget this car"
                                  Click="ForgetCar_Click" />
+            <ItemsControl ItemsSource="{Binding DisplayedFields}" Grid.ColumnSpan="2">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderThickness="0"
+                                CornerRadius="6"
+                                Background="{DynamicResource GrayBrush8}"
+                                Margin="4">
+                            <Label Content="{Binding}"
+                                   Margin="5"
+                                   Padding="5" />
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </AutoGrid>
     </Border>
 </UserControl>
