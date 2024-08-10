@@ -11,17 +11,16 @@ namespace DashMenu.UI
     public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, INotifyCollectionChanged, INotifyPropertyChanged
     {
         private readonly Dictionary<TKey, TValue> _dictionary;
+        private readonly object _lock = new object(); // Lock object for thread safety
 
         public ObservableDictionary()
         {
             _dictionary = new Dictionary<TKey, TValue>();
         }
-
         public ObservableDictionary(IDictionary<TKey, TValue> dictionary)
         {
             _dictionary = new Dictionary<TKey, TValue>(dictionary);
         }
-
         public event NotifyCollectionChangedEventHandler CollectionChanged;
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -29,7 +28,6 @@ namespace DashMenu.UI
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
         private void OnCollectionChanged(NotifyCollectionChangedAction action, object item)
         {
             CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(action, item));
@@ -38,64 +36,64 @@ namespace DashMenu.UI
         {
             CollectionChanged?.Invoke(this, e);
         }
-
         public void Add(TKey key, TValue value)
         {
-            //If the dictionary is used in WPF, then it's need to be added in the UI thread.
             Application.Current.Dispatcher.Invoke(() =>
             {
-                _dictionary.Add(key, value);
-                OnCollectionChanged(NotifyCollectionChangedAction.Add, new KeyValuePair<TKey, TValue>(key, value));
-                OnPropertyChanged(nameof(Count));
-                OnPropertyChanged("Item[]");
-            });
-        }
-
-        public bool RemoveOld(TKey key)
-        {
-            if (_dictionary.TryGetValue(key, out var value) && _dictionary.Remove(key))
-            {
-                OnCollectionChanged(NotifyCollectionChangedAction.Remove, new KeyValuePair<TKey, TValue>(key, value));
-                OnPropertyChanged(nameof(Count));
-                OnPropertyChanged("Item[]");
-                return true;
-            }
-            return false;
-        }
-
-        public bool Remove(TKey key)
-        {
-            if (_dictionary.TryGetValue(key, out TValue value))
-            {
-                // Find the index of the item before removing it
-                int index = _dictionary.Keys.ToList().IndexOf(key);
-
-                // Remove the item from the dictionary
-                bool removed = _dictionary.Remove(key);
-
-                if (removed)
+                lock (_lock)
                 {
-                    // Notify the collection changed with the item and its position
+                    _dictionary.Add(key, value);
+                    // Find the index of the newly added item
+                    int index = _dictionary.Keys.ToList().IndexOf(key);
+                    // Notify that an item has been added
                     OnCollectionChanged(new NotifyCollectionChangedEventArgs(
-                        NotifyCollectionChangedAction.Remove,
+                        NotifyCollectionChangedAction.Add,
                         new KeyValuePair<TKey, TValue>(key, value),
                         index
                     ));
-
-                    // Raise property changed notifications
                     OnPropertyChanged(nameof(Count));
                     OnPropertyChanged("Item[]");
-
-                    return true;
                 }
-            }
-            return false;
+            });
+        }
+        public bool Remove(TKey key)
+        {
+            // Use Dispatcher to ensure UI updates happen on the UI thread
+            return Application.Current.Dispatcher.Invoke(() =>
+            {
+                lock (_lock)
+                {
+                    if (_dictionary.TryGetValue(key, out TValue value))
+                    {
+                        // Get the index before removal
+                        int index = _dictionary.Keys.ToList().IndexOf(key);
+
+                        // Remove the item from the dictionary
+                        bool removed = _dictionary.Remove(key);
+
+                        if (removed)
+                        {
+                            // Notify the collection view of the removal
+                            OnCollectionChanged(new NotifyCollectionChangedEventArgs(
+                                NotifyCollectionChangedAction.Remove,
+                                new KeyValuePair<TKey, TValue>(key, value),
+                                index
+                            ));
+
+                            // Raise property changed notifications
+                            OnPropertyChanged(nameof(Count));
+                            OnPropertyChanged("Item[]");
+
+                            return true;
+                        }
+                    }
+
+                    return false;
+                }
+            });
         }
 
-
-
         public bool TryGetValue(TKey key, out TValue value) => _dictionary.TryGetValue(key, out value);
-
         public TValue this[TKey key]
         {
             get => _dictionary[key];
@@ -114,15 +112,10 @@ namespace DashMenu.UI
                 }
             }
         }
-
         public ICollection<TKey> Keys => _dictionary.Keys;
-
         public ICollection<TValue> Values => _dictionary.Values;
-
         public bool ContainsKey(TKey key) => _dictionary.ContainsKey(key);
-
         public void Add(KeyValuePair<TKey, TValue> item) => Add(item.Key, item.Value);
-
         public void Clear()
         {
             _dictionary.Clear();
@@ -130,22 +123,15 @@ namespace DashMenu.UI
             OnPropertyChanged(nameof(Count));
             OnPropertyChanged("Item[]");
         }
-
         public bool Contains(KeyValuePair<TKey, TValue> item) => _dictionary.Contains(item);
-
         public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
         {
             ((ICollection<KeyValuePair<TKey, TValue>>)_dictionary).CopyTo(array, arrayIndex);
         }
-
         public bool Remove(KeyValuePair<TKey, TValue> item) => Remove(item.Key);
-
         public int Count => _dictionary.Count;
-
         public bool IsReadOnly => ((ICollection<KeyValuePair<TKey, TValue>>)_dictionary).IsReadOnly;
-
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() => _dictionary.GetEnumerator();
-
         IEnumerator IEnumerable.GetEnumerator() => _dictionary.GetEnumerator();
     }
 }
