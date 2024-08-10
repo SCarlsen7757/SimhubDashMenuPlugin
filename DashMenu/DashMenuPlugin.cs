@@ -86,7 +86,15 @@ namespace DashMenu
                 MenuConfiguration.ConfigurationMode = !MenuConfiguration.ConfigurationMode;
 
                 //When entering configuration mode, reset the active field to 1.
-                if (MenuConfiguration.ConfigurationMode) MenuConfiguration.ActiveField = 0;
+                if (MenuConfiguration.ConfigurationMode)
+                {
+                    MenuConfiguration.ActiveField = 0;
+                }
+                else
+                {
+                    //Save displaye field when exiting config mode.
+                    SaveDisplayedField(PluginManager.LastCarId, PluginManager.GameManager.CarManager.LastCarSettings.CarModel);
+                }
 
                 pluginManager.SetPropertyValue("ConfigMode", GetType(), MenuConfiguration.ConfigurationMode);
                 pluginManager.SetPropertyValue("ActiveConfigField", GetType(), MenuConfiguration.ActiveField + 1);
@@ -127,7 +135,6 @@ namespace DashMenu
                 if (!MenuConfiguration.ConfigurationMode) return;
                 var currentField = fieldData[MenuConfiguration.ActiveField];
                 fieldData[MenuConfiguration.ActiveField] = NextField(currentField);
-                SaveDisplayedField(PluginManager.LastCarId, PluginManager.GameManager.CarManager.LastCarSettings.CarModel);
                 SimHub.Logging.Current.Debug("Dash menu action ChangeFieldTypeNext");
             });
 
@@ -136,7 +143,6 @@ namespace DashMenu
                 if (!MenuConfiguration.ConfigurationMode) return;
                 var currentField = fieldData[MenuConfiguration.ActiveField];
                 fieldData[MenuConfiguration.ActiveField] = PrevField(currentField);
-                SaveDisplayedField(PluginManager.LastCarId, PluginManager.GameManager.CarManager.LastCarSettings.CarModel);
                 SimHub.Logging.Current.Debug("Dash menu action ChangeFieldTypePrev");
             });
 
@@ -145,7 +151,6 @@ namespace DashMenu
                 if (!MenuConfiguration.ConfigurationMode) return;
                 if (fieldData.Count <= 0 || fieldData.Count >= 20) return;
                 fieldData.Add(EmptyField.Field);
-                SaveDisplayedField(PluginManager.LastCarId, PluginManager.GameManager.CarManager.LastCarSettings.CarModel);
                 pluginManager.SetPropertyValue("AmountOfFields", GetType(), fieldData.Count);
             });
 
@@ -154,7 +159,6 @@ namespace DashMenu
                 if (!MenuConfiguration.ConfigurationMode) return;
                 if (fieldData.Count <= 1) return;
                 fieldData.RemoveAt(fieldData.Count - 1);
-                SaveDisplayedField(PluginManager.LastCarId, PluginManager.GameManager.CarManager.LastCarSettings.CarModel);
                 pluginManager.SetPropertyValue("AmountOfFields", GetType(), fieldData.Count);
             });
 
