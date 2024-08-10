@@ -1,4 +1,5 @@
 ﻿using DashMenu.Extensions;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -8,7 +9,21 @@ namespace DashMenu.Settings.DisplayedFields
 {
     internal class CarFields : INotifyPropertyChanged
     {
-        //TODO: Add INotifyPropertyChanged
+        private bool isActive = false;
+        /// <summary>
+        /// Car model active
+        /// </summary>
+        [JsonIgnore]
+        public bool IsActive
+        {
+            get => isActive;
+            internal set
+            {
+                if (isActive == value) return;
+                isActive = value;
+                OnPropertyChanged();
+            }
+        }
         private string carId = string.Empty;
         /// <summary>
         /// Car ID

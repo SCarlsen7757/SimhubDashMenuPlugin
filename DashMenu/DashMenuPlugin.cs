@@ -246,6 +246,7 @@ namespace DashMenu
             if (!string.IsNullOrWhiteSpace(oldCarId) || !string.IsNullOrWhiteSpace(oldCarModel))
             {
                 SaveDisplayedField(oldCarId, oldCarModel);
+                Settings.GameSettings[PluginManager.GameName].CarFields[oldCarId].IsActive = false;
             }
 
             //Create arrays
@@ -264,6 +265,7 @@ namespace DashMenu
                 fieldData.Add(availableFieldData.FirstOrDefault(f => f.GetType().FullName == fieldDataSettings[i]));
             }
             SaveDisplayedField(PluginManager.LastCarId, PluginManager.GameManager.CarManager.LastCarSettings.CarModel);
+            Settings.GameSettings[PluginManager.GameName].CarFields[PluginManager.LastCarId].IsActive = true;
 
             PluginManager.SetPropertyValue("AmountOfFields", GetType(), fieldData.Count);
             oldCarId = PluginManager.LastCarId;

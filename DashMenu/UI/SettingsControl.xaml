@@ -120,13 +120,19 @@
                                           Grid.Row="0">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <StackPanel Margin="0,0,0,0">
-                                        <Label Padding="0"
-                                               Content="{Binding Path=Value.CarModel}" />
-                                        <Label Padding="0"
-                                               FontSize="10"
-                                               Content="{Binding Path=Value.CarId}" />
-                                    </StackPanel>
+                                    <AutoGrid Margin="0,0"
+                                              Columns="1,*">
+                                        <Border Background="Green"
+                                                Margin="-4,-4,1,-4"
+                                                Visibility="{Binding Path=Value.IsActive, Converter={SHBoolToVisibilityConverter Hide=true}}" />
+                                        <StackPanel Margin="0,0,0,0">
+                                            <Label Padding="0"
+                                                   Content="{Binding Path=Value.CarModel}" />
+                                            <Label Padding="0"
+                                                   FontSize="10"
+                                                   Content="{Binding Path=Value.CarId}" />
+                                        </StackPanel>
+                                    </AutoGrid>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </styles:SHListBox>
