@@ -20,7 +20,7 @@
             BorderBrush="#33000000"
             Background="{DynamicResource GrayBrush10}"
             Margin="4">
-        <AutoGrid Columns="auto,*" 
+        <AutoGrid Columns="auto,*"
                   Margin="10">
             <Label Content="{Binding Path=Name}"
                    Grid.ColumnSpan="2"
@@ -42,6 +42,11 @@
                                              IsChecked="{Binding Path=Enabled}" />
                     <Label Content="Enable field extension, to be selectable." />
                 </AutoGrid>
+                <styles:SHSubSectionTitle Content="Supported Games" />
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <TextBlock Text="{Binding Path=SupportedGames}"
+                               Margin="12,0" />
+                </ScrollViewer>
             </StackPanel>
             <StackPanel Visibility="{Binding Path=Enabled, Converter={SHBoolToVisibilityConverter Hide=False}}">
                 <!--Override settings-->
@@ -64,8 +69,8 @@
                     <Label Content="Override night mode color"
                            Grid.ColumnSpan="2" />
                     <styles:SHToggleCheckbox IsChecked="{Binding Path=DayNightColorScheme.NightModeColor.Override}"
-                                                 IsEnabled="{Binding Path=DayNightColorScheme.DayModeColor.Override}" />
-                        <local:ColorSchemeItem DataContext="{Binding Path=DayNightColorScheme.NightModeColor}" />
+                                             IsEnabled="{Binding Path=DayNightColorScheme.DayModeColor.Override}" />
+                    <local:ColorSchemeItem DataContext="{Binding Path=DayNightColorScheme.NightModeColor}" />
                     <!--Decimal override-->
                     <styles:SHSectionSeparator Grid.ColumnSpan="2"
                                                Margin="-24,0"

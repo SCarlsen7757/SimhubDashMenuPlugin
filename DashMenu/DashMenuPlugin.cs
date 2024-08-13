@@ -365,6 +365,9 @@ namespace DashMenu
             fieldSetting.FullName = type.FullName;
             fieldSetting.IsDecimal = fieldDataInstance.Data.IsDecimalNumber;
 
+            fieldSetting.GameSupported = fieldDataInstance.IsGameSupported;
+            fieldSetting.SupportedGames = fieldDataInstance.SupportedGames;
+
             fieldSetting.PropertyChanged += FieldSetting_PropertyChanged;
             fieldSetting.NameOverridePropertyChanged += NameOverride_PropertyChanged;
             fieldSetting.DecimalOverridePropertyChanged += DecimalOverride_PropertyChanged;

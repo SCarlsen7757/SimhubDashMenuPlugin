@@ -22,6 +22,10 @@ namespace DashMenu.Settings
         public string Name { get; internal set; }
         [JsonIgnore]
         public string FullName { get; internal set; }
+        [JsonIgnore]
+        public bool GameSupported { get; internal set; }
+        [JsonIgnore]
+        public string SupportedGames { get; internal set; }
         private bool enabled = true;
         /// <summary>
         /// Is the field enabled.
