@@ -22,7 +22,7 @@ namespace CommonDataFields
                 Data.Value = "-";
                 return;
             }
-            Data.Value = data.NewData.BrakeBias.ToString();
+            Data.Value = data.NewData.BrakeBias.ToString($"N{Data.Decimal}");
         }
     }
 }
