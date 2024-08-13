@@ -3,10 +3,10 @@ using GameReaderCommon;
 
 namespace CommonDataFields
 {
-    public class BrakeBias : IFieldDataComponent
+    public class BrakeBias : ExtensionDataBase, IFieldDataComponent
     {
+        public BrakeBias(string gameName) : base(gameName) { }
         public string Description { get => "Brake bias."; }
-
         public FieldData Data { get; set; } = new FieldData()
         {
             Name = "BB",
@@ -14,8 +14,6 @@ namespace CommonDataFields
             Decimal = 1,
             Color = new ColorScheme("#d90028", "#ffffff")
         };
-
-        public bool GameSupported(string game) => true;
         public void Update(ref GameData data)
         {
             if (!data.GameRunning) return;

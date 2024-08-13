@@ -3,8 +3,10 @@ using GameReaderCommon;
 
 namespace CommonDataFields
 {
-    public class OilPressure : IFieldDataComponent
+
+    public class OilPressure : ExtensionDataBase, IFieldDataComponent
     {
+        public OilPressure(string gameName) : base(gameName) { }
         public string Description { get => "Oil pressure"; }
         public FieldData Data { get; set; } = new FieldData()
         {
@@ -13,9 +15,6 @@ namespace CommonDataFields
             Decimal = 0,
             Color = new ColorScheme("#ffffff", "ffffff")
         };
-
-        public bool GameSupported(string game) => true;
-
         public void Update(ref GameData data)
         {
             if (!data.GameRunning) return;

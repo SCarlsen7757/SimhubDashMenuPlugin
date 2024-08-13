@@ -3,18 +3,15 @@ using GameReaderCommon;
 
 namespace CommonDataFields
 {
-    public class TCLevel : IFieldDataComponent
+    public class TCLevel : ExtensionDataBase, IFieldDataComponent
     {
+        public TCLevel(string gameName) : base(gameName) { }
         public string Description { get => "TC Level."; }
-
         public FieldData Data { get; set; } = new FieldData()
         {
             Name = "TC",
             Color = new ColorScheme("#00a3d9", "#ffffff")
         };
-
-        public bool GameSupported(string game) => true;
-
         public void Update(ref GameData data)
         {
             if (!data.GameRunning) return;

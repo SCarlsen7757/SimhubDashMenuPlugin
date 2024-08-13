@@ -21,8 +21,11 @@ namespace DashMenu.Data
         /// <summary>
         /// Does the field support this game? With this field break or make expections if this fields is run with the game?
         /// </summary>
-        /// <param name="game">Name of the game.</param>
         /// <returns>Game support.</returns>
-        bool GameSupported(string game);
+        bool IsGameSupported { get; }
+        /// <summary>
+        /// Describe what games this field supportes.
+        /// </summary>
+        string SupportedGames { get; }
     }
 }

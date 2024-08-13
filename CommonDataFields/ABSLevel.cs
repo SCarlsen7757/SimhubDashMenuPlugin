@@ -3,17 +3,15 @@ using GameReaderCommon;
 
 namespace CommonDataFields
 {
-    public class ABSLevel : IFieldDataComponent
+    public class ABSLevel : ExtensionDataBase, IFieldDataComponent
     {
+        public ABSLevel(string gameName) : base(gameName) { }
         public string Description { get => "ABS Level."; }
-
         public FieldData Data { get; set; } = new FieldData()
         {
             Name = "ABS",
             Color = new ColorScheme("#00ff2a", "#ffffff")
         };
-
-        public bool GameSupported(string name) => true;
         public void Update(ref GameData data)
         {
             if (!data.GameRunning) return;

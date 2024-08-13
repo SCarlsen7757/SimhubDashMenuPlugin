@@ -199,15 +199,10 @@ namespace DashMenu
         /// <param name="data">Current game data, including current and previous data frame.</param>
         public void DataUpdate(PluginManager pluginManager, ref GameData data)
         {
-            //TODO: use DayNightMode for the colors at some point. var mode = SimHub.Plugins.BrightnessControl.BrightnessConfiguration.CurrentMode;
-            if (fieldData.Count == 0) return;
-            for (int i = 0; i < fieldData.Count; i++)
+            foreach (IFieldDataComponent field in fieldData)
             {
-                //TODO: Find a better way to implent GameSupported. So it's called in the init method.
-                if (fieldData[i].GameSupported(pluginManager.GameName))
-                {
-                    fieldData[i].Update(ref data);
-                }
+                if (!field.IsGameSupported) continue;
+                field.Update(ref data);
             }
         }
         /// <summary>
@@ -343,7 +338,16 @@ namespace DashMenu
 
         private void SaveFieldSettingsAndAddFieldComponent(Type type)
         {
-            var fieldDataInstance = (IFieldDataComponent)Activator.CreateInstance(type);
+            IFieldDataComponent fieldDataInstance;
+            try
+            {
+                fieldDataInstance = (IFieldDataComponent)Activator.CreateInstance(type, PluginManager.GameName);
+            }
+            catch (Exception e)
+            {
+                SimHub.Logging.Current.Error(type, e);
+                return;
+            }
             //Get field settings else create field settings
             if (!(Settings.Fields.TryGetValue(type.FullName, out Fields fieldSetting)))
             {

@@ -3,8 +3,9 @@ using GameReaderCommon;
 
 namespace DashMenu
 {
-    internal class EmptyField : IFieldDataComponent
+    internal class EmptyField : ExtensionDataBase, IFieldDataComponent
     {
+        public EmptyField(string gameName) : base(gameName) { }
         public string Description { get; } = "";
         public FieldData Data { get; set; } = new FieldData()
         {
@@ -13,17 +14,12 @@ namespace DashMenu
             Color = new ColorScheme("#ffffff", "#ffffff")
         };
 
-        public bool GameSupported(string name)
-        {
-            return true;
-        }
-
         public void Update(ref GameData data)
         {
             return;
         }
 
-        private static EmptyField field = new EmptyField();
+        private readonly static EmptyField field = new EmptyField("");
         /// <summary>
         /// Empty field
         /// </summary>
