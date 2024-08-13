@@ -1,4 +1,4 @@
-# Dash menu
+﻿# Dash menu
 
 This plugin allows you to create and display customizable data fields on the dashboard. These fields are easy to change, even during a race, eliminating the need for multiple dashboards for different car types.
 
@@ -139,7 +139,160 @@ Simhub includes a built-in function for day/night settings, allowing you to conf
 
 If the field value is a decimal number, you can adjust the number of decimal places displayed. This setting is only visible if the field value can be a decimal number.
 
-## FieldData class structure
+## Make your own extension fields
+
+The following examples demonstrate how to create basic extension data fields for use within the `DashMenuPlugin` system. Each extension field includes a description, data fields with a name and color scheme, and an update method that is called on every game tick.
+
+### Example 1: Basic Extension Field
+
+This example creates a simple traction control (TC) level field.
+
+```C#
+//ref DashMenuPlugin.dll (this plugin)
+using DashMenu.Data;
+//ref GameReaderCommon.dll (found in Simhub root dir)
+using GameReaderCommon;
+
+namespace CommonDataFields
+{
+    /// <summary>
+    /// Represents a traction control (TC) level field.
+    /// </summary>
+    public class TCLevel : ExtensionDataBase, IFieldDataComponent
+    {
+        public TCLevel(string gameName) : base(gameName) { }
+        /// <summary>
+        /// Gets the description of the field.
+        /// </summary>
+        public string Description { get => "TC Level."; }
+        /// <summary>
+        /// Gets or sets the data associated with the field.
+        /// </summary>
+        public FieldData Data { get; set; } = new FieldData()
+        {
+            Name = "TC",
+            Color = new ColorScheme("#00a3d9", "#ffffff")
+        };
+        /// <summary>
+        /// Updates the field value based on the current game data.
+        /// </summary>
+        /// <param name="data">The current game data.</param>
+        public void Update(ref GameData data)
+        {
+            if (!data.GameRunning) return;
+            if (data.NewData.TCLevel < 0)
+            {
+                Data.Value = "-";
+                return;
+            }
+            Data.Value = data.NewData.TCLevel.ToString();
+        }
+    }
+}
+
+```
+
+### Example 2: Decimal Number Field
+
+This example creates a brake bias field, which can represent decimal numbers.
+
+```c#
+using DashMenu.Data;
+using GameReaderCommon;
+
+namespace CommonDataFields
+{
+    /// <summary>
+    /// Represents a brake bias field.
+    /// </summary>
+    public class BrakeBias : ExtensionDataBase, IFieldDataComponent
+    {
+        public BrakeBias(string gameName) : base(gameName) { }
+        /// <summary>
+        /// Gets the description of the field.
+        /// </summary>
+        public string Description { get => "Brake bias."; }
+        /// <summary>
+        /// Gets or sets the data associated with the field.
+        /// </summary>
+        public FieldData Data { get; set; } = new FieldData()
+        {
+            Name = "BB",
+            //Add IsDecimalNumber and Decimal
+            IsDecimalNumber = true,
+            Decimal = 1,
+            Color = new ColorScheme("#d90028", "#ffffff")
+        };
+        /// <summary>
+        /// Updates the field value based on the current game data.
+        /// </summary>
+        /// <param name="data">The current game data.</param>
+        public void Update(ref GameData data)
+        {
+            if (!data.GameRunning) return;
+            if (data.NewData.BrakeBias < 0)
+            {
+                Data.Value = "-";
+                return;
+            }
+            //Use Data.Decimal in the ToString(formatter)
+            Data.Value = data.NewData.BrakeBias.ToString($"N{Data.Decimal}");
+        }
+    }
+}
+```
+
+### Example 3: Field with Unit
+
+This example creates a water temperature field, which includes a unit derived from SimHub's settings.
+
+```c#
+using DashMenu.Data;
+using GameReaderCommon;
+
+namespace CommonDataFields
+{
+    /// <summary>
+    /// Represents a water temperature field.
+    /// </summary>
+    public class WaterTemperature : ExtensionDataBase, IFieldDataComponent
+    {
+        public WaterTemperature(string gameName) : base(gameName) { }
+        /// <summary>
+        /// Gets the description of the field.
+        /// </summary>
+        public string Description { get => "Water temperature"; }
+        /// <summary>
+        /// Gets or sets the data associated with the field.
+        /// </summary>
+        public FieldData Data { get; set; } = new FieldData()
+        {
+            Name = "Water Temp",
+            IsDecimalNumber = true,
+            Decimal = 0,
+            Color = new ColorScheme("#ffffff", "#ffffff")
+        };
+        /// <summary>
+        /// Updates the field value based on the current game data.
+        /// </summary>
+        /// <param name="data">The current game data.</param>
+        public void Update(ref GameData data)
+        {
+            if (!data.GameRunning) return;
+            if (data.NewData.WaterTemperature <= 0)
+            {
+                Data.Value = "-";
+                return;
+            }
+            Data.Value = data.NewData.WaterTemperature.ToString($"N{Data.Decimal}");
+            //Unit is taken from the default unit configured in Simhub.
+            Data.Unit = "°" + data.NewData.TemperatureUnit[0];
+        }
+    }
+}
+```
+
+### FieldData class structure
 
 ```mermaid
 classDiagram
