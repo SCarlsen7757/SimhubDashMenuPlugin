@@ -64,10 +64,8 @@
                                             <Border Background="{DynamicResource AccentColorBrush}"
                                                     Margin="-4,-4,1,-4"
                                                     Visibility="{Binding Path=Enabled, Converter={SHBoolToVisibilityConverter Hide=true}}" />
-                                            <StackPanel Margin="0,0,0,0">
                                                 <Label Padding="4,1,1,1"
                                                        Content="{Binding Path=FullName}" />
-                                            </StackPanel>
                                         </AutoGrid>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
