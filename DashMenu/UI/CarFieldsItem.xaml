@@ -36,12 +36,20 @@
                        ContentStringFormat="ID : {0}"
                        Padding="0" />
             </StackPanel>
-            <styles:SHLinkButton VerticalAlignment="Top"
-                                 Margin="4"
-                                 Height="15"
-                                 HorizontalAlignment="Right"
-                                 Content="Forget this car"
-                                 Click="ForgetCar_Click" />
+            <StackPanel>
+                <styles:SHLinkButton VerticalAlignment="Top"
+                                     Margin="4"
+                                     Height="15"
+                                     HorizontalAlignment="Right"
+                                     Content="Forget this car"
+                                     Click="DefaultFields_Click" />
+                <styles:SHLinkButton VerticalAlignment="Top"
+                                     Margin="4"
+                                     Height="15"
+                                     HorizontalAlignment="Right"
+                                     Content="Make default field from this car"
+                                     Click="DefaultFields_Click" />
+            </StackPanel>
             <styles:SHSubSectionTitle Content="Displayed Data Fields"
                                       Grid.ColumnSpan="2" />
             <ItemsControl ItemsSource="{Binding DisplayedFields}"

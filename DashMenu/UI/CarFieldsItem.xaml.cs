@@ -33,7 +33,7 @@ namespace DashMenu.UI
             Panel parent = (Panel)currentControl.Parent;
 
             // Retrieve the settings from the parent's DataContext
-            Settings.GameSettings gameSettings = (Settings.GameSettings)parent.DataContext;
+            GameSettings gameSettings = (GameSettings)parent.DataContext;
 
             // Retrieve the ObservableDictionary from the settings using the game name
             ObservableDictionary<string, CarFields> carFieldsDictionary = gameSettings.CarFields;
@@ -43,6 +43,15 @@ namespace DashMenu.UI
             {
                 carFieldsDictionary.Remove(carFields.CarId);
             }
+        }
+        private void DefaultFields_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            CarFields carFields = (CarFields)DataContext;
+            UserControl currentControl = this;
+            Panel parent = (Panel)currentControl.Parent;
+            GameSettings gameSettings = (GameSettings)parent.DataContext;
+
+            gameSettings.DefaultFields = carFields.DisplayedFields;
         }
     }
 }

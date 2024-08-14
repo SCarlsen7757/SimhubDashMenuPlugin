@@ -33,8 +33,8 @@
                                              Name="DefaultAmountOfFields"
                                              Maximum="20"
                                              Minimum="1"
-                                             MaxWidth="600" 
-                                             Value="{Binding Path=DefaultAmountOfFields, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                             MaxWidth="600"
+                                             Value="{Binding Path=DefaultAmountOfFields, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         </Grid>
                     </StackPanel>
                     <!--Field data settings-->
@@ -99,6 +99,33 @@
             <!--Car settings-->
             <styles:SHSection Title="Car settings">
                 <StackPanel>
+                    <styles:SHSubSectionTitle Content="Default fields" />
+                    <styles:SHButtonPrimary Click="ButtonForgetDefaultFields_Click"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Left"
+                                            Content="Forget default fields" />
+                    <ItemsControl ItemsSource="{Binding DefaultFields}"
+                                  Grid.ColumnSpan="2"
+                                  Margin="12,0,0,0">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderThickness="0"
+                                        CornerRadius="6"
+                                        Background="{DynamicResource GrayBrush8}"
+                                        Margin="4">
+                                    <Label Content="{Binding}"
+                                           Margin="5"
+                                           Padding="5" />
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <styles:SHSubSectionTitle Content="Per car settings" />
                     <styles:SHButtonPrimary Click="ButtonForgetAllCars_Click"
                                             VerticalAlignment="Center"
                                             HorizontalAlignment="Left"

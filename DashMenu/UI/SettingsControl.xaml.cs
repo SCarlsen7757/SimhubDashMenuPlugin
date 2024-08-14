@@ -1,5 +1,4 @@
-﻿using SimHub.Plugins;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 
 namespace DashMenu.UI
@@ -16,8 +15,14 @@ namespace DashMenu.UI
         }
         private void ButtonForgetAllCars_Click(object sender, RoutedEventArgs e)
         {
-            var settings = (Settings.Settings)this.DataContext;
-            settings.GameSettings[PluginManager.GetInstance().GameName].RemoveAllDisplayedFields();
+            var settings = (Settings.GameSettings)this.DataContext;
+            settings.RemoveAllDisplayedFields();
+        }
+
+        private void ButtonForgetDefaultFields_Click(object sender, RoutedEventArgs e)
+        {
+            var settings = (Settings.GameSettings)this.DataContext;
+            settings.DefaultFields.Clear();
         }
     }
 }
