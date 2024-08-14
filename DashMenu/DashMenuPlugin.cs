@@ -61,7 +61,7 @@ namespace DashMenu
         /// </summary>
         /// <param name="pluginManager"></param>
         /// <returns></returns>
-        public System.Windows.Controls.Control GetWPFSettingsControl(PluginManager pluginManager) => new UI.SettingsControl(Settings);
+        public System.Windows.Controls.Control GetWPFSettingsControl(PluginManager pluginManager) => new UI.SettingsControl(Settings.GameSettings[PluginManager.GameName]);
         /// <summary>
         /// Called once after plugins startup.
         /// Plugins are rebuilt at game change.
@@ -223,7 +223,7 @@ namespace DashMenu
 
             if (!Settings.GameSettings.ContainsKey(PluginManager.GameName))
             {
-                Settings.GameSettings.Add(PluginManager.GameName, new Settings.DisplayedFields.GameSettings());
+                Settings.GameSettings.Add(PluginManager.GameName, new Settings.GameSettings());
             }
         }
 
@@ -250,7 +250,7 @@ namespace DashMenu
 
             //Create arrays
             fieldData = new List<IFieldDataComponent>();
-            var fieldDataSettings = Settings.GetDisplayedField(PluginManager.GameName, PluginManager.LastCarId);
+            var fieldDataSettings = Settings.GameSettings[PluginManager.GameName].GetDisplayedField(PluginManager.LastCarId);
             //Assign data from settings
             for (int i = 0; i < fieldDataSettings.Count; i++)
             {
@@ -277,12 +277,12 @@ namespace DashMenu
         private void SaveDisplayedField(string carId, string carModel)
         {
             if (string.IsNullOrWhiteSpace(carId) || string.IsNullOrWhiteSpace(carModel)) return;
-            var fieldDataSettings = new List<string>();
+            var fieldDataSettings = new ObservableCollection<string>();
             for (int i = 0; i < fieldData.Count; i++)
             {
                 fieldDataSettings.Add(fieldData[i].GetType().FullName);
             }
-            Settings.UpdateDisplayedField(PluginManager.GameName, carId, carModel, fieldDataSettings);
+            Settings.GameSettings[PluginManager.GameName].UpdateDisplayedField(carId, carModel, fieldDataSettings);
         }
         private static IEnumerable<Type> GetCustomFieldsType(string sub_dir)
         {
@@ -349,7 +349,7 @@ namespace DashMenu
                 return;
             }
             //Get field settings else create field settings
-            if (!(Settings.Fields.TryGetValue(type.FullName, out Fields fieldSetting)))
+            if (!(Settings.GameSettings[PluginManager.GameName].Fields.TryGetValue(type.FullName, out Fields fieldSetting)))
             {
                 fieldSetting = new Fields
                 {
@@ -358,7 +358,7 @@ namespace DashMenu
                     DecimalOverride = new PropertyOverride<int>(fieldDataInstance.Data.Decimal),
                     DayNightColorScheme = new DayNightColorScheme(fieldDataInstance.Data.Color)
                 };
-                Settings.Fields.Add(type.FullName, fieldSetting);
+                Settings.GameSettings[PluginManager.GameName].Fields.Add(type.FullName, fieldSetting);
             }
             fieldSetting.Namespace = type.Namespace;
             fieldSetting.Name = type.Name;
@@ -468,7 +468,7 @@ namespace DashMenu
         {
             foreach (var field in availableFieldData)
             {
-                if (!(Settings.Fields.TryGetValue(field.GetType().FullName, out var fieldSettings))) continue;
+                if (!(Settings.GameSettings[PluginManager.GameName].Fields.TryGetValue(field.GetType().FullName, out var fieldSettings))) continue;
                 UpdateColorOveride(fieldSettings);
             }
         }

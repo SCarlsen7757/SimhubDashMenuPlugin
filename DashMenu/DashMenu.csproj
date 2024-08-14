@@ -108,8 +108,8 @@
     </Compile>
     <Compile Include="Settings\ColorSchemePropertyOverride.cs" />
     <Compile Include="Settings\DayNightColorScheme.cs" />
-    <Compile Include="Settings\DisplayedFields\CarFields.cs" />
-    <Compile Include="Settings\DisplayedFields\GameSettings.cs" />
+    <Compile Include="Settings\CarFields.cs" />
+    <Compile Include="Settings\GameSettings.cs" />
     <Compile Include="Settings\Fields.cs" />
     <Compile Include="Settings\PropertyOverride.cs" />
     <Compile Include="Settings\Settings.cs" />

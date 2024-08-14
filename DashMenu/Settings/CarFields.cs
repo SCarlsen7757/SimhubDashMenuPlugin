@@ -1,11 +1,9 @@
-﻿using DashMenu.Extensions;
-using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using Newtonsoft.Json;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace DashMenu.Settings.DisplayedFields
+namespace DashMenu.Settings
 {
     internal class CarFields : INotifyPropertyChanged
     {
@@ -54,11 +52,11 @@ namespace DashMenu.Settings.DisplayedFields
         }
         public ObservableCollection<string> DisplayedFields { get; set; }
         public CarFields() { }
-        public CarFields(string carId, string carModel, List<string> fields)
+        public CarFields(string carId, string carModel, ObservableCollection<string> fields)
         {
             CarId = carId;
             CarModel = carModel;
-            DisplayedFields = fields.ToObservableCollection();
+            DisplayedFields = fields;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -1,4 +1,4 @@
-﻿using DashMenu.Settings.DisplayedFields;
+﻿using DashMenu.Settings;
 using System.Windows.Controls;
 
 namespace DashMenu.UI
@@ -33,10 +33,10 @@ namespace DashMenu.UI
             Panel parent = (Panel)currentControl.Parent;
 
             // Retrieve the settings from the parent's DataContext
-            Settings.Settings settings = (Settings.Settings)parent.DataContext;
+            Settings.GameSettings gameSettings = (Settings.GameSettings)parent.DataContext;
 
             // Retrieve the ObservableDictionary from the settings using the game name
-            ObservableDictionary<string, CarFields> carFieldsDictionary = settings.GameSettings[SimHub.Plugins.PluginManager.GetInstance().GameName].CarFields;
+            ObservableDictionary<string, CarFields> carFieldsDictionary = gameSettings.CarFields;
 
             // Remove the car from the dictionary using the CarId key
             if (carFieldsDictionary.ContainsKey(carFields.CarId))

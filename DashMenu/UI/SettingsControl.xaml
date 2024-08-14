@@ -11,7 +11,7 @@
              d:DesignHeight="450"
              d:DesignWidth="800">
     <UserControl.DataContext>
-        <settings:Settings />
+        <settings:GameSettings />
     </UserControl.DataContext>
     <styles:SHTabControl>
         <styles:SHTabItem Header="General settings">
@@ -30,10 +30,11 @@
                             </Grid.RowDefinitions>
 
                             <ui:TitledSlider Title="Default amount of fields"
+                                             Name="DefaultAmountOfFields"
                                              Maximum="20"
                                              Minimum="1"
-                                             MaxWidth="600"
-                                             Value="{Binding DefaultAmountOfFields}" />
+                                             MaxWidth="600" 
+                                             Value="{Binding Path=DefaultAmountOfFields, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                         </Grid>
                     </StackPanel>
                     <!--Field data settings-->
@@ -54,9 +55,9 @@
                                                       Grid.ColumnSpan="2" />
                             <styles:SHListBox Name="FieldDataSettings"
                                               Margin="0,0,4,0"
-                                              ItemsSource="{Binding Path=Fields.Values}"
                                               Grid.Column="0"
-                                              Grid.Row="1">
+                                              Grid.Row="1"
+                                              ItemsSource="{Binding Path=Fields.Values}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <AutoGrid Margin="0,0"
@@ -64,8 +65,8 @@
                                             <Border Background="{DynamicResource AccentColorBrush}"
                                                     Margin="-4,-4,1,-4"
                                                     Visibility="{Binding Path=Enabled, Converter={SHBoolToVisibilityConverter Hide=true}}" />
-                                                <Label Padding="4,1,1,1"
-                                                       Content="{Binding Path=FullName}" />
+                                            <Label Padding="4,1,1,1"
+                                                   Content="{Binding Path=FullName}" />
                                         </AutoGrid>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
@@ -115,7 +116,8 @@
                         <styles:SHListBox Name="FirstCarDataFieldSetting"
                                           Margin="0,0,4,0"
                                           Grid.Column="0"
-                                          Grid.Row="0">
+                                          Grid.Row="0"
+                                          ItemsSource="{Binding Path=CarFields}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <AutoGrid Margin="0,0"
