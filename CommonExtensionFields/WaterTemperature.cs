@@ -1,7 +1,7 @@
 ﻿using DashMenu.Data;
 using GameReaderCommon;
 
-namespace CommonDataFields
+namespace CommonExtensionFields
 {
     public class WaterTemperature : FieldExtensionBase, IFieldDataComponent
     {

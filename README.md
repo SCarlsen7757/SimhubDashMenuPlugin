@@ -22,7 +22,7 @@ To install the plugin:
 
 This plugin uses a flexible and expandable approach similar to Simhub for plugins. To add additional fields:
 
-1. Create a folder named `DashMenuCustomFields` in the root directory of Simhub.
+1. Create a folder named `DashMenuExtensionFields` in the root directory of Simhub.
 2. Place any additional dash menu data field DLL files into this folder.
 
 The DLL files placed in this folder will be loaded when starting Simhub.

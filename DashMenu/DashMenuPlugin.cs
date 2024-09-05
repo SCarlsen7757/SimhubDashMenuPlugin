@@ -329,7 +329,7 @@ namespace DashMenu
         }
         private void GetCustomFields()
         {
-            foreach (Type type in GetExtensionFieldsType("DashMenuCustomFields"))
+            foreach (Type type in GetExtensionFieldsType("DashMenuExtensionFields"))
             {
                 AddExtensionComponent(type);
             }

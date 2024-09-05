@@ -93,8 +93,11 @@
     <Compile Include="DashMenuPlugin.cs" />
     <Compile Include="Data\ColorScheme.cs" />
     <Compile Include="Data\FieldExtensionBase.cs" />
+    <Compile Include="Data\GaugeField.cs" />
     <Compile Include="Data\IDataField.cs" />
     <Compile Include="Data\IFieldExtensionBasic.cs" />
+    <Compile Include="Data\IFieldGaugeComponent.cs" />
+    <Compile Include="Data\IGaugeField.cs" />
     <Compile Include="EmptyDataField.cs" />
     <Compile Include="Extensions\ListExtensions.cs" />
     <Compile Include="FieldComponent.cs" />
