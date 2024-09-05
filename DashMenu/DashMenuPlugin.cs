@@ -69,16 +69,15 @@ namespace DashMenu
         /// <param name="pluginManager"></param>
         public void Init(PluginManager pluginManager)
         {
-            SimHub.Logging.Current.Info($"{this.GetType().FullName}. Plugin: {this.PluginName}, Version {Version.PluginVersion}");
+            SimHub.Logging.Current.Info($"{GetType().FullName}. Plugin: {PluginName}, Version {Version.PluginVersion}");
             LoadSettings();
 
             //Check if Empty field is in settings else add it
             AddExtensionComponent(typeof(EmptyDataField));
 
             GetCustomFields();
-            //TODO : Make UI to be able to disable and enable Data field.
-            pluginManager.AddProperty("ConfigMode", this.GetType(), MenuConfiguration.ConfigurationMode, "When in configuration mode, it's possible to change the displayed data.");
-            pluginManager.AddProperty("ActiveConfigField", this.GetType(), MenuConfiguration.ActiveField, "Active field in the dash menu config screen.");
+            pluginManager.AddProperty("ConfigMode", GetType(), MenuConfiguration.ConfigurationMode, "When in configuration mode, it's possible to change the displayed data.");
+            pluginManager.AddProperty("ActiveConfigField", GetType(), MenuConfiguration.ActiveField, "Active field in the dash menu config screen.");
             pluginManager.AddProperty("AmountOfFields", GetType(), fieldData.Count, "Amount of fields for the current car.");
             pluginManager.AddAction<DashMenuPlugin>("ToggleConfigMode", (pm, a) =>
             {
@@ -333,6 +332,7 @@ namespace DashMenu
             {
                 AddExtensionComponent(type);
             }
+            //TODO : Remove field settings for field extension that's not found.
             UpdateAvailableFieldData();
         }
 
