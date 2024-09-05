@@ -7,7 +7,7 @@ namespace CommonDataFields
     {
         public BrakeBias(string gameName) : base(gameName) { }
         public string Description { get => "Brake bias."; }
-        public IFieldData Data { get; set; } = new FieldData()
+        public IDataField Data { get; set; } = new DataField()
         {
             Name = "BB",
             IsDecimalNumber = true,

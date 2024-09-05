@@ -22,7 +22,7 @@ namespace DashMenu.UI
         private void ButtonForgetDefaultFields_Click(object sender, RoutedEventArgs e)
         {
             var settings = (Settings.GameSettings)this.DataContext;
-            settings.DefaultFields.Clear();
+            settings.DefaultDataFields.Clear();
         }
     }
 }

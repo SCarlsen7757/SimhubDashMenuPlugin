@@ -7,7 +7,7 @@ namespace CommonDataFields
     {
         public WaterTemperature(string gameName) : base(gameName) { }
         public string Description { get => "Water temperature"; }
-        public IFieldData Data { get; set; } = new FieldData()
+        public IDataField Data { get; set; } = new DataField()
         {
             Name = "Water Temp",
             IsDecimalNumber = true,

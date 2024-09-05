@@ -13,35 +13,35 @@ namespace DashMenu.Settings
     {
         public GameSettings()
         {
-            Fields.CollectionChanged += Fields_CollectionChanged;
+            DataFields.CollectionChanged += Fields_CollectionChanged;
             CarFields = new ObservableDictionary<string, CarFields>();
         }
 
-        private int defaultAmountOfFields = 5;
+        private int defaultAmountOfDataFields = 5;
         /// <summary>
         /// Max amount of fields that can be displayed.
         /// </summary>
-        public int DefaultAmountOfFields
+        public int DefaultAmountOfDataFields
         {
-            get => defaultAmountOfFields;
+            get => defaultAmountOfDataFields;
             set
             {
-                if (value == defaultAmountOfFields) return;
-                defaultAmountOfFields = value;
+                if (value == defaultAmountOfDataFields) return;
+                defaultAmountOfDataFields = value;
                 OnPropertyChanged();
             }
         }
-        private readonly object collectionLock = new object();
-        private readonly ObservableCollection<string> defaultFields = new ObservableCollection<string>();
-        public ObservableCollection<string> DefaultFields
+        private readonly object collectionDataFieldLock = new object();
+        private readonly ObservableCollection<string> defaultDataFields = new ObservableCollection<string>();
+        public ObservableCollection<string> DefaultDataFields
         {
             get
             {
                 return Application.Current.Dispatcher.Invoke(() =>
                 {
-                    lock (collectionLock)
+                    lock (collectionDataFieldLock)
                     {
-                        return defaultFields;
+                        return defaultDataFields;
                     }
                 });
             }
@@ -49,15 +49,15 @@ namespace DashMenu.Settings
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    lock (collectionLock)
+                    lock (collectionDataFieldLock)
                     {
                         // Only clear and repopulate if the incoming value is different
-                        if (value != null && !defaultFields.SequenceEqual(value))
+                        if (value != null && !defaultDataFields.SequenceEqual(value))
                         {
-                            defaultFields.Clear();
+                            defaultDataFields.Clear();
                             foreach (var field in value)
                             {
-                                defaultFields.Add(field);
+                                defaultDataFields.Add(field);
                             }
                             OnPropertyChanged();
                         }
@@ -65,16 +65,16 @@ namespace DashMenu.Settings
                 });
             }
         }
-        private ObservableCollection<string> DefaultFieldData()
+        private ObservableCollection<string> DefaultDataFieldsList()
 
         {
-            return new ObservableCollection<string>(Enumerable.Repeat(EmptyField.FullName, DefaultAmountOfFields));
+            return new ObservableCollection<string>(Enumerable.Repeat(EmptyDataField.FullName, DefaultAmountOfDataFields));
         }
         public ObservableDictionary<string, CarFields> CarFields { get; set; }
         /// <summary>
         /// All fields. Used for enabling and disabling the fields to be able to select them.
         /// </summary> 
-        public ObservableDictionary<string, Fields> Fields { get; set; } = new ObservableDictionary<string, Fields>();
+        public ObservableDictionary<string, DataFields> DataFields { get; set; } = new ObservableDictionary<string, DataFields>();
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -84,7 +84,7 @@ namespace DashMenu.Settings
         }
         private void Fields_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            if (!(sender is Fields fields)) return;
+            if (!(sender is DataFields fields)) return;
             switch (e.Action)
             {
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
@@ -115,15 +115,15 @@ namespace DashMenu.Settings
         {
             if (displayedFields == null)
             {
-                displayedFields = DefaultFields;
+                displayedFields = DefaultDataFields;
                 if (displayedFields.Count == 0)
                 {
-                    displayedFields = DefaultFieldData();
+                    displayedFields = DefaultDataFieldsList();
                 }
             }
             if (CarFields.TryGetValue(carId, out var carSettings))
             {
-                carSettings.DisplayedFields = displayedFields;
+                carSettings.DisplayedDataFields = displayedFields;
             }
             else
             {
@@ -141,14 +141,14 @@ namespace DashMenu.Settings
         {
             if (CarFields.TryGetValue(carId, out var carSettings))
             {
-                return carSettings.DisplayedFields;
+                return carSettings.DisplayedDataFields;
             }
             else
             {
-                var displayedFields = DefaultFields;
+                var displayedFields = DefaultDataFields;
                 if (displayedFields.Count == 0)
                 {
-                    displayedFields = DefaultFieldData();
+                    displayedFields = DefaultDataFieldsList();
                 }
                 return displayedFields;
             }

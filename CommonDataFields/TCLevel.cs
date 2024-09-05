@@ -7,7 +7,7 @@ namespace CommonDataFields
     {
         public TCLevel(string gameName) : base(gameName) { }
         public string Description { get => "TC Level."; }
-        public IFieldData Data { get; set; } = new FieldData()
+        public IDataField Data { get; set; } = new DataField()
         {
             Name = "TC",
             Color = new ColorScheme("#00a3d9", "#ffffff")

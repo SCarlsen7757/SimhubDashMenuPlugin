@@ -3,7 +3,7 @@
     /// <summary>
     /// Interface for field data.
     /// </summary>
-    public interface IFieldData
+    public interface IDataField
     {
         ColorScheme Color { get; set; }
         int Decimal { get; set; }

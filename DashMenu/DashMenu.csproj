@@ -93,12 +93,12 @@
     <Compile Include="DashMenuPlugin.cs" />
     <Compile Include="Data\ColorScheme.cs" />
     <Compile Include="Data\FieldExtensionBase.cs" />
-    <Compile Include="Data\IFieldData.cs" />
+    <Compile Include="Data\IDataField.cs" />
     <Compile Include="Data\IFieldExtensionBasic.cs" />
-    <Compile Include="EmptyField.cs" />
+    <Compile Include="EmptyDataField.cs" />
     <Compile Include="Extensions\ListExtensions.cs" />
     <Compile Include="FieldComponent.cs" />
-    <Compile Include="Data\FieldData.cs" />
+    <Compile Include="Data\DataField.cs" />
     <Compile Include="Data\IFieldDataComponent.cs" />
     <Compile Include="MenuConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -111,7 +111,7 @@
     <Compile Include="Settings\DayNightColorScheme.cs" />
     <Compile Include="Settings\CarFields.cs" />
     <Compile Include="Settings\GameSettings.cs" />
-    <Compile Include="Settings\Fields.cs" />
+    <Compile Include="Settings\DataFields.cs" />
     <Compile Include="Settings\PropertyOverride.cs" />
     <Compile Include="Settings\Settings.cs" />
     <Compile Include="UI\CarFieldsItem.xaml.cs">
@@ -170,9 +170,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="NewFolder1\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>if $(ConfigurationName)==Debug (

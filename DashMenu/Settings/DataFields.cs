@@ -4,9 +4,9 @@ using System.Runtime.CompilerServices;
 
 namespace DashMenu.Settings
 {
-    internal class Fields : INotifyPropertyChanged
+    internal class DataFields : INotifyPropertyChanged
     {
-        public Fields()
+        public DataFields()
         {
             DayNightColorScheme = new DayNightColorScheme();
             NameOverride.PropertyChanged += NameOverride_PropertyChanged;

@@ -47,12 +47,13 @@
                                      Margin="4"
                                      Height="15"
                                      HorizontalAlignment="Right"
-                                     Content="Make default field from this car"
+                                     Content="Make default data field from this car"
+                                     ToolTip="Make the data fields from this car, the default data fields for new cars."
                                      Click="DefaultFields_Click" />
             </StackPanel>
             <styles:SHSubSectionTitle Content="Displayed Data Fields"
                                       Grid.ColumnSpan="2" />
-            <ItemsControl ItemsSource="{Binding DisplayedFields}"
+            <ItemsControl ItemsSource="{Binding DisplayedDataFields}"
                           Grid.ColumnSpan="2"
                           Margin="12,0,0,0">
                 <ItemsControl.ItemsPanel>

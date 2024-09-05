@@ -24,7 +24,7 @@ namespace DashMenu.Settings
         }
         private void Fields_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            if (!(sender is Fields fields)) return;
+            if (!(sender is DataFields fields)) return;
             switch (e.Action)
             {
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Add:

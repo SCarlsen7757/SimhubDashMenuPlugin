@@ -73,7 +73,7 @@ namespace DashMenu
             LoadSettings();
 
             //Check if Empty field is in settings else add it
-            SaveFieldSettingsAndAddFieldComponent(typeof(EmptyField));
+            AddExtensionComponent(typeof(EmptyDataField));
 
             GetCustomFields();
             //TODO : Make UI to be able to disable and enable Data field.
@@ -150,7 +150,7 @@ namespace DashMenu
             {
                 if (!MenuConfiguration.ConfigurationMode) return;
                 if (fieldData.Count <= 0 || fieldData.Count >= 20) return;
-                fieldData.Add(EmptyField.Field);
+                fieldData.Add(EmptyDataField.Field);
                 pluginManager.SetPropertyValue("AmountOfFields", GetType(), fieldData.Count);
             });
 
@@ -234,7 +234,7 @@ namespace DashMenu
             this.SaveCommonSettings("DashMenuSettings", Settings);
         }
 
-        internal IFieldData GetField(int index)
+        internal IDataField GetField(int index)
         {
             if (index <= 0 || index > fieldData.Count) return null;
             return fieldData[index - 1].Data;
@@ -257,7 +257,7 @@ namespace DashMenu
                 //Check if DisplayField is valid
                 if (string.IsNullOrEmpty(fieldDataSettings[i]) || !availableFieldData.Any(f => fieldDataSettings[i] == f.GetType().FullName))
                 {
-                    fieldDataSettings[i] = EmptyField.FullName;
+                    fieldDataSettings[i] = EmptyDataField.FullName;
                 }
 
                 //Asign data
@@ -284,7 +284,7 @@ namespace DashMenu
             }
             Settings.GameSettings[PluginManager.GameName].UpdateDisplayedField(carId, carModel, fieldDataSettings);
         }
-        private static IEnumerable<Type> GetCustomFieldsType(string sub_dir)
+        private static IEnumerable<Type> GetExtensionFieldsType(string sub_dir)
         {
             string rootDirectory = Path.Combine(Path.GetDirectoryName((Assembly.GetExecutingAssembly().Location)), sub_dir);
             string[] dllFiles;
@@ -299,7 +299,7 @@ namespace DashMenu
                 Directory.CreateDirectory(rootDirectory);
                 yield break;
             }
-            Type interfaceType = typeof(IFieldDataComponent);
+            Type interfaceType = typeof(IFieldExtensionBasic);
 
             // Iterate through each DLL file
             foreach (string dllFile in dllFiles)
@@ -329,14 +329,14 @@ namespace DashMenu
         }
         private void GetCustomFields()
         {
-            foreach (Type type in GetCustomFieldsType("DashMenuCustomFields"))
+            foreach (Type type in GetExtensionFieldsType("DashMenuCustomFields"))
             {
-                SaveFieldSettingsAndAddFieldComponent(type);
+                AddExtensionComponent(type);
             }
             UpdateAvailableFieldData();
         }
 
-        private void SaveFieldSettingsAndAddFieldComponent(Type type)
+        private void AddExtensionComponent(Type type)
         {
             IFieldDataComponent fieldDataInstance;
             try
@@ -349,16 +349,16 @@ namespace DashMenu
                 return;
             }
             //Get field settings else create field settings
-            if (!(Settings.GameSettings[PluginManager.GameName].Fields.TryGetValue(type.FullName, out Fields fieldSetting)))
+            if (!(Settings.GameSettings[PluginManager.GameName].DataFields.TryGetValue(type.FullName, out DataFields fieldSetting)))
             {
-                fieldSetting = new Fields
+                fieldSetting = new DataFields
                 {
                     Enabled = true,
                     NameOverride = new PropertyOverride<string>(fieldDataInstance.Data.Name),
                     DecimalOverride = new PropertyOverride<int>(fieldDataInstance.Data.Decimal),
                     DayNightColorScheme = new DayNightColorScheme(fieldDataInstance.Data.Color)
                 };
-                Settings.GameSettings[PluginManager.GameName].Fields.Add(type.FullName, fieldSetting);
+                Settings.GameSettings[PluginManager.GameName].DataFields.Add(type.FullName, fieldSetting);
             }
             fieldSetting.Namespace = type.Namespace;
             fieldSetting.Name = type.Name;
@@ -384,10 +384,10 @@ namespace DashMenu
 
         private void NameOverride_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (!(sender is Settings.Fields fieldSettings)) return;
+            if (!(sender is Settings.DataFields fieldSettings)) return;
             UpdateNameOverride(fieldSettings);
         }
-        private void UpdateNameOverride(Settings.Fields fieldSettings)
+        private void UpdateNameOverride(Settings.DataFields fieldSettings)
         {
             var fieldData = allFieldData.FirstOrDefault(x => x.FullName == fieldSettings.FullName);
             if (fieldData == null) return;
@@ -403,11 +403,11 @@ namespace DashMenu
         }
         private void FieldSetting_ColorSchemeOverridePropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (!(sender is Settings.Fields fieldSettings)) return;
+            if (!(sender is Settings.DataFields fieldSettings)) return;
             UpdateColorOveride(fieldSettings);
         }
 
-        private void UpdateColorOveride(Fields fieldSettings)
+        private void UpdateColorOveride(DataFields fieldSettings)
         {
             var fieldData = allFieldData.FirstOrDefault(x => x.FullName == fieldSettings.FullName);
             if (fieldData == null) return;
@@ -428,10 +428,10 @@ namespace DashMenu
 
         private void DecimalOverride_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (!(sender is Settings.Fields fieldSettings)) return;
+            if (!(sender is Settings.DataFields fieldSettings)) return;
             UpdateDecimalOverride(fieldSettings);
         }
-        private void UpdateDecimalOverride(Settings.Fields fieldSettings)
+        private void UpdateDecimalOverride(Settings.DataFields fieldSettings)
         {
             var fieldData = allFieldData.FirstOrDefault(x => x.FullName == fieldSettings.FullName);
             if (fieldData == null) return;
@@ -447,7 +447,7 @@ namespace DashMenu
         }
         private void FieldSetting_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (!(sender is Fields settingsfield)) return;
+            if (!(sender is DataFields settingsfield)) return;
             switch (e.PropertyName)
             {
                 case nameof(settingsfield.Enabled):
@@ -468,7 +468,7 @@ namespace DashMenu
         {
             foreach (var field in availableFieldData)
             {
-                if (!(Settings.GameSettings[PluginManager.GameName].Fields.TryGetValue(field.GetType().FullName, out var fieldSettings))) continue;
+                if (!(Settings.GameSettings[PluginManager.GameName].DataFields.TryGetValue(field.GetType().FullName, out var fieldSettings))) continue;
                 UpdateColorOveride(fieldSettings);
             }
         }
@@ -495,7 +495,7 @@ namespace DashMenu
                 {
                     if (fieldComponent.FieldData.GetType().FullName == fieldData[i].GetType().FullName)
                     {
-                        fieldData[i] = availableFieldData.FirstOrDefault(f => f.GetType().FullName == EmptyField.Field.GetType().FullName);
+                        fieldData[i] = availableFieldData.FirstOrDefault(f => f.GetType().FullName == EmptyDataField.Field.GetType().FullName);
                     }
                 }
                 availableFieldData.Remove(fieldComponent.FieldData);

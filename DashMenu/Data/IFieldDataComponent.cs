@@ -5,6 +5,6 @@
         /// <summary>
         /// Field data.
         /// </summary>
-        IFieldData Data { get; set; }
+        IDataField Data { get; set; }
     }
 }

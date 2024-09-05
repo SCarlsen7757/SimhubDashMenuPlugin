@@ -14,7 +14,7 @@
         <settings:GameSettings />
     </UserControl.DataContext>
     <styles:SHTabControl>
-        <styles:SHTabItem Header="General settings">
+        <styles:SHTabItem Header="Data fields">
             <styles:SHSection Title="General settings">
                 <AutoGrid Rows="auto,*">
                     <!--Default amount of fields-->
@@ -29,12 +29,12 @@
                                 <RowDefinition Height="auto" />
                             </Grid.RowDefinitions>
 
-                            <ui:TitledSlider Title="Default amount of fields"
+                            <ui:TitledSlider Title="Default amount data of fields"
                                              Name="DefaultAmountOfFields"
                                              Maximum="20"
                                              Minimum="1"
                                              MaxWidth="600"
-                                             Value="{Binding Path=DefaultAmountOfFields, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                             Value="{Binding Path=DefaultAmountOfDataFields, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         </Grid>
                     </StackPanel>
                     <!--Field data settings-->
@@ -57,7 +57,7 @@
                                               Margin="0,0,4,0"
                                               Grid.Column="0"
                                               Grid.Row="1"
-                                              ItemsSource="{Binding Path=Fields.Values}">
+                                              ItemsSource="{Binding Path=DataFields.Values}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <AutoGrid Margin="0,0"
@@ -99,12 +99,13 @@
             <!--Car settings-->
             <styles:SHSection Title="Car settings">
                 <StackPanel>
-                    <styles:SHSubSectionTitle Content="Default fields" />
-                    <styles:SHButtonPrimary Click="ButtonForgetDefaultFields_Click"
-                                            VerticalAlignment="Center"
-                                            HorizontalAlignment="Left"
-                                            Content="Forget default fields" />
-                    <ItemsControl ItemsSource="{Binding DefaultFields}"
+                    <styles:SHSubSectionTitle Content="Default data fields" />
+                    <styles:SHLinkButton Click="ButtonForgetDefaultFields_Click"
+                                         VerticalAlignment="Center"
+                                         HorizontalAlignment="Right"
+                                         Content="Forget default fields"
+                                         Margin="0,0,4,0" />
+                    <ItemsControl ItemsSource="{Binding DefaultDataFields}"
                                   Grid.ColumnSpan="2"
                                   Margin="12,0,0,0">
                         <ItemsControl.ItemsPanel>
@@ -126,10 +127,11 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                     <styles:SHSubSectionTitle Content="Per car settings" />
-                    <styles:SHButtonPrimary Click="ButtonForgetAllCars_Click"
-                                            VerticalAlignment="Center"
-                                            HorizontalAlignment="Left"
-                                            Content="Forget all cars" />
+                    <styles:SHLinkButton Click="ButtonForgetAllCars_Click"
+                                         VerticalAlignment="Center"
+                                         HorizontalAlignment="Right"
+                                         Content="Forget all cars"
+                                         Margin="0,0,4,8" />
                     <!--Car fields-->
                     <Grid>
                         <Grid.ColumnDefinitions>

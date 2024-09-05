@@ -17,9 +17,9 @@ namespace DashMenu.UI
         private void UserControl_DataContextChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
         {
             if (!contentInitialized) return;
-            if (!(DataContext is Settings.Fields field)) return;
+            if (!(DataContext is Settings.DataFields field)) return;
             //Can't disable empty field plugin.
-            EnabledCheckBox.IsEnabled = !(field.FullName == typeof(EmptyField).FullName);
+            EnabledCheckBox.IsEnabled = !(field.FullName == typeof(EmptyDataField).FullName);
         }
     }
 }

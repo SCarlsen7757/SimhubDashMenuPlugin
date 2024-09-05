@@ -51,7 +51,7 @@ namespace DashMenu.UI
             Panel parent = (Panel)currentControl.Parent;
             GameSettings gameSettings = (GameSettings)parent.DataContext;
 
-            gameSettings.DefaultFields = carFields.DisplayedFields;
+            gameSettings.DefaultDataFields = carFields.DisplayedDataFields;
         }
     }
 }

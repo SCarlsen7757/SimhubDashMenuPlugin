@@ -7,7 +7,7 @@ namespace CommonDataFields
     {
         public EngineMap(string gameName) : base(gameName) { }
         public string Description { get => "Engine map"; }
-        public IFieldData Data { get; set; } = new FieldData()
+        public IDataField Data { get; set; } = new DataField()
         {
             Name = "MAP",
             Color = new ColorScheme("#d9c000", "#ffffff")
