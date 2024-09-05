@@ -3,11 +3,11 @@ using GameReaderCommon;
 
 namespace CommonDataFields
 {
-    public class BrakeBias : ExtensionDataBase, IFieldDataComponent
+    public class BrakeBias : FieldExtensionBase, IFieldDataComponent
     {
         public BrakeBias(string gameName) : base(gameName) { }
         public string Description { get => "Brake bias."; }
-        public FieldData Data { get; set; } = new FieldData()
+        public IFieldData Data { get; set; } = new FieldData()
         {
             Name = "BB",
             IsDecimalNumber = true,

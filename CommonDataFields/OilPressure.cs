@@ -4,11 +4,11 @@ using GameReaderCommon;
 namespace CommonDataFields
 {
 
-    public class OilPressure : ExtensionDataBase, IFieldDataComponent
+    public class OilPressure : FieldExtensionBase, IFieldDataComponent
     {
         public OilPressure(string gameName) : base(gameName) { }
         public string Description { get => "Oil pressure"; }
-        public FieldData Data { get; set; } = new FieldData()
+        public IFieldData Data { get; set; } = new FieldData()
         {
             Name = "Oil Press",
             IsDecimalNumber = true,

@@ -3,11 +3,11 @@ using GameReaderCommon;
 
 namespace DashMenu
 {
-    internal class EmptyField : ExtensionDataBase, IFieldDataComponent
+    internal class EmptyField : FieldExtensionBase, IFieldDataComponent
     {
         public EmptyField(string gameName) : base(gameName) { }
         public string Description { get; } = "";
-        public FieldData Data { get; set; } = new FieldData()
+        public IFieldData Data { get; set; } = new FieldData()
         {
             Name = "",
             Value = "",

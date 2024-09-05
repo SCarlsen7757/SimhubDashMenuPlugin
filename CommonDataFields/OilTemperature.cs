@@ -3,11 +3,11 @@ using GameReaderCommon;
 
 namespace CommonDataFields
 {
-    public class OilTemperature : ExtensionDataBase, IFieldDataComponent
+    public class OilTemperature : FieldExtensionBase, IFieldDataComponent
     {
         public OilTemperature(string gameName) : base(gameName) { }
         public string Description { get => "Oil temperature"; }
-        public FieldData Data { get; set; } = new FieldData()
+        public IFieldData Data { get; set; } = new FieldData()
         {
             Name = "Oil Temp",
             IsDecimalNumber = true,

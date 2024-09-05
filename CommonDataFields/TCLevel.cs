@@ -3,11 +3,11 @@ using GameReaderCommon;
 
 namespace CommonDataFields
 {
-    public class TCLevel : ExtensionDataBase, IFieldDataComponent
+    public class TCLevel : FieldExtensionBase, IFieldDataComponent
     {
         public TCLevel(string gameName) : base(gameName) { }
         public string Description { get => "TC Level."; }
-        public FieldData Data { get; set; } = new FieldData()
+        public IFieldData Data { get; set; } = new FieldData()
         {
             Name = "TC",
             Color = new ColorScheme("#00a3d9", "#ffffff")

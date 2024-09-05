@@ -234,7 +234,7 @@ namespace DashMenu
             this.SaveCommonSettings("DashMenuSettings", Settings);
         }
 
-        internal FieldData GetField(int index)
+        internal IFieldData GetField(int index)
         {
             if (index <= 0 || index > fieldData.Count) return null;
             return fieldData[index - 1].Data;

@@ -3,11 +3,11 @@ using GameReaderCommon;
 
 namespace CommonDataFields
 {
-    public class ABSLevel : ExtensionDataBase, IFieldDataComponent
+    public class ABSLevel : FieldExtensionBase, IFieldDataComponent
     {
         public ABSLevel(string gameName) : base(gameName) { }
         public string Description { get => "ABS Level."; }
-        public FieldData Data { get; set; } = new FieldData()
+        public IFieldData Data { get; set; } = new FieldData()
         {
             Name = "ABS",
             Color = new ColorScheme("#00ff2a", "#ffffff")

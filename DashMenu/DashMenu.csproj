@@ -92,8 +92,9 @@
   <ItemGroup>
     <Compile Include="DashMenuPlugin.cs" />
     <Compile Include="Data\ColorScheme.cs" />
-    <Compile Include="Data\ExtensionDataBase.cs" />
+    <Compile Include="Data\FieldExtensionBase.cs" />
     <Compile Include="Data\IFieldData.cs" />
+    <Compile Include="Data\IFieldExtensionBasic.cs" />
     <Compile Include="EmptyField.cs" />
     <Compile Include="Extensions\ListExtensions.cs" />
     <Compile Include="FieldComponent.cs" />
