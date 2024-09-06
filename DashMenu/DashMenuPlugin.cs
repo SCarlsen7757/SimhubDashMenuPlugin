@@ -40,7 +40,7 @@ namespace DashMenu
         {
             get
             {
-                PluginNameAttribute attribute = (PluginNameAttribute)Attribute.GetCustomAttribute(this.GetType(), typeof(PluginNameAttribute));
+                PluginNameAttribute attribute = (PluginNameAttribute)Attribute.GetCustomAttribute(GetType(), typeof(PluginNameAttribute));
                 return attribute.name;
             }
         }
@@ -180,7 +180,7 @@ namespace DashMenu
                 throw;
 #endif
             }
-            pluginManager.AddProperty<bool>("PluginRunning", this.GetType(), true);
+            pluginManager.AddProperty<bool>("PluginRunning", GetType(), true);
             PluginManagerEvents.Instance.ActiveCarChanged += CarChanged;
             BrightnessConfiguration.Configuration.PropertyChanged += DayNightMode_PropertyChanged;
 
