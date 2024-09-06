@@ -94,13 +94,21 @@ namespace DashMenu.Settings
                     fields.PropertyChanged -= PropertyOverride_PropertyChanged;
                     break;
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Replace:
+#if DEBUG
                     throw new NotImplementedException();
+#endif
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Move:
+#if DEBUG
                     throw new NotImplementedException();
+#endif
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Reset:
+#if DEBUG
                     throw new NotImplementedException();
+#endif
                 default:
+#if DEBUG
                     throw new NotImplementedException();
+#endif
             }
         }
 
