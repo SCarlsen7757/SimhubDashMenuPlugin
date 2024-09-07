@@ -3,10 +3,10 @@ using GameReaderCommon;
 
 namespace DashMenu
 {
-    internal class EmptyDataField : FieldExtensionBase, IFieldDataComponent
+    internal class EmptyDataField : FieldExtensionBase, IDataFieldComponent
     {
         public EmptyDataField(string gameName) : base(gameName) { }
-        public string Description { get; } = "";
+        public string Description { get; } = string.Empty;
         public IDataField Data { get; set; } = new DataField()
         {
             Name = "",
@@ -19,11 +19,11 @@ namespace DashMenu
             return;
         }
 
-        private readonly static EmptyDataField field = new EmptyDataField("");
+        private readonly static EmptyDataField @field = new EmptyDataField("");
         /// <summary>
         /// Empty field
         /// </summary>
-        public static EmptyDataField Field { get { return field; } }
+        public static EmptyDataField Field => @field;
         private static string fullname = null;
         public static string FullName
         {

@@ -3,7 +3,7 @@ using GameReaderCommon;
 
 namespace CommonExtensionFields
 {
-    public class BrakeBias : FieldExtensionBase, IFieldDataComponent
+    public class BrakeBias : FieldExtensionBase, IDataFieldComponent
     {
         public BrakeBias(string gameName) : base(gameName) { }
         public string Description { get => "Brake bias."; }

@@ -3,7 +3,7 @@ using GameReaderCommon;
 
 namespace CommonExtensionFields
 {
-    public class EngineMap : FieldExtensionBase, IFieldDataComponent
+    public class EngineMap : FieldExtensionBase, IDataFieldComponent
     {
         public EngineMap(string gameName) : base(gameName) { }
         public string Description { get => "Engine map"; }

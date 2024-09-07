@@ -3,17 +3,25 @@ using GameReaderCommon;
 
 namespace CommonExtensionFields
 {
-    public class WaterTemperature : FieldExtensionBase, IFieldDataComponent
+    public class WaterTemperature : FieldExtensionBase, IGaugeFieldComponent
     {
         public WaterTemperature(string gameName) : base(gameName) { }
         public string Description { get => "Water temperature"; }
-        public IDataField Data { get; set; } = new DataField()
+        public IGaugeField Data { get; set; } = new GaugeField()
         {
             Name = "Water Temp",
             IsDecimalNumber = true,
             Decimal = 0,
-            Color = new ColorScheme("#ffffff", "#ffffff")
+            Color = new ColorScheme("#ffffff", "#ffffff"),
+            Maximum = 100.ToString(),
+            Minimum = 20.ToString()
         };
+        IDataField IDataFieldComponent.Data
+        {
+            get => Data; // Return the same GaugeField instance
+            set => Data = (IGaugeField)value; // Set the same instance
+        }
+
         public void Update(ref GameData data)
         {
             if (!data.GameRunning) return;

@@ -24,16 +24,24 @@ namespace DashMenu
 
         private Settings.Settings Settings { get; set; }
         private MenuConfiguration MenuConfiguration { get; set; } = new MenuConfiguration();
-        private List<IFieldDataComponent> fieldData = new List<IFieldDataComponent>();
+        private List<IDataFieldComponent> dataFields = new List<IDataFieldComponent>();
+        private List<IGaugeFieldComponent> gaugeFields = new List<IGaugeFieldComponent>();
         /// <summary>
-        /// List of all field data, used in the settings UI.
+        /// List of all data fields.
         /// </summary>
-        private readonly ObservableCollection<FieldComponent> allFieldData = new ObservableCollection<FieldComponent>();
+        private readonly ObservableCollection<DataFieldComponent> allDataField = new ObservableCollection<DataFieldComponent>();
         /// <summary>
-        /// List of available fields that can be used in the displayed fields.
+        /// List of all gauge fields.
         /// </summary>
-        private readonly List<IFieldDataComponent> availableFieldData = new List<IFieldDataComponent>();
-
+        private readonly ObservableCollection<GaugeFieldComponent> allGaugeField = new ObservableCollection<GaugeFieldComponent>();
+        /// <summary>
+        /// List of available data fields that can be used in the displayed data fields.
+        /// </summary>
+        private readonly List<IDataFieldComponent> availableDataField = new List<IDataFieldComponent>();
+        /// <summary>
+        /// List of avaiable gauge fields that can be used in the displayed gauge fields.
+        /// </summary>
+        private readonly List<IGaugeFieldComponent> availableGaugeField = new List<IGaugeFieldComponent>();
         private string oldCarId = null;
         private string oldCarModel = null;
         public string PluginName
@@ -62,6 +70,28 @@ namespace DashMenu
         /// <param name="pluginManager"></param>
         /// <returns></returns>
         public System.Windows.Controls.Control GetWPFSettingsControl(PluginManager pluginManager) => new UI.SettingsControl(Settings.GameSettings[PluginManager.GameName]);
+
+        internal static class PropertyNames
+        {
+            public const string PluginRunning = "PluginRunning";
+            public const string ConfigMode = "ConfigMode";
+            public const string ActiveConfigField = "ActiveConfigField";
+            public const string FieldType = "FieldType";
+            public const string AmountOfDataFields = "AmountOfDataFields";
+            public const string AmountOfGaugeFields = "AmountOfGaugeFields";
+        }
+
+        internal static class ActionNames
+        {
+            public const string ToggleConfigMode = "ToggleConfigMode";
+            public const string ChangeFieldType = "ChangeFieldType";
+            public const string ConfigNextField = "ConfigNextField";
+            public const string ConfigPrevField = "ConfigPrevField";
+            public const string ChangeFieldTypeNext = "ChangeFieldTypeNext";
+            public const string ChangeFieldTypePrev = "ChangeFieldTypePrev";
+            public const string IncreaseNumberOfField = "IncreaseNumberOfFields";
+            public const string DecreaseNumberOfField = "DecreasenumberOfFields";
+        }
         /// <summary>
         /// Called once after plugins startup.
         /// Plugins are rebuilt at game change.
@@ -73,21 +103,27 @@ namespace DashMenu
             LoadSettings();
 
             //Check if Empty field is in settings else add it
-            AddExtensionComponent(typeof(EmptyDataField));
-
+            AddDataFieldExtensionComponent(typeof(EmptyDataField));
+            AddGaugeFieldExtensionComponent(typeof(EmptyGaugeField));
             GetCustomFields();
-            pluginManager.AddProperty("ConfigMode", GetType(), MenuConfiguration.ConfigurationMode, "When in configuration mode, it's possible to change the displayed data.");
-            pluginManager.AddProperty("ActiveConfigField", GetType(), MenuConfiguration.ActiveField, "Active field in the dash menu config screen.");
-            pluginManager.AddProperty("AmountOfFields", GetType(), fieldData.Count, "Amount of fields for the current car.");
-            pluginManager.AddAction<DashMenuPlugin>("ToggleConfigMode", (pm, a) =>
+            SettingsExtensionFieldsCleanUp();
+            UpdateAvailableField();
+
+            pluginManager.AddProperty(PropertyNames.ConfigMode, GetType(), MenuConfiguration.ConfigurationMode, "When in configuration mode, it's possible to change the displayed data.");
+            pluginManager.AddProperty(PropertyNames.ActiveConfigField, GetType(), MenuConfiguration.ActiveField, "Active field in the dash menu config screen.");
+            pluginManager.AddProperty(PropertyNames.FieldType, GetType(), MenuConfiguration.FieldType.ToString(), "Field type that selected, that can be changed when in configuration mode.");
+            pluginManager.AddProperty(PropertyNames.AmountOfDataFields, GetType(), dataFields.Count, "Amount of data fields for the current car.");
+            pluginManager.AddProperty(PropertyNames.AmountOfGaugeFields, GetType(), gaugeFields.Count, "Amount of gauge fields for the current car.");
+            pluginManager.AddAction<DashMenuPlugin>(ActionNames.ToggleConfigMode, (pm, a) =>
             {
-                if (fieldData.Count == 0) return;
+                if (string.IsNullOrWhiteSpace(PluginManager.LastCarId)) return;
                 MenuConfiguration.ConfigurationMode = !MenuConfiguration.ConfigurationMode;
 
                 //When entering configuration mode, reset the active field to 1.
                 if (MenuConfiguration.ConfigurationMode)
                 {
                     MenuConfiguration.ActiveField = 0;
+                    MenuConfiguration.FieldType = FieldType.Data;
                 }
                 else
                 {
@@ -95,14 +131,34 @@ namespace DashMenu
                     SaveDisplayedField(PluginManager.LastCarId, PluginManager.GameManager.CarManager.LastCarSettings.CarModel);
                 }
 
-                pluginManager.SetPropertyValue("ConfigMode", GetType(), MenuConfiguration.ConfigurationMode);
-                pluginManager.SetPropertyValue("ActiveConfigField", GetType(), MenuConfiguration.ActiveField + 1);
+                pluginManager.SetPropertyValue(PropertyNames.ConfigMode, GetType(), MenuConfiguration.ConfigurationMode);
+                pluginManager.SetPropertyValue(PropertyNames.ActiveConfigField, GetType(), MenuConfiguration.ActiveField + 1);
+                pluginManager.SetPropertyValue(PropertyNames.FieldType, GetType(), MenuConfiguration.FieldType.ToString());
             });
-
-            pluginManager.AddAction<DashMenuPlugin>("ConfigNextField", (pm, a) =>
+            pluginManager.AddAction<DashMenuPlugin>(ActionNames.ChangeFieldType, (pm, a) =>
             {
                 if (!MenuConfiguration.ConfigurationMode) return;
-                if (MenuConfiguration.ActiveField < fieldData.Count - 1)
+                //It works for now.
+                if (MenuConfiguration.FieldType == FieldType.Data)
+                {
+                    MenuConfiguration.FieldType = FieldType.Gauge;
+                }
+                else
+                {
+                    MenuConfiguration.FieldType = FieldType.Data;
+                }
+
+                MenuConfiguration.ActiveField = 0;
+                pluginManager.SetPropertyValue(PropertyNames.FieldType, GetType(), MenuConfiguration.FieldType.ToString());
+                pluginManager.SetPropertyValue(PropertyNames.ActiveConfigField, GetType(), MenuConfiguration.ActiveField + 1);
+            });
+
+            pluginManager.AddAction<DashMenuPlugin>(ActionNames.ConfigNextField, (pm, a) =>
+            {
+                if (!MenuConfiguration.ConfigurationMode) return;
+                int count = CurrentFieldTypeCount() - 1;
+                if (count <= 0) return;
+                if (MenuConfiguration.ActiveField < count)
                 {
                     MenuConfiguration.ActiveField++;
                 }
@@ -110,55 +166,123 @@ namespace DashMenu
                 {
                     MenuConfiguration.ActiveField = 0;
                 }
-                pluginManager.SetPropertyValue("ActiveConfigField", GetType(), MenuConfiguration.ActiveField + 1);
-                SimHub.Logging.Current.Debug("Dash menu action ConfigNextField");
+                pluginManager.SetPropertyValue(PropertyNames.ActiveConfigField, GetType(), MenuConfiguration.ActiveField + 1);
+                SimHub.Logging.Current.Debug($"Dash menu action ConfigNextField. New active field: {MenuConfiguration.ActiveField + 1}.");
             });
 
-            pluginManager.AddAction<DashMenuPlugin>("ConfigPrevField", (pm, a) =>
+            pluginManager.AddAction<DashMenuPlugin>(ActionNames.ConfigPrevField, (pm, a) =>
             {
                 if (!MenuConfiguration.ConfigurationMode) return;
+                int count = CurrentFieldTypeCount() - 1;
+                if (count <= 0) return;
                 if (MenuConfiguration.ActiveField > 0)
                 {
                     MenuConfiguration.ActiveField--;
                 }
                 else
                 {
-                    MenuConfiguration.ActiveField = fieldData.Count - 1;
+                    MenuConfiguration.ActiveField = count;
                 }
-                pluginManager.SetPropertyValue("ActiveConfigField", GetType(), MenuConfiguration.ActiveField + 1);
-                SimHub.Logging.Current.Debug("Dash menu action ConfigPrevField");
+                pluginManager.SetPropertyValue(PropertyNames.ActiveConfigField, GetType(), MenuConfiguration.ActiveField + 1);
+                SimHub.Logging.Current.Debug($"Dash menu action ConfigPrevField. New active field {MenuConfiguration.ActiveField + 1}.");
             });
 
-            pluginManager.AddAction<DashMenuPlugin>("ChangeFieldTypeNext", (pm, a) =>
+            pluginManager.AddAction<DashMenuPlugin>(ActionNames.ChangeFieldTypeNext, (pm, a) =>
             {
                 if (!MenuConfiguration.ConfigurationMode) return;
-                var currentField = fieldData[MenuConfiguration.ActiveField];
-                fieldData[MenuConfiguration.ActiveField] = NextField(currentField);
-                SimHub.Logging.Current.Debug("Dash menu action ChangeFieldTypeNext");
+                switch (MenuConfiguration.FieldType)
+                {
+                    case FieldType.Data:
+                        var currentDataField = dataFields[MenuConfiguration.ActiveField];
+                        dataFields[MenuConfiguration.ActiveField] = NextField(currentDataField);
+                        break;
+                    case FieldType.Gauge:
+                        var currentGuageField = gaugeFields[MenuConfiguration.ActiveField];
+                        gaugeFields[MenuConfiguration.ActiveField] = NextField(currentGuageField);
+                        break;
+                    default:
+#if DEBUG
+                        throw new ArgumentOutOfRangeException();
+#else
+                        SimHub.Logging.Current.Error($"Invalid FieldType: {MenuConfiguration.FieldType}");
+                        break;
+#endif
+                }
+                SimHub.Logging.Current.Debug($"Dash menu action ChangeFieldTypeNext of field type: {MenuConfiguration.FieldType}.");
             });
 
-            pluginManager.AddAction<DashMenuPlugin>("ChangeFieldTypePrev", (pm, a) =>
+            pluginManager.AddAction<DashMenuPlugin>(ActionNames.ChangeFieldTypePrev, (pm, a) =>
             {
                 if (!MenuConfiguration.ConfigurationMode) return;
-                var currentField = fieldData[MenuConfiguration.ActiveField];
-                fieldData[MenuConfiguration.ActiveField] = PrevField(currentField);
-                SimHub.Logging.Current.Debug("Dash menu action ChangeFieldTypePrev");
+                switch (MenuConfiguration.FieldType)
+                {
+                    case FieldType.Data:
+                        var currentDataField = dataFields[MenuConfiguration.ActiveField];
+                        dataFields[MenuConfiguration.ActiveField] = PrevField(currentDataField);
+                        break;
+                    case FieldType.Gauge:
+                        var currentGuageField = gaugeFields[MenuConfiguration.ActiveField];
+                        gaugeFields[MenuConfiguration.ActiveField] = PrevFied(currentGuageField);
+                        break;
+                    default:
+#if DEBUG
+                        throw new ArgumentOutOfRangeException();
+#else
+                        SimHub.Logging.Current.Error($"Invalid FieldType: {MenuConfiguration.FieldType}");
+                        break;
+#endif
+                }
+                SimHub.Logging.Current.Debug($"Dash menu action ChangeFieldTypePrev of field type: {MenuConfiguration.FieldType}.");
             });
 
-            pluginManager.AddAction<DashMenuPlugin>("IncreaseNumberOfFieldData", (pm, a) =>
+            pluginManager.AddAction<DashMenuPlugin>(ActionNames.IncreaseNumberOfField, (pm, a) =>
             {
                 if (!MenuConfiguration.ConfigurationMode) return;
-                if (fieldData.Count <= 0 || fieldData.Count >= 20) return;
-                fieldData.Add(EmptyDataField.Field);
-                pluginManager.SetPropertyValue("AmountOfFields", GetType(), fieldData.Count);
+                int count = CurrentFieldTypeCount();
+                if (count <= 0 || count >= 20) return;
+                switch (MenuConfiguration.FieldType)
+                {
+                    case FieldType.Data:
+                        dataFields.Add(EmptyDataField.Field);
+                        pluginManager.SetPropertyValue(PropertyNames.AmountOfDataFields, GetType(), dataFields.Count);
+                        break;
+                    case FieldType.Gauge:
+                        gaugeFields.Add(EmptyGaugeField.Field);
+                        pluginManager.SetPropertyValue(PropertyNames.AmountOfGaugeFields, GetType(), gaugeFields.Count);
+                        break;
+                    default:
+#if DEBUG
+                        throw new ArgumentOutOfRangeException();
+#else
+                        SimHub.Logging.Current.Error($"Invalid FieldType: {MenuConfiguration.FieldType}");
+                        break;
+#endif
+                }
             });
 
-            pluginManager.AddAction<DashMenuPlugin>("DecreaseNumberOfFieldData", (pm, a) =>
+            pluginManager.AddAction<DashMenuPlugin>(ActionNames.DecreaseNumberOfField, (pm, a) =>
             {
                 if (!MenuConfiguration.ConfigurationMode) return;
-                if (fieldData.Count <= 1) return;
-                fieldData.RemoveAt(fieldData.Count - 1);
-                pluginManager.SetPropertyValue("AmountOfFields", GetType(), fieldData.Count);
+                switch (MenuConfiguration.FieldType)
+                {
+                    case FieldType.Data:
+                        if (dataFields.Count <= 0) return;
+                        dataFields.RemoveAt(dataFields.Count - 1);
+                        pluginManager.SetPropertyValue(PropertyNames.AmountOfDataFields, GetType(), dataFields.Count);
+                        break;
+                    case FieldType.Gauge:
+                        if (gaugeFields.Count <= 0) return;
+                        dataFields.RemoveAt(gaugeFields.Count - 1);
+                        pluginManager.SetPropertyValue(PropertyNames.AmountOfGaugeFields, GetType(), gaugeFields.Count);
+                        break;
+                    default:
+#if DEBUG
+                        throw new ArgumentOutOfRangeException();
+#else
+                        SimHub.Logging.Current.Error($"Invalid FieldType: {MenuConfiguration.FieldType}");
+                        break;
+#endif
+                }
             });
 
             //Add NCalc method
@@ -166,24 +290,33 @@ namespace DashMenu
             //It will add the method again, but it's already added.
             try
             {
-                if (!NCalcEngineMethodsRegistry.GenericMethodsProvider.ContainsKey("dashfielddata".ToLower()))
+                const string dashFieldData = "dashfielddata";
+                if (!NCalcEngineMethodsRegistry.GenericMethodsProvider.ContainsKey(dashFieldData.ToLower()))
                 {
-                    NCalcEngineMethodsRegistry.AddMethod("dashfielddata",
+                    NCalcEngineMethodsRegistry.AddMethod(dashFieldData,
                         "field",
                         "Returns the data of the specified field.",
-                        engine => (Func<int, object>)(field => GetField(field)));
+                        engine => (Func<int, object>)(field => GetDataField(field)));
+                }
+
+                const string dashFieldGauge = "dashfieldgauge";
+                if (!NCalcEngineMethodsRegistry.GenericMethodsProvider.ContainsKey(dashFieldGauge.ToLower()))
+                {
+                    NCalcEngineMethodsRegistry.AddMethod(dashFieldGauge,
+                        "field",
+                        "Return the gauge data of the specified field.",
+                        engine => (Func<int, object>)(field => GetGaugeField(field)));
                 }
             }
-            catch (ArgumentException)
+            catch (ArgumentException e)
             {
 #if DEBUG
-                throw;
+                throw e;
 #endif
             }
-            pluginManager.AddProperty<bool>("PluginRunning", GetType(), true);
+            pluginManager.AddProperty<bool>(PropertyNames.PluginRunning, GetType(), true);
             PluginManagerEvents.Instance.ActiveCarChanged += CarChanged;
             BrightnessConfiguration.Configuration.PropertyChanged += DayNightMode_PropertyChanged;
-
 
             SimHub.Logging.Current.Info("Plugin started");
         }
@@ -198,7 +331,12 @@ namespace DashMenu
         /// <param name="data">Current game data, including current and previous data frame.</param>
         public void DataUpdate(PluginManager pluginManager, ref GameData data)
         {
-            foreach (IFieldDataComponent field in fieldData)
+            foreach (IDataFieldComponent field in dataFields)
+            {
+                if (!field.IsGameSupported) continue;
+                field.Update(ref data);
+            }
+            foreach (IGaugeFieldComponent field in gaugeFields)
             {
                 if (!field.IsGameSupported) continue;
                 field.Update(ref data);
@@ -225,18 +363,53 @@ namespace DashMenu
                 Settings.GameSettings.Add(PluginManager.GameName, new Settings.GameSettings());
             }
         }
-
-
         public void SaveSettings()
         {
             SaveDisplayedField(PluginManager.LastCarId, oldCarModel);
             this.SaveCommonSettings("DashMenuSettings", Settings);
         }
-
-        internal IDataField GetField(int index)
+        private int CurrentFieldTypeCount()
         {
-            if (index <= 0 || index > fieldData.Count) return null;
-            return fieldData[index - 1].Data;
+            switch (MenuConfiguration.FieldType)
+            {
+                case FieldType.Data:
+                    return dataFields.Count;
+                case FieldType.Gauge:
+                    return gaugeFields.Count;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+        private void SettingsExtensionFieldsCleanUp()
+        {
+            foreach (var gameSettings in Settings.GameSettings.Values)
+            {
+                // Create a list to hold the keys to remove
+                var fieldsToRemove = new List<string>();
+
+                foreach (var dataField in gameSettings.DataFields.Keys)
+                {
+                    if (!allDataField.Any(x => x.FullName == dataField))
+                    {
+                        fieldsToRemove.Add(dataField);
+                    }
+                }
+                // Remove the fields from gameSettings.DataFields that are not present in allDataField
+                foreach (var field in fieldsToRemove)
+                {
+                    gameSettings.DataFields.Remove(field);
+                }
+            }
+        }
+        private IDataField GetDataField(int index)
+        {
+            if (index <= 0 || index > dataFields.Count) return EmptyDataField.Field.Data;
+            return dataFields[index - 1].Data;
+        }
+        private IGaugeField GetGaugeField(int index)
+        {
+            if (index <= 0 || index > gaugeFields.Count) return EmptyGaugeField.Field.Data;
+            return gaugeFields[index - 1].Data;
         }
         private void CarChanged(object sender, EventArgs e)
         {
@@ -248,40 +421,66 @@ namespace DashMenu
             }
 
             //Create arrays
-            fieldData = new List<IFieldDataComponent>();
-            var fieldDataSettings = Settings.GameSettings[PluginManager.GameName].GetDisplayedField(PluginManager.LastCarId);
-            //Assign data from settings
+            dataFields = new List<IDataFieldComponent>();
+            var fieldDataSettings = Settings.GameSettings[PluginManager.GameName].GetDisplayedDataField(PluginManager.LastCarId);
+            //Assign from settings
             for (int i = 0; i < fieldDataSettings.Count; i++)
             {
                 //Check if DisplayField is valid
-                if (string.IsNullOrEmpty(fieldDataSettings[i]) || !availableFieldData.Any(f => fieldDataSettings[i] == f.GetType().FullName))
+                if (string.IsNullOrEmpty(fieldDataSettings[i]) || !availableDataField.Any(f => fieldDataSettings[i] == f.GetType().FullName))
                 {
                     fieldDataSettings[i] = EmptyDataField.FullName;
                 }
 
                 //Asign data
-                fieldData.Add(availableFieldData.FirstOrDefault(f => f.GetType().FullName == fieldDataSettings[i]));
+                dataFields.Add(availableDataField.FirstOrDefault(f => f.GetType().FullName == fieldDataSettings[i]));
             }
+
+            gaugeFields = new List<IGaugeFieldComponent>();
+            var fieldGaugeSettings = Settings.GameSettings[PluginManager.GameName].GetDisplayedGaugeField(PluginManager.LastCarId);
+            //Assign from settings
+            for (int i = 0; i < fieldGaugeSettings.Count; i++)
+            {
+                //Check if DisplayField is valid
+                if (string.IsNullOrEmpty(fieldGaugeSettings[i]) || !availableGaugeField.Any(f => fieldGaugeSettings[i] == f.GetType().FullName))
+                {
+                    fieldGaugeSettings[i] = EmptyDataField.FullName;
+                }
+
+                //Asign data
+                gaugeFields.Add(availableGaugeField.FirstOrDefault(f => f.GetType().FullName == fieldGaugeSettings[i]));
+            }
+
+            //Save the new cars fields
             SaveDisplayedField(PluginManager.LastCarId, PluginManager.GameManager.CarManager.LastCarSettings.CarModel);
             Settings.GameSettings[PluginManager.GameName].CarFields[PluginManager.LastCarId].IsActive = true;
 
-            PluginManager.SetPropertyValue("AmountOfFields", GetType(), fieldData.Count);
+            PluginManager.SetPropertyValue(PropertyNames.AmountOfDataFields, GetType(), dataFields.Count);
+            PluginManager.SetPropertyValue(PropertyNames.AmountOfGaugeFields, GetType(), gaugeFields.Count);
+
             oldCarId = PluginManager.LastCarId;
             oldCarModel = PluginManager.GameManager.CarManager.LastCarSettings.CarModel;
         }
         private void FieldComponent_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            UpdateAvailableFieldData((FieldComponent)sender);
+            UpdateAvailableField((DataFieldComponent)sender);
         }
         private void SaveDisplayedField(string carId, string carModel)
         {
             if (string.IsNullOrWhiteSpace(carId) || string.IsNullOrWhiteSpace(carModel)) return;
+
             var fieldDataSettings = new ObservableCollection<string>();
-            for (int i = 0; i < fieldData.Count; i++)
+            for (int i = 0; i < dataFields.Count; i++)
             {
-                fieldDataSettings.Add(fieldData[i].GetType().FullName);
+                fieldDataSettings.Add(dataFields[i].GetType().FullName);
             }
-            Settings.GameSettings[PluginManager.GameName].UpdateDisplayedField(carId, carModel, fieldDataSettings);
+
+            var fieldGaugeSettings = new ObservableCollection<string>();
+            for (int i = 0; i < gaugeFields.Count; i++)
+            {
+                fieldGaugeSettings.Add(gaugeFields[i].GetType().FullName);
+            }
+            Settings.GameSettings[PluginManager.GameName].UpdateDisplayedFields(carId, carModel, fieldDataSettings, fieldGaugeSettings);
         }
         private static IEnumerable<Type> GetExtensionFieldsType(string sub_dir)
         {
@@ -332,16 +531,73 @@ namespace DashMenu
             {
                 AddExtensionComponent(type);
             }
-            //TODO : Remove field settings for field extension that's not found.
-            UpdateAvailableFieldData();
         }
 
         private void AddExtensionComponent(Type type)
         {
-            IFieldDataComponent fieldDataInstance;
+            if (type.GetInterfaces().Contains(typeof(IDataFieldComponent)))
+            {
+                AddDataFieldExtensionComponent(type);
+            }
+            if (type.GetInterfaces().Contains(typeof(IGaugeFieldComponent)))
+            {
+                AddGaugeFieldExtensionComponent(type);
+            }
+        }
+
+        private void AddDataFieldExtensionComponent(Type type)
+        {
+            IDataFieldComponent fieldInstance;
             try
             {
-                fieldDataInstance = (IFieldDataComponent)Activator.CreateInstance(type, PluginManager.GameName);
+                fieldInstance = (IDataFieldComponent)Activator.CreateInstance(type, PluginManager.GameName);
+            }
+            catch (Exception e)
+            {
+                SimHub.Logging.Current.Error(type, e);
+                return;
+            }
+            var data = fieldInstance.Data;
+            //Get field settings else create field settings
+            if (!(Settings.GameSettings[PluginManager.GameName].DataFields.TryGetValue(type.FullName, out Settings.DataField fieldSetting)))
+            {
+
+                fieldSetting = new Settings.DataField
+                {
+                    Enabled = true,
+                    NameOverride = new PropertyOverride<string>(fieldInstance.Data.Name),
+                    DecimalOverride = new PropertyOverride<int>(fieldInstance.Data.Decimal),
+                    DayNightColorScheme = new DayNightColorScheme(fieldInstance.Data.Color)
+                };
+                Settings.GameSettings[PluginManager.GameName].DataFields.Add(type.FullName, fieldSetting);
+            }
+            fieldSetting.Namespace = type.Namespace;
+            fieldSetting.Name = type.Name;
+            fieldSetting.FullName = type.FullName;
+            fieldSetting.IsDecimal = fieldInstance.Data.IsDecimalNumber;
+
+            fieldSetting.GameSupported = fieldInstance.IsGameSupported;
+            fieldSetting.SupportedGames = fieldInstance.SupportedGames;
+
+            fieldSetting.PropertyChanged += FieldSetting_PropertyChanged;
+            fieldSetting.NameOverridePropertyChanged += NameOverride_PropertyChanged;
+            fieldSetting.DecimalOverridePropertyChanged += DecimalOverride_PropertyChanged;
+            fieldSetting.ColorSchemeOverridePropertyChanged += FieldSetting_ColorSchemeOverridePropertyChanged;
+            DataFieldComponent fieldComponent = new DataFieldComponent(fieldInstance)
+            {
+                Enabled = fieldSetting.Enabled
+            };
+            allDataField.Add(fieldComponent);
+            UpdateNameOverride(fieldSetting);
+            UpdateColorOveride(fieldSetting);
+            UpdateDecimalOverride(fieldSetting);
+        }
+        private void AddGaugeFieldExtensionComponent(Type type)
+        {
+            IGaugeFieldComponent fieldInstance;
+            try
+            {
+                fieldInstance = (IGaugeFieldComponent)Activator.CreateInstance(type, PluginManager.GameName);
             }
             catch (Exception e)
             {
@@ -349,176 +605,244 @@ namespace DashMenu
                 return;
             }
             //Get field settings else create field settings
-            if (!(Settings.GameSettings[PluginManager.GameName].DataFields.TryGetValue(type.FullName, out DataFields fieldSetting)))
+            if (!(Settings.GameSettings[PluginManager.GameName].GaugeFields.TryGetValue(type.FullName, out Settings.GaugeField fieldSetting)))
             {
-                fieldSetting = new DataFields
+                fieldSetting = new Settings.GaugeField
                 {
                     Enabled = true,
-                    NameOverride = new PropertyOverride<string>(fieldDataInstance.Data.Name),
-                    DecimalOverride = new PropertyOverride<int>(fieldDataInstance.Data.Decimal),
-                    DayNightColorScheme = new DayNightColorScheme(fieldDataInstance.Data.Color)
+                    NameOverride = new PropertyOverride<string>(fieldInstance.Data.Name),
+                    DecimalOverride = new PropertyOverride<int>(fieldInstance.Data.Decimal),
+                    DayNightColorScheme = new DayNightColorScheme(fieldInstance.Data.Color),
+                    MaximumOverride = new PropertyOverride<string>(fieldInstance.Data.Maximum),
+                    MinimumOverride = new PropertyOverride<string>(fieldInstance.Data.Minimum),
+                    StepOverride = new PropertyOverride<string>(fieldInstance.Data.Step)
                 };
-                Settings.GameSettings[PluginManager.GameName].DataFields.Add(type.FullName, fieldSetting);
+
+                Settings.GameSettings[PluginManager.GameName].GaugeFields.Add(type.FullName, fieldSetting);
             }
             fieldSetting.Namespace = type.Namespace;
             fieldSetting.Name = type.Name;
             fieldSetting.FullName = type.FullName;
-            fieldSetting.IsDecimal = fieldDataInstance.Data.IsDecimalNumber;
+            fieldSetting.IsDecimal = fieldInstance.Data.IsDecimalNumber;
+            fieldSetting.IsRangeLocked = fieldInstance.Data.IsRangeLocked;
+            fieldSetting.IsStepLocked = fieldInstance.Data.IsStepLocked;
 
-            fieldSetting.GameSupported = fieldDataInstance.IsGameSupported;
-            fieldSetting.SupportedGames = fieldDataInstance.SupportedGames;
+            fieldSetting.GameSupported = fieldInstance.IsGameSupported;
+            fieldSetting.SupportedGames = fieldInstance.SupportedGames;
 
             fieldSetting.PropertyChanged += FieldSetting_PropertyChanged;
             fieldSetting.NameOverridePropertyChanged += NameOverride_PropertyChanged;
             fieldSetting.DecimalOverridePropertyChanged += DecimalOverride_PropertyChanged;
             fieldSetting.ColorSchemeOverridePropertyChanged += FieldSetting_ColorSchemeOverridePropertyChanged;
-            FieldComponent fieldComponent = new FieldComponent(fieldDataInstance)
+            GaugeFieldComponent fieldComponent = new GaugeFieldComponent(fieldInstance)
             {
                 Enabled = fieldSetting.Enabled
             };
-            allFieldData.Add(fieldComponent);
+            allGaugeField.Add(fieldComponent);
             UpdateNameOverride(fieldSetting);
             UpdateColorOveride(fieldSetting);
             UpdateDecimalOverride(fieldSetting);
         }
-
         private void NameOverride_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (!(sender is Settings.DataFields fieldSettings)) return;
+            if (!(sender is Settings.DataField fieldSettings)) return;
             UpdateNameOverride(fieldSettings);
         }
-        private void UpdateNameOverride(Settings.DataFields fieldSettings)
+        private void UpdateNameOverride(Settings.DataField fieldSettings)
         {
-            var fieldData = allFieldData.FirstOrDefault(x => x.FullName == fieldSettings.FullName);
+            var fieldData = allDataField.FirstOrDefault(x => x.FullName == fieldSettings.FullName);
             if (fieldData == null) return;
 
             if (fieldSettings.NameOverride.Override)
             {
-                fieldData.FieldData.Data.Name = fieldSettings.NameOverride.OverrideValue;
+                fieldData.FieldComponent.Data.Name = fieldSettings.NameOverride.OverrideValue;
             }
             else
             {
-                fieldData.FieldData.Data.Name = fieldSettings.NameOverride.DefaultValue;
+                fieldData.FieldComponent.Data.Name = fieldSettings.NameOverride.DefaultValue;
             }
         }
         private void FieldSetting_ColorSchemeOverridePropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (!(sender is Settings.DataFields fieldSettings)) return;
+            if (!(sender is Settings.DataField fieldSettings)) return;
             UpdateColorOveride(fieldSettings);
         }
 
-        private void UpdateColorOveride(DataFields fieldSettings)
+        private void UpdateColorOveride(Settings.DataField fieldSettings)
         {
-            var fieldData = allFieldData.FirstOrDefault(x => x.FullName == fieldSettings.FullName);
+            var fieldData = allDataField.FirstOrDefault(x => x.FullName == fieldSettings.FullName);
             if (fieldData == null) return;
 
             if (!fieldSettings.DayNightColorScheme.DayModeColor.Override)
             {
-                fieldData.FieldData.Data.Color = fieldSettings.DayNightColorScheme.DayModeColor.DefaultValue;
+                fieldData.FieldComponent.Data.Color = fieldSettings.DayNightColorScheme.DayModeColor.DefaultValue;
                 return;
             }
 
             if (BrightnessConfiguration.Configuration.IsNightMode && fieldSettings.DayNightColorScheme.NightModeColor.Override)
             {
-                fieldData.FieldData.Data.Color = fieldSettings.DayNightColorScheme.NightModeColor.OverrideValue;
+                fieldData.FieldComponent.Data.Color = fieldSettings.DayNightColorScheme.NightModeColor.OverrideValue;
                 return;
             }
-            fieldData.FieldData.Data.Color = fieldSettings.DayNightColorScheme.DayModeColor.OverrideValue;
+            fieldData.FieldComponent.Data.Color = fieldSettings.DayNightColorScheme.DayModeColor.OverrideValue;
         }
 
         private void DecimalOverride_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (!(sender is Settings.DataFields fieldSettings)) return;
+            if (!(sender is Settings.DataField fieldSettings)) return;
             UpdateDecimalOverride(fieldSettings);
         }
-        private void UpdateDecimalOverride(Settings.DataFields fieldSettings)
+        private void UpdateDecimalOverride(Settings.DataField fieldSettings)
         {
-            var fieldData = allFieldData.FirstOrDefault(x => x.FullName == fieldSettings.FullName);
+            var fieldData = allDataField.FirstOrDefault(x => x.FullName == fieldSettings.FullName);
             if (fieldData == null) return;
 
             if (fieldSettings.DecimalOverride.Override)
             {
-                fieldData.FieldData.Data.Decimal = fieldSettings.DecimalOverride.OverrideValue;
+                fieldData.FieldComponent.Data.Decimal = fieldSettings.DecimalOverride.OverrideValue;
             }
             else
             {
-                fieldData.FieldData.Data.Decimal = fieldSettings.DecimalOverride.DefaultValue;
+                fieldData.FieldComponent.Data.Decimal = fieldSettings.DecimalOverride.DefaultValue;
             }
         }
         private void FieldSetting_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (!(sender is DataFields settingsfield)) return;
-            switch (e.PropertyName)
+            if ((sender is Settings.DataField settingsDataField))
             {
-                case nameof(settingsfield.Enabled):
-                    var fieldComponent = allFieldData.FirstOrDefault(f => f.FullName == settingsfield.FullName);
-                    if (fieldComponent == null)
-                    {
-                        SimHub.Logging.Current.Error($"Settings changed for a data field that's not loaded. Missing class: {settingsfield.FullName}");
-                        return;
-                    }
-                    fieldComponent.Enabled = settingsfield.Enabled;
-                    UpdateAvailableFieldData(fieldComponent);
-                    break;
-                default:
-                    break;
+                switch (e.PropertyName)
+                {
+                    case nameof(settingsDataField.Enabled):
+                        var fieldComponent = allDataField.FirstOrDefault(f => f.FullName == settingsDataField.FullName);
+                        if (fieldComponent == null)
+                        {
+                            SimHub.Logging.Current.Error($"Settings changed for a data field that's not loaded. Missing class: {settingsDataField.FullName}");
+                            return;
+                        }
+                        fieldComponent.Enabled = settingsDataField.Enabled;
+                        UpdateAvailableField(fieldComponent);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else if ((sender is Settings.GaugeField settingsGaugeField))
+            {
+                switch (e.PropertyName)
+                {
+                    case nameof(settingsGaugeField.Enabled):
+                        var fieldComponent = allGaugeField.FirstOrDefault(f => f.FullName == settingsGaugeField.FullName);
+                        if (fieldComponent == null)
+                        {
+                            SimHub.Logging.Current.Error($"Settings changed for a data field that's not loaded. Missing class: {settingsGaugeField.FullName}");
+                            return;
+                        }
+                        fieldComponent.Enabled = settingsGaugeField.Enabled;
+                        UpdateAvailableField(fieldComponent);
+                        break;
+                    default:
+                        break;
+                }
             }
         }
         private void DayNightMode_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            foreach (var field in availableFieldData)
+            foreach (var field in availableDataField)
             {
                 if (!(Settings.GameSettings[PluginManager.GameName].DataFields.TryGetValue(field.GetType().FullName, out var fieldSettings))) continue;
                 UpdateColorOveride(fieldSettings);
             }
         }
 
-        private void UpdateAvailableFieldData()
+        private void UpdateAvailableField()
         {
-            availableFieldData.Clear();
-            foreach (var fieldComponent in allFieldData)
+            availableDataField.Clear();
+            foreach (var fieldComponent in allDataField)
             {
-                if (fieldComponent.Enabled) availableFieldData.Add(fieldComponent.FieldData);
+                if (fieldComponent.Enabled) availableDataField.Add(fieldComponent.FieldComponent);
+            }
+
+            availableGaugeField.Clear();
+            foreach (var fieldComponent in allGaugeField)
+            {
+                if (fieldComponent.Enabled) availableGaugeField.Add(fieldComponent.FieldComponent);
             }
         }
-        private void UpdateAvailableFieldData(FieldComponent fieldComponent)
+        private void UpdateAvailableField(DataFieldComponent fieldComponent)
         {
             if (fieldComponent.Enabled)
             {
-                availableFieldData.Add(fieldComponent.FieldData);
+                availableDataField.Add(fieldComponent.FieldComponent);
             }
             else
             {
-                //Check if the field data is in the displayed fields, and change it to empty field.
-                //Then remove it from the available field data list.
-                for (int i = 0; i < fieldData.Count; i++)
+                //Check if the field is in the displayed fields, and change it to empty field.
+                //Then remove it from the available field list.
+                for (int i = 0; i < dataFields.Count; i++)
                 {
-                    if (fieldComponent.FieldData.GetType().FullName == fieldData[i].GetType().FullName)
+                    if (fieldComponent.FieldComponent.GetType().FullName == dataFields[i].GetType().FullName)
                     {
-                        fieldData[i] = availableFieldData.FirstOrDefault(f => f.GetType().FullName == EmptyDataField.Field.GetType().FullName);
+                        dataFields[i] = availableDataField.FirstOrDefault(f => f.GetType().FullName == EmptyDataField.Field.GetType().FullName);
                     }
                 }
-                availableFieldData.Remove(fieldComponent.FieldData);
+                availableDataField.Remove(fieldComponent.FieldComponent);
             }
         }
-        private int CurrentFieldIndex(IFieldDataComponent fieldData)
+        private void UpdateAvailableField(GaugeFieldComponent fieldComponent)
         {
-            return availableFieldData.FindIndex(f => f == fieldData);
+            if (fieldComponent.Enabled)
+            {
+                availableGaugeField.Add(fieldComponent.FieldComponent);
+            }
+            else
+            {
+                //Check if the field is in the displayed fields, and change it to empty field.
+                //Then remove it from the available field list.
+                for (int i = 0; i < dataFields.Count; i++)
+                {
+                    if (fieldComponent.FieldComponent.GetType().FullName == gaugeFields[i].GetType().FullName)
+                    {
+                        gaugeFields[i] = availableGaugeField.FirstOrDefault(f => f.GetType().FullName == EmptyGaugeField.Field.GetType().FullName);
+                    }
+                }
+                availableGaugeField.Remove(fieldComponent.FieldComponent);
+            }
         }
-        private IFieldDataComponent NextField(IFieldDataComponent currentField)
+        private int CurrentFieldIndex(IDataFieldComponent field)
         {
-            int maxIndex = availableFieldData.Count - 1;
+            return availableDataField.FindIndex(f => f == field);
+        }
+        private int CurrentFieldIndex(IGaugeFieldComponent field)
+        {
+            return availableGaugeField.FindIndex(f => f == field);
+        }
+        private IDataFieldComponent NextField(IDataFieldComponent currentField)
+        {
+            int maxIndex = availableDataField.Count - 1;
             int currentIndex = CurrentFieldIndex(currentField);
             int nextIndex = (currentIndex >= maxIndex) ? 0 : currentIndex + 1;
-            return availableFieldData[nextIndex];
+            return availableDataField[nextIndex];
         }
-
-        private IFieldDataComponent PrevField(IFieldDataComponent currentField)
+        private IGaugeFieldComponent NextField(IGaugeFieldComponent currentField)
         {
-            int maxIndex = availableFieldData.Count - 1;
+            int maxIndex = availableGaugeField.Count - 1;
+            int currentIndex = CurrentFieldIndex(currentField);
+            int nextIndex = (currentIndex >= maxIndex) ? 0 : currentIndex + 1;
+            return availableGaugeField[nextIndex];
+        }
+        private IDataFieldComponent PrevField(IDataFieldComponent currentField)
+        {
+            int maxIndex = availableDataField.Count - 1;
             int currentIndex = CurrentFieldIndex(currentField);
             int prevIndex = (currentIndex <= 0) ? maxIndex : currentIndex - 1;
-            return availableFieldData[prevIndex];
+            return availableDataField[prevIndex];
+        }
+        private IGaugeFieldComponent PrevFied(IGaugeFieldComponent currentField)
+        {
+            int maxIndex = availableGaugeField.Count - 1;
+            int currentIndex = CurrentFieldIndex(currentField);
+            int prevIndex = (currentIndex <= 0) ? maxIndex : currentIndex - 1;
+            return availableGaugeField[prevIndex];
         }
     }
 }

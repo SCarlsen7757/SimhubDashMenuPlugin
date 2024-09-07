@@ -13,13 +13,14 @@ namespace DashMenu.Settings
     {
         public GameSettings()
         {
-            DataFields.CollectionChanged += Fields_CollectionChanged;
+            DataFields.CollectionChanged += DataFields_CollectionChanged;
+            GaugeFields.CollectionChanged += GaugeFields_CollectionChanged;
             CarFields = new ObservableDictionary<string, CarFields>();
         }
 
         private int defaultAmountOfDataFields = 5;
         /// <summary>
-        /// Max amount of fields that can be displayed.
+        /// Max amount of data fields that can be displayed.
         /// </summary>
         public int DefaultAmountOfDataFields
         {
@@ -45,36 +46,82 @@ namespace DashMenu.Settings
                     }
                 });
             }
+            set => Application.Current.Dispatcher.Invoke(() =>
+                                {
+                                    lock (collectionDataFieldLock)
+                                    {
+                                        // Only clear and repopulate if the incoming value is different
+                                        if (value != null && !defaultDataFields.SequenceEqual(value))
+                                        {
+                                            defaultDataFields.Clear();
+                                            foreach (string field in value)
+                                            {
+                                                defaultDataFields.Add(field);
+                                            }
+                                            OnPropertyChanged();
+                                        }
+                                    }
+                                });
+        }
+        private int defaultAmountOfGaugeFields = 2;
+        public int DefaultAmountOfGaugeFields
+        {
+            get => defaultAmountOfGaugeFields;
             set
             {
-                Application.Current.Dispatcher.Invoke(() =>
+                if (value == defaultAmountOfGaugeFields) return;
+                defaultAmountOfGaugeFields = value;
+                OnPropertyChanged();
+            }
+        }
+        private readonly object collectionGaugeFieldLock = new object();
+        private readonly ObservableCollection<string> defaultGaugeFields = new ObservableCollection<string>();
+        public ObservableCollection<string> DefaultGaugeFields
+        {
+            get
+            {
+                return Application.Current.Dispatcher.Invoke(() =>
                 {
-                    lock (collectionDataFieldLock)
+                    lock (collectionGaugeFieldLock)
                     {
-                        // Only clear and repopulate if the incoming value is different
-                        if (value != null && !defaultDataFields.SequenceEqual(value))
-                        {
-                            defaultDataFields.Clear();
-                            foreach (var field in value)
-                            {
-                                defaultDataFields.Add(field);
-                            }
-                            OnPropertyChanged();
-                        }
+                        return defaultGaugeFields;
                     }
                 });
             }
+            set => Application.Current.Dispatcher.Invoke(() =>
+                                {
+                                    lock (collectionGaugeFieldLock)
+                                    {
+                                        // Only clear and repopulate if the incoming value is different
+                                        if (value != null && !defaultGaugeFields.SequenceEqual(value))
+                                        {
+                                            defaultGaugeFields.Clear();
+                                            foreach (string field in value)
+                                            {
+                                                defaultGaugeFields.Add(field);
+                                            }
+                                            OnPropertyChanged();
+                                        }
+                                    }
+                                });
         }
         private ObservableCollection<string> DefaultDataFieldsList()
-
         {
             return new ObservableCollection<string>(Enumerable.Repeat(EmptyDataField.FullName, DefaultAmountOfDataFields));
         }
+        private ObservableCollection<string> DefaultGaugeFieldsList()
+        {
+            return new ObservableCollection<string>(Enumerable.Repeat(EmptyGaugeField.FullName, DefaultAmountOfGaugeFields));
+        }
         public ObservableDictionary<string, CarFields> CarFields { get; set; }
         /// <summary>
-        /// All fields. Used for enabling and disabling the fields to be able to select them.
+        /// All data fields. Used for enabling and disabling the fields to be able to select them.
         /// </summary> 
-        public ObservableDictionary<string, DataFields> DataFields { get; set; } = new ObservableDictionary<string, DataFields>();
+        public ObservableDictionary<string, DataField> DataFields { get; set; } = new ObservableDictionary<string, DataField>();
+        /// <summary>
+        /// All gauge fields. Used for enabling and disabling the fields to be able to select them.
+        /// </summary>
+        public ObservableDictionary<string, GaugeField> GaugeFields { get; set; } = new ObservableDictionary<string, GaugeField>();
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -82,9 +129,9 @@ namespace DashMenu.Settings
         {
             OnPropertyChanged(sender.GetType().Name); // Raise PropertyChanged for the PropertyOverride property
         }
-        private void Fields_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void DataFields_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            if (!(sender is DataFields fields)) return;
+            if (!(sender is DataField fields)) return;
             switch (e.Action)
             {
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
@@ -93,18 +140,23 @@ namespace DashMenu.Settings
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
                     fields.PropertyChanged -= PropertyOverride_PropertyChanged;
                     break;
-                case System.Collections.Specialized.NotifyCollectionChangedAction.Replace:
+                default:
 #if DEBUG
                     throw new NotImplementedException();
 #endif
-                case System.Collections.Specialized.NotifyCollectionChangedAction.Move:
-#if DEBUG
-                    throw new NotImplementedException();
-#endif
-                case System.Collections.Specialized.NotifyCollectionChangedAction.Reset:
-#if DEBUG
-                    throw new NotImplementedException();
-#endif
+            }
+        }
+        private void GaugeFields_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (!(sender is GaugeField fields)) return;
+            switch (e.Action)
+            {
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
+                    fields.PropertyChanged += PropertyOverride_PropertyChanged;
+                    break;
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
+                    fields.PropertyChanged -= PropertyOverride_PropertyChanged;
+                    break;
                 default:
 #if DEBUG
                     throw new NotImplementedException();
@@ -118,24 +170,37 @@ namespace DashMenu.Settings
         /// <param name="gameName">Name of the game.</param>
         /// <param name="carId">Id of the car</param>
         /// <param name="carModel">Name of the car.</param>
-        /// <param name="displayedFields">Displayed fields settings. Can be null then it create default displayed fields settings.</param>
-        internal void UpdateDisplayedField(string carId, string carModel, ObservableCollection<string> displayedFields = null)
+        /// <param name="displayedDataFields">Displayed data field settings.</param>
+        /// <param name="displayedGaugeFields">Displayed gauge field settings</param>
+        internal void UpdateDisplayedFields(string carId, string carModel, ObservableCollection<string> displayedDataFields, ObservableCollection<string> displayedGaugeFields)
         {
-            if (displayedFields == null)
+            //TODO: testing, is this code needed
+            /*
+            if (displayedDataFields == null)
             {
-                displayedFields = DefaultDataFields;
-                if (displayedFields.Count == 0)
+                displayedDataFields = DefaultDataFields;
+                if (displayedDataFields.Count == 0)
                 {
-                    displayedFields = DefaultDataFieldsList();
+                    displayedDataFields = DefaultDataFieldsList();
                 }
             }
+            if (displayedGaugeFields == null)
+            {
+                displayedGaugeFields = DefaultGaugeFields;
+                if (displayedGaugeFields.Count == 0)
+                {
+                    displayedGaugeFields = DefaultGaugeFieldsList();
+                }
+            }
+            */
             if (CarFields.TryGetValue(carId, out var carSettings))
             {
-                carSettings.DisplayedDataFields = displayedFields;
+                carSettings.DisplayedDataFields = displayedDataFields;
+                carSettings.DisplayedGaugeFields = displayedGaugeFields;
             }
             else
             {
-                carSettings = new CarFields(carId, carModel, displayedFields);
+                carSettings = new CarFields(carId, carModel, displayedDataFields, displayedGaugeFields);
                 CarFields.Add(carId, carSettings);
             }
         }
@@ -145,7 +210,7 @@ namespace DashMenu.Settings
         /// <param name="gameName">Game of the game.</param>
         /// <param name="carId">ID of the car.</param>
         /// <returns></returns>
-        internal ObservableCollection<string> GetDisplayedField(string carId)
+        internal ObservableCollection<string> GetDisplayedDataField(string carId)
         {
             if (CarFields.TryGetValue(carId, out var carSettings))
             {
@@ -157,6 +222,22 @@ namespace DashMenu.Settings
                 if (displayedFields.Count == 0)
                 {
                     displayedFields = DefaultDataFieldsList();
+                }
+                return displayedFields;
+            }
+        }
+        internal ObservableCollection<string> GetDisplayedGaugeField(string carId)
+        {
+            if (CarFields.TryGetValue(carId, out var carSettings))
+            {
+                return carSettings.DisplayedGaugeFields;
+            }
+            else
+            {
+                var displayedFields = DefaultGaugeFields;
+                if (displayedFields.Count == 0)
+                {
+                    displayedFields = DefaultGaugeFieldsList();
                 }
                 return displayedFields;
             }

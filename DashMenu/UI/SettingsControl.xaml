@@ -30,7 +30,6 @@
                             </Grid.RowDefinitions>
 
                             <ui:TitledSlider Title="Default amount data of fields"
-                                             Name="DefaultAmountOfFields"
                                              Maximum="20"
                                              Minimum="1"
                                              MaxWidth="600"
@@ -87,6 +86,86 @@
                             </Border>
                             <local:FieldDataSettingItem Visibility="{Binding ElementName=FieldDataSettings, Path=SelectedValue, Converter={IsNullToCollapsedConverter}}"
                                                         DataContext="{Binding ElementName=FieldDataSettings, Path=SelectedValue}"
+                                                        Grid.Column="1"
+                                                        Grid.Row="1"
+                                                        Grid.RowSpan="2" />
+                        </Grid>
+                    </StackPanel>
+                </AutoGrid>
+            </styles:SHSection>
+        </styles:SHTabItem>
+        <styles:SHTabItem Header="Gauge fields">
+            <styles:SHSection Title="General settings">
+                <AutoGrid Rows="auto,*">
+                    <!--Default amount of fields-->
+                    <StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                            </Grid.RowDefinitions>
+
+                            <ui:TitledSlider Title="Default amount gauge of fields"
+                                             Maximum="20"
+                                             Minimum="1"
+                                             MaxWidth="600"
+                                             Value="{Binding Path=DefaultAmountOfGaugeFields, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </Grid>
+                    </StackPanel>
+                    <!--Field gauge settings-->
+                    <StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="400" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <styles:SHSubSectionTitle Content="Field data"
+                                                      Grid.Column="0"
+                                                      Grid.Row="0"
+                                                      Grid.ColumnSpan="2" />
+                            <styles:SHListBox Name="FieldGaugeSettings"
+                                              Margin="0,0,4,0"
+                                              Grid.Column="0"
+                                              Grid.Row="1"
+                                              ItemsSource="{Binding Path=GaugeFields.Values}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <AutoGrid Margin="0,0"
+                                                  Columns="1,*">
+                                            <Border Background="{DynamicResource AccentColorBrush}"
+                                                    Margin="-4,-4,1,-4"
+                                                    Visibility="{Binding Path=Enabled, Converter={SHBoolToVisibilityConverter Hide=true}}" />
+                                            <Label Padding="4,1,1,1"
+                                                   Content="{Binding Path=FullName}" />
+                                        </AutoGrid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </styles:SHListBox>
+                            <Border CornerRadius="6"
+                                    BorderBrush="#33000000"
+                                    Background="{DynamicResource GrayBrush10}"
+                                    Margin="4"
+                                    Grid.Column="1"
+                                    Grid.Row="1"
+                                    Grid.RowSpan="2"
+                                    Visibility="{Binding ElementName=FieldGaugeSettings, Path=SelectedValue, Converter={IsNotNullToCollapsedConverter}}">
+                                <StackPanel VerticalAlignment="Center">
+                                    <Label VerticalAlignment="Center"
+                                           HorizontalAlignment="Center"
+                                           Content="Select a field data to edit it" />
+                                </StackPanel>
+                            </Border>
+                            <local:FieldDataSettingItem Visibility="{Binding ElementName=FieldGaugeSettings, Path=SelectedValue, Converter={IsNullToCollapsedConverter}}"
+                                                        DataContext="{Binding ElementName=FieldGaugeSettings, Path=SelectedValue}"
                                                         Grid.Column="1"
                                                         Grid.Row="1"
                                                         Grid.RowSpan="2" />

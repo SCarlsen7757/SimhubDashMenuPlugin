@@ -3,7 +3,7 @@ using GameReaderCommon;
 
 namespace CommonExtensionFields
 {
-    public class ABSLevel : FieldExtensionBase, IFieldDataComponent
+    public class ABSLevel : FieldExtensionBase, IDataFieldComponent
     {
         public ABSLevel(string gameName) : base(gameName) { }
         public string Description { get => "ABS Level."; }

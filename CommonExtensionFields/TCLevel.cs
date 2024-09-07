@@ -3,7 +3,7 @@ using GameReaderCommon;
 
 namespace CommonExtensionFields
 {
-    public class TCLevel : FieldExtensionBase, IFieldDataComponent
+    public class TCLevel : FieldExtensionBase, IDataFieldComponent
     {
         public TCLevel(string gameName) : base(gameName) { }
         public string Description { get => "TC Level."; }

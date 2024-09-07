@@ -4,17 +4,24 @@ using GameReaderCommon;
 namespace CommonExtensionFields
 {
 
-    public class OilPressure : FieldExtensionBase, IFieldDataComponent
+    public class OilPressure : FieldExtensionBase, IGaugeFieldComponent
     {
         public OilPressure(string gameName) : base(gameName) { }
         public string Description { get => "Oil pressure"; }
-        public IDataField Data { get; set; } = new DataField()
+        public IGaugeField Data { get; set; } = new GaugeField()
         {
             Name = "Oil Press",
             IsDecimalNumber = true,
             Decimal = 0,
-            Color = new ColorScheme("#ffffff", "ffffff")
+            Color = new ColorScheme("#ffffff", "ffffff"),
+            Maximum = 150.ToString(),
+            Minimum = 50.ToString()
         };
+        IDataField IDataFieldComponent.Data
+        {
+            get => Data; // Return the same GaugeField instance
+            set => Data = (IGaugeField)value; // Set the same instance
+        }
         public void Update(ref GameData data)
         {
             if (!data.GameRunning) return;
