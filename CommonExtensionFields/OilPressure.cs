@@ -13,7 +13,7 @@ namespace CommonExtensionFields
             Name = "Oil Press",
             IsDecimalNumber = true,
             Decimal = 0,
-            Color = new ColorScheme("#ffffff", "ffffff"),
+            Color = new ColorScheme("#ffffff", "#000000"),
             Maximum = 150.ToString(),
             Minimum = 50.ToString()
         };

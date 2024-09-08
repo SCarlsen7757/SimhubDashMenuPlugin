@@ -12,7 +12,7 @@ namespace CommonExtensionFields
             Name = "Water Temp",
             IsDecimalNumber = true,
             Decimal = 0,
-            Color = new ColorScheme("#ffffff", "#ffffff"),
+            Color = new ColorScheme("#ffffff", "#000000"),
             Maximum = 100.ToString(),
             Minimum = 20.ToString()
         };
