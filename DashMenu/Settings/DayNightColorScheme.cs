@@ -41,17 +41,10 @@ namespace DashMenu.Settings
         }
         public DayNightColorScheme(ColorScheme defaultColor)
         {
-            DayModeColor.DefaultValue = defaultColor;
-            DayModeColor.OverrideValue = defaultColor;
-            NightModeColor.DefaultValue = defaultColor;
-            NightModeColor.OverrideValue = defaultColor;
-        }
-        public DayNightColorScheme(ColorScheme defaultDayColor, ColorScheme defaultNightColor)
-        {
-            DayModeColor.DefaultValue = defaultDayColor;
-            DayModeColor.OverrideValue = defaultDayColor;
-            NightModeColor.DefaultValue = defaultNightColor;
-            NightModeColor.OverrideValue = defaultNightColor;
+            DayModeColor.DefaultValue = defaultColor.Clone();
+            DayModeColor.OverrideValue = defaultColor.Clone();
+            NightModeColor.DefaultValue = defaultColor.Clone();
+            NightModeColor.OverrideValue = defaultColor.Clone();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

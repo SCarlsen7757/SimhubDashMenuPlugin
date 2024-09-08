@@ -11,6 +11,12 @@ namespace DashMenu.Data
             Primary = primary;
             Accent = accent;
         }
+        // Copy constructor for deep copying
+        public ColorScheme(ColorScheme other)
+        {
+            Primary = other.Primary;
+            Accent = other.Accent;
+        }
         private string primary = "#FFFFFF";
         /// <summary>
         /// Primary color.
@@ -40,6 +46,10 @@ namespace DashMenu.Data
                 accent = color;
                 OnPropertyChanged();
             }
+        }
+        public ColorScheme Clone()
+        {
+            return new ColorScheme(this); // Use the copy constructor
         }
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
