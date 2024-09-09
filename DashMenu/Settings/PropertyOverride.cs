@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -20,6 +21,7 @@ namespace DashMenu.Settings
         /// <summary>
         /// Default value of the property.
         /// </summary>
+        [JsonIgnore]
         public T DefaultValue
         {
             get => defaultValue;

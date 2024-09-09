@@ -1,0 +1,56 @@
+﻿<UserControl x:Class="DashMenu.UI.GaugeFieldSettingsItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:DashMenu.UI"
+             xmlns:settings="clr-namespace:DashMenu.Settings"
+             xmlns:ui="clr-namespace:SimHub.Plugins.UI;assembly=SimHub.Plugins"
+             xmlns:styles="clr-namespace:SimHub.Plugins.Styles;assembly=SimHub.Plugins"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="800">
+    <UserControl.DataContext>
+        <settings:GaugeField />
+    </UserControl.DataContext>
+    <AutoGrid Columns="auto,*"
+              Margin="10">
+        <StackPanel Visibility="{Binding Path=Enabled, Converter={SHBoolToVisibilityConverter Hide=False}}">
+            <!--Override settings-->
+            <styles:SHSubSectionTitle Content="Gauge override settings" />
+            <StackPanel>
+                <AutoGrid Columns="auto,*"
+                          Margin="12,0"
+                          Visibility="{Binding Path=IsRangeLocked, Converter={SHBoolToVisibilityConverter Hide=False}}">
+                    <!--Maximum override-->
+                    <Label Content="Override maximum value"
+                           Grid.ColumnSpan="2" />
+                    <styles:SHToggleCheckbox IsChecked="{Binding Path=MaximumOverride.Override}" />
+                    <TextBox Text="{Binding Path=MaximumOverride.OverrideValue, UpdateSourceTrigger=PropertyChanged}"
+                             IsEnabled="{Binding Path=MaximumOverride.Override}" />
+                </AutoGrid>
+                <AutoGrid Columns="auto,*"
+                          Margin="12,0"
+                          Visibility="{Binding Path=IsRangeLocked, Converter={SHBoolToVisibilityConverter Hide=True}}">
+                    <!--Minimum override-->
+                    <Label Content="Override minimum value"
+                           Grid.ColumnSpan="2" />
+                    <styles:SHToggleCheckbox IsChecked="{Binding Path=MinimumOverride.Override}" />
+                    <TextBox Text="{Binding Path=MinimumOverride.OverrideValue, UpdateSourceTrigger=PropertyChanged}"
+                             IsEnabled="{Binding Path=MinimumOverride.Override}" />
+                </AutoGrid>
+                <AutoGrid Columns="auto,*"
+                          Margin="12,0"
+                          Visibility="{Binding Path=IsStepLocked, Converter={SHBoolToVisibilityConverter Hide=True}}">
+                    <!--Step override-->
+                    <Label Content="Override step value"
+                           Grid.ColumnSpan="2" />
+                    <styles:SHToggleCheckbox IsChecked="{Binding Path=StepOverride.Override}" />
+                    <TextBox Text="{Binding Path=StepOverride.OverrideValue, UpdateSourceTrigger=PropertyChanged}"
+                             IsEnabled="{Binding Path=StepOverride.Override}" />
+                </AutoGrid>
+            </StackPanel>
+        </StackPanel>
+    </AutoGrid>
+</UserControl>

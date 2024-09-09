@@ -128,8 +128,11 @@
     <Compile Include="UI\ColorSchemeItem.xaml.cs">
       <DependentUpon>ColorSchemeItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\FieldDataSettingItem.xaml.cs">
-      <DependentUpon>FieldDataSettingItem.xaml</DependentUpon>
+    <Compile Include="UI\DataFieldSettingsItem.xaml.cs">
+      <DependentUpon>DataFieldSettingsItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\GaugeFieldSettingsItem.xaml.cs">
+      <DependentUpon>GaugeFieldSettingsItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\ObservableDictionary.cs" />
     <Compile Include="UI\SettingsControl.xaml.cs">
@@ -166,7 +169,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\FieldDataSettingItem.xaml">
+    <Page Include="UI\DataFieldSettingsItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\GaugeFieldSettingsItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

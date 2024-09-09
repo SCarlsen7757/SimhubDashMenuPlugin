@@ -580,13 +580,19 @@ namespace DashMenu
             fieldSetting.FullName = type.FullName;
             fieldSetting.IsDecimal = fieldInstance.Data.IsDecimalNumber;
 
+            //Get default values before they are overriden
+            fieldSetting.NameOverride.DefaultValue = fieldInstance.Data.Name;
+            fieldSetting.DecimalOverride.DefaultValue = fieldInstance.Data.Decimal;
+            fieldSetting.DayNightColorScheme.DayModeColor.DefaultValue = fieldInstance.Data.Color;
+            fieldSetting.DayNightColorScheme.NightModeColor.DefaultValue = fieldInstance.Data.Color;
+
             fieldSetting.GameSupported = fieldInstance.IsGameSupported;
             fieldSetting.SupportedGames = fieldInstance.SupportedGames;
 
             fieldSetting.PropertyChanged += FieldSetting_PropertyChanged;
             fieldSetting.NameOverridePropertyChanged += NameOverride_PropertyChanged;
             fieldSetting.DecimalOverridePropertyChanged += DecimalOverride_PropertyChanged;
-            fieldSetting.ColorSchemeOverridePropertyChanged += FieldSetting_ColorSchemeOverridePropertyChanged;
+            fieldSetting.ColorSchemeOverridePropertyChanged += ColorSchemeOverridePropertyChanged;
             DataFieldComponent fieldComponent = new DataFieldComponent(fieldInstance)
             {
                 Enabled = fieldSetting.Enabled
@@ -635,13 +641,26 @@ namespace DashMenu
             fieldSetting.IsRangeLocked = fieldInstance.Data.IsRangeLocked;
             fieldSetting.IsStepLocked = fieldInstance.Data.IsStepLocked;
 
+            //Get default values before they are overriden
+            fieldSetting.NameOverride.DefaultValue = fieldInstance.Data.Name;
+            fieldSetting.DecimalOverride.DefaultValue = fieldInstance.Data.Decimal;
+            fieldSetting.DayNightColorScheme.DayModeColor.DefaultValue = fieldInstance.Data.Color;
+            fieldSetting.DayNightColorScheme.NightModeColor.DefaultValue = fieldInstance.Data.Color;
+            fieldSetting.MaximumOverride.DefaultValue = fieldInstance.Data.Maximum;
+            fieldSetting.MinimumOverride.DefaultValue = fieldInstance.Data.Minimum;
+            fieldSetting.StepOverride.DefaultValue = fieldInstance.Data.Step;
+
             fieldSetting.GameSupported = fieldInstance.IsGameSupported;
             fieldSetting.SupportedGames = fieldInstance.SupportedGames;
 
             fieldSetting.PropertyChanged += FieldSetting_PropertyChanged;
             fieldSetting.NameOverridePropertyChanged += NameOverride_PropertyChanged;
             fieldSetting.DecimalOverridePropertyChanged += DecimalOverride_PropertyChanged;
-            fieldSetting.ColorSchemeOverridePropertyChanged += FieldSetting_ColorSchemeOverridePropertyChanged;
+            fieldSetting.ColorSchemeOverridePropertyChanged += ColorSchemeOverridePropertyChanged;
+
+            fieldSetting.MaximumOverridePropertyChanged += MaximumOverridePropertyChanged;
+            fieldSetting.MinimumOverridePropertyChanged += MinimumOverridePropertyChanged;
+            fieldSetting.StepOverridePropertyChanged += StepOverridePropertyChanged;
             GaugeFieldComponent fieldComponent = new GaugeFieldComponent(fieldInstance)
             {
                 Enabled = fieldSetting.Enabled
@@ -651,6 +670,46 @@ namespace DashMenu
             UpdateColorOveride(fieldSetting);
             UpdateDecimalOverride(fieldSetting);
         }
+
+        private void StepOverridePropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if ((sender is Settings.GaugeField settings))
+            {
+                var field = allGaugeField.First(x => x.FullName == settings.FullName);
+                if (field == null) return;
+
+                field.FieldComponent.Data.Step = settings.StepOverride.Override
+                    ? settings.StepOverride.OverrideValue
+                    : settings.StepOverride.DefaultValue;
+            }
+        }
+
+        private void MinimumOverridePropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if ((sender is Settings.GaugeField settings))
+            {
+                var field = allGaugeField.First(x => x.FullName == settings.FullName);
+                if (field == null) return;
+
+                field.FieldComponent.Data.Minimum = settings.MinimumOverride.Override
+                    ? settings.MinimumOverride.OverrideValue
+                    : settings.MinimumOverride.DefaultValue;
+            }
+        }
+
+        private void MaximumOverridePropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if ((sender is Settings.GaugeField settings))
+            {
+                var field = allGaugeField.First(x => x.FullName == settings.FullName);
+                if (field == null) return;
+
+                field.FieldComponent.Data.Maximum = settings.MaximumOverride.Override
+                    ? settings.MaximumOverride.OverrideValue
+                    : settings.MaximumOverride.DefaultValue;
+            }
+        }
+
         private void NameOverride_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if ((sender is Settings.GaugeField gaugeFieldSettings))
@@ -667,30 +726,20 @@ namespace DashMenu
             var field = allDataField.First(x => x.FullName == settings.FullName);
             if (field == null) return;
 
-            if (settings.NameOverride.Override)
-            {
-                field.FieldComponent.Data.Name = settings.NameOverride.OverrideValue;
-            }
-            else
-            {
-                field.FieldComponent.Data.Name = settings.NameOverride.DefaultValue;
-            }
+            field.FieldComponent.Data.Name = settings.NameOverride.Override
+                ? settings.NameOverride.OverrideValue
+                : settings.NameOverride.DefaultValue;
         }
         private void UpdateNameOverride(Settings.GaugeField settings)
         {
             var field = allGaugeField.First(x => x.FullName == settings.FullName);
             if (field == null) return;
 
-            if (settings.NameOverride.Override)
-            {
-                field.FieldComponent.Data.Name = settings.NameOverride.OverrideValue;
-            }
-            else
-            {
-                field.FieldComponent.Data.Name = settings.NameOverride.DefaultValue;
-            }
+            field.FieldComponent.Data.Name = settings.NameOverride.Override
+                ? settings.NameOverride.OverrideValue
+                : settings.NameOverride.DefaultValue;
         }
-        private void FieldSetting_ColorSchemeOverridePropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void ColorSchemeOverridePropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (sender is Settings.GaugeField gaugeFieldSettings)
             {
@@ -754,28 +803,18 @@ namespace DashMenu
             var field = allDataField.FirstOrDefault(x => x.FullName == fieldSettings.FullName);
             if (field == null) return;
 
-            if (fieldSettings.DecimalOverride.Override)
-            {
-                field.FieldComponent.Data.Decimal = fieldSettings.DecimalOverride.OverrideValue;
-            }
-            else
-            {
-                field.FieldComponent.Data.Decimal = fieldSettings.DecimalOverride.DefaultValue;
-            }
+            field.FieldComponent.Data.Decimal = fieldSettings.DecimalOverride.Override
+                ? fieldSettings.DecimalOverride.OverrideValue
+                : fieldSettings.DecimalOverride.DefaultValue;
         }
         private void UpdateDecimalOverride(Settings.GaugeField fieldSettings)
         {
             var field = allGaugeField.FirstOrDefault(x => x.FullName == fieldSettings.FullName);
             if (field == null) return;
 
-            if (fieldSettings.DecimalOverride.Override)
-            {
-                field.FieldComponent.Data.Decimal = fieldSettings.DecimalOverride.OverrideValue;
-            }
-            else
-            {
-                field.FieldComponent.Data.Decimal = fieldSettings.DecimalOverride.DefaultValue;
-            }
+            field.FieldComponent.Data.Decimal = fieldSettings.DecimalOverride.Override
+                ? fieldSettings.DecimalOverride.OverrideValue
+                : fieldSettings.DecimalOverride.DefaultValue;
         }
         private void FieldSetting_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {

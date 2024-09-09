@@ -84,11 +84,17 @@
                                            Content="Select a field data to edit it" />
                                 </StackPanel>
                             </Border>
-                            <local:FieldDataSettingItem Visibility="{Binding ElementName=FieldDataSettings, Path=SelectedValue, Converter={IsNullToCollapsedConverter}}"
-                                                        DataContext="{Binding ElementName=FieldDataSettings, Path=SelectedValue}"
-                                                        Grid.Column="1"
-                                                        Grid.Row="1"
-                                                        Grid.RowSpan="2" />
+                            <Border Grid.Column="1"
+                                    Grid.Row="1"
+                                    Grid.RowSpan="2"
+                                    BorderThickness="0"
+                                    CornerRadius="6"
+                                    BorderBrush="#33000000"
+                                    Background="{DynamicResource GrayBrush10}"
+                                    Visibility="{Binding ElementName=FieldDataSettings, Path=SelectedValue, Converter={IsNullToCollapsedConverter}}"
+                                    Margin="4">
+                                <local:DataFieldSettingsItem DataContext="{Binding ElementName=FieldDataSettings, Path=SelectedValue}" />
+                            </Border>
                         </Grid>
                     </StackPanel>
                 </AutoGrid>
@@ -164,11 +170,21 @@
                                            Content="Select a field data to edit it" />
                                 </StackPanel>
                             </Border>
-                            <local:FieldDataSettingItem Visibility="{Binding ElementName=FieldGaugeSettings, Path=SelectedValue, Converter={IsNullToCollapsedConverter}}"
-                                                        DataContext="{Binding ElementName=FieldGaugeSettings, Path=SelectedValue}"
-                                                        Grid.Column="1"
-                                                        Grid.Row="1"
-                                                        Grid.RowSpan="2" />
+                            <Border CornerRadius="6"
+                                    BorderBrush="#33000000"
+                                    Background="{DynamicResource GrayBrush10}"
+                                    Margin="4"
+                                    Grid.Column="1"
+                                    Grid.Row="1"
+                                    Grid.RowSpan="2"
+                                    Visibility="{Binding ElementName=FieldGaugeSettings, Path=SelectedValue, Converter={IsNullToCollapsedConverter}}">
+                                <ScrollViewer>
+                                <StackPanel Orientation="Horizontal">
+                                    <local:DataFieldSettingsItem DataContext="{Binding ElementName=FieldGaugeSettings, Path=SelectedValue}" />
+                                    <local:GaugeFieldSettingsItem DataContext="{Binding ElementName=FieldGaugeSettings, Path=SelectedValue}" />
+                                </StackPanel>
+                                </ScrollViewer>
+                            </Border>
                         </Grid>
                     </StackPanel>
                 </AutoGrid>

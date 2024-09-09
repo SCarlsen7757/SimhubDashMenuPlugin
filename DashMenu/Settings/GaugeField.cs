@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using Newtonsoft.Json;
+using System.ComponentModel;
+
 
 namespace DashMenu.Settings
 {
@@ -15,16 +17,15 @@ namespace DashMenu.Settings
             StepOverride = new PropertyOverride<string>();
             StepOverride.PropertyChanged += Step_PropertyChanged;
         }
-
-
         private bool isRangeLocked = true;
         /// <summary>
         /// Is the value range, maximum and minimum locked. Determined by the extension.
         /// </summary>
+        [JsonIgnore]
         public bool IsRangeLocked
         {
             get => isRangeLocked;
-            internal set
+            set
             {
                 if (isRangeLocked == value) return;
                 isRangeLocked = value;
@@ -37,9 +38,11 @@ namespace DashMenu.Settings
         /// <summary>
         /// Is the step value locked. Determined by the extension.
         /// </summary>
+        [JsonIgnore]
         public bool IsStepLocked
         {
-            get => isStepLocked; internal set
+            get => isStepLocked;
+            set
             {
                 if (isStepLocked == value) return;
                 isStepLocked = value;
