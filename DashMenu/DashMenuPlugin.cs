@@ -571,6 +571,10 @@ namespace DashMenu
                 };
                 Settings.GameSettings[PluginManager.GameName].DataFields.Add(type.FullName, fieldSetting);
             }
+
+            //Make sure that empty field can't be disabled.
+            if (fieldInstance.GetType().FullName == EmptyDataField.FullName) fieldSetting.Enabled = true;
+
             fieldSetting.Namespace = type.Namespace;
             fieldSetting.Name = type.Name;
             fieldSetting.FullName = type.FullName;
@@ -620,6 +624,10 @@ namespace DashMenu
 
                 Settings.GameSettings[PluginManager.GameName].GaugeFields.Add(type.FullName, fieldSetting);
             }
+
+            //Make sure that empty field can't be disabled.
+            if (fieldInstance.GetType().FullName == EmptyGaugeField.FullName) fieldSetting.Enabled = true;
+
             fieldSetting.Namespace = type.Namespace;
             fieldSetting.Name = type.Name;
             fieldSetting.FullName = type.FullName;
