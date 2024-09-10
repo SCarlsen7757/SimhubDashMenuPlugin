@@ -26,9 +26,9 @@
                     <!--Maximum override-->
                     <Label Content="Override maximum value"
                            Grid.ColumnSpan="2" />
-                    <styles:SHToggleCheckbox IsChecked="{Binding Path=MaximumOverride.Override}" />
-                    <TextBox Text="{Binding Path=MaximumOverride.OverrideValue, UpdateSourceTrigger=PropertyChanged}"
-                             IsEnabled="{Binding Path=MaximumOverride.Override}" />
+                    <styles:SHToggleCheckbox IsChecked="{Binding Path=Override.Maximum.Override}" />
+                    <TextBox Text="{Binding Path=Override.Maximum.OverrideValue, UpdateSourceTrigger=PropertyChanged}"
+                             IsEnabled="{Binding Path=Override.Maximum.Override}" />
                 </AutoGrid>
                 <AutoGrid Columns="auto,*"
                           Margin="12,0"
@@ -36,9 +36,9 @@
                     <!--Minimum override-->
                     <Label Content="Override minimum value"
                            Grid.ColumnSpan="2" />
-                    <styles:SHToggleCheckbox IsChecked="{Binding Path=MinimumOverride.Override}" />
-                    <TextBox Text="{Binding Path=MinimumOverride.OverrideValue, UpdateSourceTrigger=PropertyChanged}"
-                             IsEnabled="{Binding Path=MinimumOverride.Override}" />
+                    <styles:SHToggleCheckbox IsChecked="{Binding Path=Override.Minimum.Override}" />
+                    <TextBox Text="{Binding Path=Override.Minimum.OverrideValue, UpdateSourceTrigger=PropertyChanged}"
+                             IsEnabled="{Binding Path=Override.Minimum.Override}" />
                 </AutoGrid>
                 <AutoGrid Columns="auto,*"
                           Margin="12,0"
@@ -46,9 +46,9 @@
                     <!--Step override-->
                     <Label Content="Override step value"
                            Grid.ColumnSpan="2" />
-                    <styles:SHToggleCheckbox IsChecked="{Binding Path=StepOverride.Override}" />
-                    <TextBox Text="{Binding Path=StepOverride.OverrideValue, UpdateSourceTrigger=PropertyChanged}"
-                             IsEnabled="{Binding Path=StepOverride.Override}" />
+                    <styles:SHToggleCheckbox IsChecked="{Binding Path=Override.Step.Override}" />
+                    <TextBox Text="{Binding Path=Override.Step.OverrideValue, UpdateSourceTrigger=PropertyChanged}"
+                             IsEnabled="{Binding Path=Override.Step.Override}" />
                 </AutoGrid>
             </StackPanel>
         </StackPanel>

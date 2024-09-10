@@ -6,20 +6,7 @@ namespace DashMenu.Settings
 {
     internal class DataField : INotifyPropertyChanged
     {
-        public DataField()
-        {
-            NameOverride = new PropertyOverride<string>();
-            NameOverride.PropertyChanged += NameOverride_PropertyChanged;
-
-            DecimalOverride = new PropertyOverride<int>();
-            DecimalOverride.PropertyChanged += DecimalOverride_PropertyChanged;
-
-            DayNightColorScheme = new DayNightColorScheme();
-            DayNightColorScheme.DayModeColor.PropertyChanged += ColorSchemeOverride_PropertyChanged;
-            DayNightColorScheme.DayModeColor.OverrideValue.PropertyChanged += ColorSchemeOverride_PropertyChanged;
-            DayNightColorScheme.NightModeColor.PropertyChanged += ColorSchemeOverride_PropertyChanged;
-            DayNightColorScheme.NightModeColor.OverrideValue.PropertyChanged += ColorSchemeOverride_PropertyChanged;
-        }
+        public DataField() { }
         [JsonIgnore]
         public string Namespace { get; internal set; }
         [JsonIgnore]
@@ -59,18 +46,29 @@ namespace DashMenu.Settings
                 OnPropertyChanged();
             }
         }
-        public PropertyOverride<string> NameOverride { get; set; }
-        public PropertyOverride<int> DecimalOverride { get; set; }
-        public DayNightColorScheme DayNightColorScheme { get; set; }
+        public OverrideProperties Override { get; set; } = new OverrideProperties();
+        public class OverrideProperties
+        {
+            public OverrideProperties()
+            {
+                DayNightColorScheme.DayModeColor.PropertyChanged += ColorScheme_PropertyChanged;
+                DayNightColorScheme.DayModeColor.OverrideValue.PropertyChanged += ColorScheme_PropertyChanged;
+                DayNightColorScheme.NightModeColor.PropertyChanged += ColorScheme_PropertyChanged;
+                DayNightColorScheme.NightModeColor.OverrideValue.PropertyChanged += ColorScheme_PropertyChanged;
+            }
+            public PropertyOverride<string> Name { get; set; } = new PropertyOverride<string>();
+            public PropertyOverride<int> Decimal { get; set; } = new PropertyOverride<int>();
+            public DayNightColorScheme DayNightColorScheme { get; set; } = new DayNightColorScheme();
+            public event PropertyChangedEventHandler NamePropertyChanged;
+            public event PropertyChangedEventHandler DecimalPropertyChanged;
+            public event PropertyChangedEventHandler ColorSchemePropertyChanged;
+            private void Name_PropertyChanged(object sender, PropertyChangedEventArgs e) => NamePropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Name)));
+            private void Decimal_PropertyChanged(object sender, PropertyChangedEventArgs e) => DecimalPropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Decimal)));
+            private void ColorScheme_PropertyChanged(object sender, PropertyChangedEventArgs e) => ColorSchemePropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DayNightColorScheme)));
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        public event PropertyChangedEventHandler NameOverridePropertyChanged;
-        public event PropertyChangedEventHandler DecimalOverridePropertyChanged;
-        public event PropertyChangedEventHandler ColorSchemeOverridePropertyChanged;
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        private void NameOverride_PropertyChanged(object sender, PropertyChangedEventArgs e) => NameOverridePropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(NameOverride)));
-        private void DecimalOverride_PropertyChanged(object sender, PropertyChangedEventArgs e) => DecimalOverridePropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DecimalOverride)));
-        private void ColorSchemeOverride_PropertyChanged(object sender, PropertyChangedEventArgs e) => ColorSchemeOverridePropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DayNightColorScheme)));
     }
 }
