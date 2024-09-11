@@ -463,7 +463,7 @@ namespace DashMenu
         }
         private void FieldComponent_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            UpdateAvailableField((DataFieldComponent)sender);
+            UpdateAvailableFields((DataFieldComponent)sender);
         }
         private void SaveDisplayedField(string carId, string carModel)
         {
@@ -589,10 +589,10 @@ namespace DashMenu
             fieldSetting.GameSupported = fieldInstance.IsGameSupported;
             fieldSetting.SupportedGames = fieldInstance.SupportedGames;
 
-            fieldSetting.PropertyChanged += FieldSetting_PropertyChanged;
-            fieldSetting.Override.NamePropertyChanged += NameOverride_PropertyChanged;
-            fieldSetting.Override.DecimalPropertyChanged += DecimalOverride_PropertyChanged;
-            fieldSetting.Override.ColorSchemePropertyChanged += ColorSchemeOverridePropertyChanged;
+            fieldSetting.PropertyChanged += DataFieldSetting_PropertyChanged;
+            fieldSetting.Override.NamePropertyChanged += DataFieldNameOverride_PropertyChanged;
+            fieldSetting.Override.DecimalPropertyChanged += DataFieldDecimalOverride_PropertyChanged;
+            fieldSetting.Override.ColorSchemePropertyChanged += DataFieldColorSchemeOverridePropertyChanged;
             DataFieldComponent fieldComponent = new DataFieldComponent(fieldInstance)
             {
                 Enabled = fieldSetting.Enabled
@@ -652,14 +652,14 @@ namespace DashMenu
             fieldSetting.GameSupported = fieldInstance.IsGameSupported;
             fieldSetting.SupportedGames = fieldInstance.SupportedGames;
 
-            fieldSetting.PropertyChanged += FieldSetting_PropertyChanged;
-            fieldSetting.Override.NamePropertyChanged += NameOverride_PropertyChanged;
-            fieldSetting.Override.DecimalPropertyChanged += DecimalOverride_PropertyChanged;
-            fieldSetting.Override.ColorSchemePropertyChanged += ColorSchemeOverridePropertyChanged;
+            fieldSetting.PropertyChanged += GaugeFieldSetting_PropertyChanged;
+            fieldSetting.Override.NamePropertyChanged += GaugeFieldNameOverride_PropertyChanged;
+            fieldSetting.Override.DecimalPropertyChanged += GaugeFieldDecimalOverride_PropertyChanged;
+            fieldSetting.Override.ColorSchemePropertyChanged += GaugeFieldColorSchemeOverridePropertyChanged;
 
-            fieldSetting.Override.MaximumPropertyChanged += MaximumOverridePropertyChanged;
-            fieldSetting.Override.MinimumPropertyChanged += MinimumOverridePropertyChanged;
-            fieldSetting.Override.StepPropertyChanged += StepOverridePropertyChanged;
+            fieldSetting.Override.MaximumPropertyChanged += GaugeFieldMaximumOverridePropertyChanged;
+            fieldSetting.Override.MinimumPropertyChanged += GaugeFieldMinimumOverridePropertyChanged;
+            fieldSetting.Override.StepPropertyChanged += GaugeFieldStepOverridePropertyChanged;
             GaugeFieldComponent fieldComponent = new GaugeFieldComponent(fieldInstance)
             {
                 Enabled = fieldSetting.Enabled
@@ -668,58 +668,65 @@ namespace DashMenu
             UpdateNameOverride(fieldSetting);
             UpdateColorOveride(fieldSetting);
             UpdateDecimalOverride(fieldSetting);
+            UpdateMaximumOverride(fieldSetting);
+            UpdateMinimumOverride(fieldSetting);
+            UpdateStepOverride(fieldSetting);
         }
 
-        private void StepOverridePropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void GaugeFieldStepOverridePropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if ((sender is Settings.GaugeField settings))
-            {
-                var field = allGaugeField.First(x => x.FullName == settings.FullName);
-                if (field == null) return;
-
-                field.FieldComponent.Data.Step = settings.Override.Step.Override
-                    ? settings.Override.Step.OverrideValue
-                    : settings.Override.Step.DefaultValue;
-            }
+            if (!(sender is Settings.GaugeField settings)) return;
+            UpdateStepOverride(settings);
         }
 
-        private void MinimumOverridePropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void UpdateStepOverride(Settings.GaugeField settings)
         {
-            if ((sender is Settings.GaugeField settings))
-            {
-                var field = allGaugeField.First(x => x.FullName == settings.FullName);
-                if (field == null) return;
+            var field = allGaugeField.First(x => x.FullName == settings.FullName);
+            if (field == null) return;
 
-                field.FieldComponent.Data.Minimum = settings.Override.Minimum.Override
-                    ? settings.Override.Minimum.OverrideValue
-                    : settings.Override.Minimum.DefaultValue;
-            }
+            field.FieldComponent.Data.Step = settings.Override.Step.Override
+                ? settings.Override.Step.OverrideValue
+                : settings.Override.Step.DefaultValue;
         }
 
-        private void MaximumOverridePropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void GaugeFieldMinimumOverridePropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if ((sender is Settings.GaugeField settings))
-            {
-                var field = allGaugeField.First(x => x.FullName == settings.FullName);
-                if (field == null) return;
-
-                field.FieldComponent.Data.Maximum = settings.Override.Maximum.Override
-                    ? settings.Override.Maximum.OverrideValue
-                    : settings.Override.Maximum.DefaultValue;
-            }
+            if (!(sender is Settings.GaugeField settings)) return;
+            UpdateMinimumOverride(settings);
         }
 
-        private void NameOverride_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void UpdateMinimumOverride(Settings.GaugeField settings)
         {
-            if ((sender is Settings.GaugeField gaugeFieldSettings))
-            {
-                UpdateNameOverride(gaugeFieldSettings);
-            }
-            else if ((sender is Settings.DataField dataFieldSettings))
-            {
-                UpdateNameOverride(dataFieldSettings);
-            }
+            var field = allGaugeField.First(x => x.FullName == settings.FullName);
+            if (field == null) return;
+
+            field.FieldComponent.Data.Minimum = settings.Override.Minimum.Override
+                ? settings.Override.Minimum.OverrideValue
+                : settings.Override.Minimum.DefaultValue;
         }
+
+        private void GaugeFieldMaximumOverridePropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (!(sender is Settings.GaugeField settings)) return;
+            UpdateMaximumOverride(settings);
+        }
+
+        private void UpdateMaximumOverride(Settings.GaugeField settings)
+        {
+            var field = allGaugeField.First(x => x.FullName == settings.FullName);
+            if (field == null) return;
+
+            field.FieldComponent.Data.Maximum = settings.Override.Maximum.Override
+                ? settings.Override.Maximum.OverrideValue
+                : settings.Override.Maximum.DefaultValue;
+        }
+
+        private void DataFieldNameOverride_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (!(sender is Settings.DataField.OverrideProperties settings)) return;
+            UpdateNameOverride(settings.parent);
+        }
+
         private void UpdateNameOverride(Settings.DataField settings)
         {
             var field = allDataField.First(x => x.FullName == settings.FullName);
@@ -729,6 +736,13 @@ namespace DashMenu
                 ? settings.Override.Name.OverrideValue
                 : settings.Override.Name.DefaultValue;
         }
+
+        private void GaugeFieldNameOverride_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (!(sender is Settings.GaugeField.OverrideProperties settings)) return;
+            UpdateNameOverride(settings.parent);
+        }
+
         private void UpdateNameOverride(Settings.GaugeField settings)
         {
             var field = allGaugeField.First(x => x.FullName == settings.FullName);
@@ -738,122 +752,133 @@ namespace DashMenu
                 ? settings.Override.Name.OverrideValue
                 : settings.Override.Name.DefaultValue;
         }
-        private void ColorSchemeOverridePropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+
+        private void DataFieldColorSchemeOverridePropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (sender is Settings.GaugeField gaugeFieldSettings)
+            if ((sender is Settings.DataField.OverrideProperties settings))
             {
-                UpdateColorOveride(gaugeFieldSettings);
-            }
-            else if ((sender is Settings.DataField dataFieldSettings))
-            {
-                UpdateColorOveride(dataFieldSettings);
+                UpdateColorOveride(settings.parent);
             }
         }
 
-        private void UpdateColorOveride(Settings.DataField fieldSettings)
+        private void GaugeFieldColorSchemeOverridePropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            var datafield = allDataField.FirstOrDefault(x => x.FullName == fieldSettings.FullName);
+            if (sender is Settings.GaugeField.OverrideProperties settings)
+            {
+                UpdateColorOveride(settings.parent);
+            }
+        }
+
+        private void UpdateColorOveride(Settings.DataField settings)
+        {
+            var datafield = allDataField.FirstOrDefault(x => x.FullName == settings.FullName);
             if (datafield == null) return;
 
-            if (!fieldSettings.Override.DayNightColorScheme.DayModeColor.Override)
+            if (!settings.Override.DayNightColorScheme.DayModeColor.Override)
             {
-                datafield.FieldComponent.Data.Color = fieldSettings.Override.DayNightColorScheme.DayModeColor.DefaultValue;
+                datafield.FieldComponent.Data.Color = settings.Override.DayNightColorScheme.DayModeColor.DefaultValue;
                 return;
             }
 
-            if (BrightnessConfiguration.Configuration.IsNightMode && fieldSettings.Override.DayNightColorScheme.NightModeColor.Override)
+            if (BrightnessConfiguration.Configuration.IsNightMode && settings.Override.DayNightColorScheme.NightModeColor.Override)
             {
-                datafield.FieldComponent.Data.Color = fieldSettings.Override.DayNightColorScheme.NightModeColor.OverrideValue;
+                datafield.FieldComponent.Data.Color = settings.Override.DayNightColorScheme.NightModeColor.OverrideValue;
                 return;
             }
-            datafield.FieldComponent.Data.Color = fieldSettings.Override.DayNightColorScheme.DayModeColor.OverrideValue;
+            datafield.FieldComponent.Data.Color = settings.Override.DayNightColorScheme.DayModeColor.OverrideValue;
         }
-        private void UpdateColorOveride(Settings.GaugeField fieldSettings)
+
+        private void UpdateColorOveride(Settings.GaugeField settings)
         {
-            var gaugeField = allGaugeField.FirstOrDefault(x => x.FullName == fieldSettings.FullName);
+            var gaugeField = allGaugeField.FirstOrDefault(x => x.FullName == settings.FullName);
             if (gaugeField == null) return;
 
-            if (!fieldSettings.Override.DayNightColorScheme.DayModeColor.Override)
+            if (!settings.Override.DayNightColorScheme.DayModeColor.Override)
             {
-                gaugeField.FieldComponent.Data.Color = fieldSettings.Override.DayNightColorScheme.DayModeColor.DefaultValue;
+                gaugeField.FieldComponent.Data.Color = settings.Override.DayNightColorScheme.DayModeColor.DefaultValue;
                 return;
             }
 
-            if (BrightnessConfiguration.Configuration.IsNightMode && fieldSettings.Override.DayNightColorScheme.NightModeColor.Override)
+            if (BrightnessConfiguration.Configuration.IsNightMode && settings.Override.DayNightColorScheme.NightModeColor.Override)
             {
-                gaugeField.FieldComponent.Data.Color = fieldSettings.Override.DayNightColorScheme.NightModeColor.OverrideValue;
+                gaugeField.FieldComponent.Data.Color = settings.Override.DayNightColorScheme.NightModeColor.OverrideValue;
                 return;
             }
-            gaugeField.FieldComponent.Data.Color = fieldSettings.Override.DayNightColorScheme.DayModeColor.OverrideValue;
+            gaugeField.FieldComponent.Data.Color = settings.Override.DayNightColorScheme.DayModeColor.OverrideValue;
         }
-        private void DecimalOverride_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+
+        private void DataFieldDecimalOverride_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if ((sender is Settings.GaugeField gaugeFieldSettings))
-            {
-                UpdateDecimalOverride(gaugeFieldSettings);
-            }
-            if ((sender is Settings.DataField dataFieldSettings))
-            {
-                UpdateDecimalOverride(dataFieldSettings);
-            }
+            if (!(sender is Settings.DataField.OverrideProperties settings)) return;
+            UpdateDecimalOverride(settings.parent);
         }
-        private void UpdateDecimalOverride(Settings.DataField fieldSettings)
+
+        private void UpdateDecimalOverride(Settings.DataField settings)
         {
-            var field = allDataField.FirstOrDefault(x => x.FullName == fieldSettings.FullName);
+            var field = allDataField.FirstOrDefault(x => x.FullName == settings.FullName);
             if (field == null) return;
 
-            field.FieldComponent.Data.Decimal = fieldSettings.Override.Decimal.Override
-                ? fieldSettings.Override.Decimal.OverrideValue
-                : fieldSettings.Override.Decimal.DefaultValue;
+            field.FieldComponent.Data.Decimal = settings.Override.Decimal.Override
+                ? settings.Override.Decimal.OverrideValue
+                : settings.Override.Decimal.DefaultValue;
         }
-        private void UpdateDecimalOverride(Settings.GaugeField fieldSettings)
+
+        private void GaugeFieldDecimalOverride_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            var field = allGaugeField.FirstOrDefault(x => x.FullName == fieldSettings.FullName);
+            if (!(sender is Settings.GaugeField.OverrideProperties settings)) return;
+            UpdateDecimalOverride(settings.parent);
+        }
+
+        private void UpdateDecimalOverride(Settings.GaugeField settings)
+        {
+            var field = allGaugeField.FirstOrDefault(x => x.FullName == settings.FullName);
             if (field == null) return;
 
-            field.FieldComponent.Data.Decimal = fieldSettings.Override.Decimal.Override
-                ? fieldSettings.Override.Decimal.OverrideValue
-                : fieldSettings.Override.Decimal.DefaultValue;
+            field.FieldComponent.Data.Decimal = settings.Override.Decimal.Override
+                ? settings.Override.Decimal.OverrideValue
+                : settings.Override.Decimal.DefaultValue;
         }
-        private void FieldSetting_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+
+        private void DataFieldSetting_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if ((sender is Settings.GaugeField settingsGaugeField))
+            if (!(sender is Settings.GaugeField settingsGaugeField)) return;
+            switch (e.PropertyName)
             {
-                switch (e.PropertyName)
-                {
-                    case nameof(settingsGaugeField.Enabled):
-                        var fieldComponent = allGaugeField.FirstOrDefault(f => f.FullName == settingsGaugeField.FullName);
-                        if (fieldComponent == null)
-                        {
-                            SimHub.Logging.Current.Error($"Settings changed for a data field that's not loaded. Missing class: {settingsGaugeField.FullName}");
-                            return;
-                        }
-                        fieldComponent.Enabled = settingsGaugeField.Enabled;
-                        UpdateAvailableFields(fieldComponent);
-                        break;
-                    default:
-                        break;
-                }
-            }
-            else if ((sender is Settings.DataField settingsDataField))
-            {
-                switch (e.PropertyName)
-                {
-                    case nameof(settingsDataField.Enabled):
-                        var fieldComponent = allDataField.FirstOrDefault(f => f.FullName == settingsDataField.FullName);
-                        if (fieldComponent == null)
-                        {
-                            SimHub.Logging.Current.Error($"Settings changed for a data field that's not loaded. Missing class: {settingsDataField.FullName}");
-                            return;
-                        }
-                        fieldComponent.Enabled = settingsDataField.Enabled;
-                        UpdateAvailableField(fieldComponent);
-                        break;
-                    default:
-                        break;
-                }
+                case nameof(settingsGaugeField.Enabled):
+                    var fieldComponent = allGaugeField.FirstOrDefault(f => f.FullName == settingsGaugeField.FullName);
+                    if (fieldComponent == null)
+                    {
+                        SimHub.Logging.Current.Error($"Settings changed for a data field that's not loaded. Missing class: {settingsGaugeField.FullName}");
+                        return;
+                    }
+                    fieldComponent.Enabled = settingsGaugeField.Enabled;
+                    UpdateAvailableFields(fieldComponent);
+                    break;
+                default:
+                    break;
             }
         }
+
+        private void GaugeFieldSetting_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (!(sender is Settings.DataField settingsDataField)) return;
+            switch (e.PropertyName)
+            {
+                case nameof(settingsDataField.Enabled):
+                    var fieldComponent = allDataField.FirstOrDefault(f => f.FullName == settingsDataField.FullName);
+                    if (fieldComponent == null)
+                    {
+                        SimHub.Logging.Current.Error($"Settings changed for a data field that's not loaded. Missing class: {settingsDataField.FullName}");
+                        return;
+                    }
+                    fieldComponent.Enabled = settingsDataField.Enabled;
+                    UpdateAvailableFields(fieldComponent);
+                    break;
+                default:
+                    break;
+            }
+        }
+
         private void DayNightMode_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             foreach (var field in availableDataField)
@@ -882,7 +907,8 @@ namespace DashMenu
                 if (fieldComponent.Enabled) availableGaugeField.Add(fieldComponent.FieldComponent);
             }
         }
-        private void UpdateAvailableField(DataFieldComponent fieldComponent)
+
+        private void UpdateAvailableFields(DataFieldComponent fieldComponent)
         {
             if (fieldComponent.Enabled)
             {
@@ -902,6 +928,7 @@ namespace DashMenu
                 availableDataField.Remove(fieldComponent.FieldComponent);
             }
         }
+
         private void UpdateAvailableFields(GaugeFieldComponent fieldComponent)
         {
             if (fieldComponent.Enabled)
@@ -922,14 +949,17 @@ namespace DashMenu
                 availableGaugeField.Remove(fieldComponent.FieldComponent);
             }
         }
+
         private int CurrentFieldIndex(IDataFieldComponent field)
         {
             return availableDataField.FindIndex(f => f == field);
         }
+
         private int CurrentFieldIndex(IGaugeFieldComponent field)
         {
             return availableGaugeField.FindIndex(f => f == field);
         }
+
         private IDataFieldComponent NextField(IDataFieldComponent currentField)
         {
             int maxIndex = availableDataField.Count - 1;
@@ -937,6 +967,7 @@ namespace DashMenu
             int nextIndex = (currentIndex >= maxIndex) ? 0 : currentIndex + 1;
             return availableDataField[nextIndex];
         }
+
         private IGaugeFieldComponent NextField(IGaugeFieldComponent currentField)
         {
             int maxIndex = availableGaugeField.Count - 1;
@@ -944,6 +975,7 @@ namespace DashMenu
             int nextIndex = (currentIndex >= maxIndex) ? 0 : currentIndex + 1;
             return availableGaugeField[nextIndex];
         }
+
         private IDataFieldComponent PrevField(IDataFieldComponent currentField)
         {
             int maxIndex = availableDataField.Count - 1;
@@ -951,6 +983,7 @@ namespace DashMenu
             int prevIndex = (currentIndex <= 0) ? maxIndex : currentIndex - 1;
             return availableDataField[prevIndex];
         }
+
         private IGaugeFieldComponent PrevFied(IGaugeFieldComponent currentField)
         {
             int maxIndex = availableGaugeField.Count - 1;
