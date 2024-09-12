@@ -272,7 +272,7 @@ namespace DashMenu
                         break;
                     case FieldType.Gauge:
                         if (gaugeFields.Count <= 0) return;
-                        dataFields.RemoveAt(gaugeFields.Count - 1);
+                        gaugeFields.RemoveAt(gaugeFields.Count - 1);
                         pluginManager.SetPropertyValue(PropertyNames.AmountOfGaugeFields, GetType(), gaugeFields.Count);
                         break;
                     default:
@@ -312,6 +312,8 @@ namespace DashMenu
             {
 #if DEBUG
                 throw e;
+#else
+                SimHub.Logging.Current.Error(this, e);
 #endif
             }
             pluginManager.AddProperty<bool>(PropertyNames.PluginRunning, GetType(), true);
@@ -469,13 +471,13 @@ namespace DashMenu
         {
             if (string.IsNullOrWhiteSpace(carId) || string.IsNullOrWhiteSpace(carModel)) return;
 
-            var fieldDataSettings = new ObservableCollection<string>();
+            var fieldDataSettings = new List<string>();
             for (int i = 0; i < dataFields.Count; i++)
             {
                 fieldDataSettings.Add(dataFields[i].GetType().FullName);
             }
 
-            var fieldGaugeSettings = new ObservableCollection<string>();
+            var fieldGaugeSettings = new List<string>();
             for (int i = 0; i < gaugeFields.Count; i++)
             {
                 fieldGaugeSettings.Add(gaugeFields[i].GetType().FullName);

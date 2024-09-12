@@ -1,5 +1,6 @@
 ﻿using DashMenu.UI;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -143,6 +144,8 @@ namespace DashMenu.Settings
                 default:
 #if DEBUG
                     throw new NotImplementedException();
+#else
+                    break;
 #endif
             }
         }
@@ -160,6 +163,8 @@ namespace DashMenu.Settings
                 default:
 #if DEBUG
                     throw new NotImplementedException();
+#else
+                    break;
 #endif
             }
         }
@@ -172,35 +177,30 @@ namespace DashMenu.Settings
         /// <param name="carModel">Name of the car.</param>
         /// <param name="displayedDataFields">Displayed data field settings.</param>
         /// <param name="displayedGaugeFields">Displayed gauge field settings</param>
-        internal void UpdateDisplayedFields(string carId, string carModel, ObservableCollection<string> displayedDataFields, ObservableCollection<string> displayedGaugeFields)
+        internal void UpdateDisplayedFields(string carId, string carModel, List<string> displayedDataFields, List<string> displayedGaugeFields)
         {
-            //TODO: testing, is this code needed
-            /*
-            if (displayedDataFields == null)
-            {
-                displayedDataFields = DefaultDataFields;
-                if (displayedDataFields.Count == 0)
-                {
-                    displayedDataFields = DefaultDataFieldsList();
-                }
-            }
-            if (displayedGaugeFields == null)
-            {
-                displayedGaugeFields = DefaultGaugeFields;
-                if (displayedGaugeFields.Count == 0)
-                {
-                    displayedGaugeFields = DefaultGaugeFieldsList();
-                }
-            }
-            */
             if (CarFields.TryGetValue(carId, out var carSettings))
             {
-                carSettings.DisplayedDataFields = displayedDataFields;
-                carSettings.DisplayedGaugeFields = displayedGaugeFields;
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    carSettings.DisplayedDataFields.Clear();
+                    foreach (string field in displayedDataFields)
+                    {
+                        carSettings.DisplayedDataFields.Add(field);
+                    }
+                    carSettings.DisplayedGaugeFields.Clear();
+                    foreach (string field in displayedGaugeFields)
+                    {
+                        carSettings.DisplayedGaugeFields.Add(field);
+                    }
+                });
             }
             else
             {
-                carSettings = new CarFields(carId, carModel, displayedDataFields, displayedGaugeFields);
+                carSettings = new CarFields(carId,
+                    carModel,
+                    new ObservableCollection<string>(displayedDataFields),
+                    new ObservableCollection<string>(displayedGaugeFields));
                 CarFields.Add(carId, carSettings);
             }
         }

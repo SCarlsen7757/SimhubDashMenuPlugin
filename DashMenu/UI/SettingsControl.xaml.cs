@@ -15,14 +15,19 @@ namespace DashMenu.UI
         }
         private void ButtonForgetAllCars_Click(object sender, RoutedEventArgs e)
         {
-            var settings = (Settings.GameSettings)this.DataContext;
+            var settings = (Settings.GameSettings)DataContext;
             settings.RemoveAllDisplayedFields();
         }
 
-        private void ButtonForgetDefaultFields_Click(object sender, RoutedEventArgs e)
+        private void ButtonForgetDefaultDataFields_Click(object sender, RoutedEventArgs e)
         {
-            var settings = (Settings.GameSettings)this.DataContext;
+            var settings = (Settings.GameSettings)DataContext;
             settings.DefaultDataFields.Clear();
+        }
+        private void ButtonForgetDefaultGaugeFields_Click(object sender, RoutedEventArgs e)
+        {
+            var settings = (Settings.GameSettings)DataContext;
+            settings.DefaultGaugeFields.Clear();
         }
     }
 }

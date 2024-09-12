@@ -53,7 +53,11 @@ namespace DashMenu.Settings
         public ObservableCollection<string> DisplayedDataFields { get; set; }
         public ObservableCollection<string> DisplayedGaugeFields { get; set; }
 
-        public CarFields() { }
+        public CarFields()
+        {
+            DisplayedDataFields = new ObservableCollection<string>();
+            DisplayedGaugeFields = new ObservableCollection<string>();
+        }
         public CarFields(string carId, string carModel, ObservableCollection<string> dataFields, ObservableCollection<string> gaugeFields)
         {
             CarId = carId;

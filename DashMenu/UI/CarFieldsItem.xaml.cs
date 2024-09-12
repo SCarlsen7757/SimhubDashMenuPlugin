@@ -44,7 +44,7 @@ namespace DashMenu.UI
                 carFieldsDictionary.Remove(carFields.CarId);
             }
         }
-        private void DefaultFields_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void DefaultDataFields_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             CarFields carFields = (CarFields)DataContext;
             UserControl currentControl = this;
@@ -52,6 +52,15 @@ namespace DashMenu.UI
             GameSettings gameSettings = (GameSettings)parent.DataContext;
 
             gameSettings.DefaultDataFields = carFields.DisplayedDataFields;
+        }
+        private void DefaultGaugeFields_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            CarFields carFields = (CarFields)DataContext;
+            UserControl currentControl = this;
+            Panel parent = (Panel)currentControl.Parent;
+            GameSettings gameSettings = (GameSettings)parent.DataContext;
+
+            gameSettings.DefaultGaugeFields = carFields.DisplayedGaugeFields;
         }
     }
 }

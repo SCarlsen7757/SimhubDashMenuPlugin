@@ -42,18 +42,52 @@
                                      Height="15"
                                      HorizontalAlignment="Right"
                                      Content="Forget this car"
-                                     Click="DefaultFields_Click" />
-                <styles:SHLinkButton VerticalAlignment="Top"
-                                     Margin="4"
-                                     Height="15"
-                                     HorizontalAlignment="Right"
-                                     Content="Make default data field from this car"
-                                     ToolTip="Make the data fields from this car, the default data fields for new cars."
-                                     Click="DefaultFields_Click" />
+                                     Click="DefaultDataFields_Click" />
             </StackPanel>
+            <!--Data fields-->
             <styles:SHSubSectionTitle Content="Displayed Data Fields"
                                       Grid.ColumnSpan="2" />
+            <styles:SHLinkButton VerticalAlignment="Top"
+                                 Margin="4"
+                                 Height="15"
+                                 HorizontalAlignment="Right"
+                                 Grid.ColumnSpan="2"
+                                 Content="Make default data field from this car"
+                                 ToolTip="Make the data fields from this car, the default data fields for new cars."
+                                 Click="DefaultDataFields_Click" />
             <ItemsControl ItemsSource="{Binding DisplayedDataFields}"
+                          Grid.ColumnSpan="2"
+                          Margin="12,0,0,0">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderThickness="0"
+                                CornerRadius="6"
+                                Background="{DynamicResource GrayBrush8}"
+                                Margin="4">
+                            <Label Content="{Binding}"
+                                   Margin="5"
+                                   Padding="5" />
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <!--Gauge fields-->
+            <styles:SHSubSectionTitle Content="Displayed Gauge Fields"
+                                      Grid.ColumnSpan="2" />
+            <styles:SHLinkButton VerticalAlignment="Top"
+                                 Margin="4"
+                                 Height="15"
+                                 HorizontalAlignment="Right"
+                                 Grid.ColumnSpan="2"
+                                 Content="Make default gauge field from this car"
+                                 ToolTip="Make the gauge fields from this car, the default gauge fields for new cars."
+                                 Click="DefaultGaugeFields_Click" />
+            <ItemsControl ItemsSource="{Binding DisplayedGaugeFields}"
                           Grid.ColumnSpan="2"
                           Margin="12,0,0,0">
                 <ItemsControl.ItemsPanel>
