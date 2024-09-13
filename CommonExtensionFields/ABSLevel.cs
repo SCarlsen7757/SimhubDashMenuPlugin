@@ -5,13 +5,19 @@ namespace CommonExtensionFields
 {
     public class ABSLevel : FieldExtensionBase, IDataFieldComponent
     {
-        public ABSLevel(string gameName) : base(gameName) { }
-        public string Description { get => "ABS Level."; }
-        public IDataField Data { get; set; } = new DataField()
+        public ABSLevel(string gameName) : base(gameName)
         {
-            Name = "ABS",
-            Color = new ColorScheme("#00ff2a", "#ffffff")
-        };
+            Data = new DataField()
+            {
+                Name = "ABS",
+                Color = new ColorScheme("#00ff2a", "#ffffff")
+            };
+        }
+
+        public string Description { get => "ABS Level"; }
+
+        IDataField IDataFieldComponent.Data { get => Data; set => Data = value; }
+
         public void Update(ref GameData data)
         {
             if (!data.GameRunning) return;

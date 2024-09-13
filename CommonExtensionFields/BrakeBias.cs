@@ -5,15 +5,25 @@ namespace CommonExtensionFields
 {
     public class BrakeBias : FieldExtensionBase, IDataFieldComponent
     {
-        public BrakeBias(string gameName) : base(gameName) { }
-        public string Description { get => "Brake bias."; }
-        public IDataField Data { get; set; } = new DataField()
+        public BrakeBias(string gameName) : base(gameName)
         {
-            Name = "BB",
-            IsDecimalNumber = true,
-            Decimal = 1,
-            Color = new ColorScheme("#d90028", "#ffffff")
-        };
+            Data = new DataField()
+            {
+                Name = "BB",
+                IsDecimalNumber = true,
+                Decimal = 1,
+                Color = new ColorScheme("#d90028", "#ffffff")
+            };
+        }
+
+        public string Description { get => "Brake bias"; }
+
+        IDataField IDataFieldComponent.Data
+        {
+            get => Data;
+            set => Data = value;
+        }
+
         public void Update(ref GameData data)
         {
             if (!data.GameRunning) return;

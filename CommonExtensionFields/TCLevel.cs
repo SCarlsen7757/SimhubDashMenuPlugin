@@ -5,13 +5,22 @@ namespace CommonExtensionFields
 {
     public class TCLevel : FieldExtensionBase, IDataFieldComponent
     {
-        public TCLevel(string gameName) : base(gameName) { }
-        public string Description { get => "TC Level."; }
-        public IDataField Data { get; set; } = new DataField()
+        public TCLevel(string gameName) : base(gameName)
         {
-            Name = "TC",
-            Color = new ColorScheme("#00a3d9", "#ffffff")
-        };
+            Data = new DataField()
+            {
+                Name = "TC",
+                Color = new ColorScheme("#00a3d9", "#ffffff")
+            };
+        }
+
+        public string Description { get => "TC Level."; }
+        IDataField IDataFieldComponent.Data
+        {
+            get => Data;
+            set => Data = value;
+        }
+
         public void Update(ref GameData data)
         {
             if (!data.GameRunning) return;

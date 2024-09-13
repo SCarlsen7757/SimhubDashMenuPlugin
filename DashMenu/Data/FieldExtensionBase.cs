@@ -16,8 +16,15 @@ namespace DashMenu.Data
             this.gameName = gameName ?? throw new ArgumentNullException(nameof(gameName));
         }
 
+        public IDataField Data;
         public bool IsGameSupported => true;
 
         public string SupportedGames => "All games.";
+
+        protected string DecimalValue(double value)
+        {
+            return value.ToString($"N{Data.Decimal}");
+        }
+
     }
 }
