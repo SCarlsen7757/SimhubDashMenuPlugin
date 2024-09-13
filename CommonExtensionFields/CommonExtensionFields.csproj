@@ -53,6 +53,7 @@
     <Compile Include="OilTemperature.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TCLevel.cs" />
+    <Compile Include="Throttle.cs" />
     <Compile Include="WaterTemperature.cs" />
   </ItemGroup>
   <ItemGroup>
