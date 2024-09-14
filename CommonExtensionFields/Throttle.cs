@@ -49,11 +49,6 @@ namespace CommonExtensionFields
         public void Update(ref GameData data)
         {
             if (!data.GameRunning) return;
-            if (data.NewData.Throttle < 0)
-            {
-                Data.Value = "-";
-                return;
-            }
             Data.Value = DecimalValue(data.NewData.Throttle);
         }
     }
