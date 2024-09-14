@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ABSLevel.cs" />
+    <Compile Include="Brake.cs" />
     <Compile Include="BrakeBias.cs" />
     <Compile Include="EngineMap.cs" />
     <Compile Include="OilPressure.cs" />
