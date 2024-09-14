@@ -23,7 +23,7 @@ namespace DashMenu.Data
 
         protected string DecimalValue(double value)
         {
-            return value.ToString($"N{Data.Decimal}");
+            return value.ToString($"F{Data.Decimal}");
         }
 
     }
