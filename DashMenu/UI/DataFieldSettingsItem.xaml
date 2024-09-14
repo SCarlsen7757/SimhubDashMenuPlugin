@@ -70,19 +70,19 @@
                 <!--Decimal override-->
                 <styles:SHSectionSeparator Grid.ColumnSpan="2"
                                            Margin="-24,0"
-                                           Visibility="{Binding Path=IsDecimal, Converter={SHBoolToVisibilityConverter Hide=False}}" />
+                                           Visibility="{Binding Path=IsDecimal, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={SHBoolToVisibilityConverter Hide=False}}" />
                 <Label Content="Override number of decimal in the field value"
                        Grid.ColumnSpan="2"
                        Visibility="{Binding Path=IsDecimal, Converter={SHBoolToVisibilityConverter Hide=False}}" />
                 <styles:SHToggleCheckbox IsChecked="{Binding Path=Override.Decimal.Override, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                          IsEnabled="{Binding Path=IsDecimal}"
-                                         Visibility="{Binding Path=IsDecimal, Converter={SHBoolToVisibilityConverter Hide=False}}" />
+                                         Visibility="{Binding Path=IsDecimal, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={SHBoolToVisibilityConverter Hide=False}}" />
                 <ui:TitledSlider Title="Number of decimals shown"
                                  Value="{Binding Path=Override.Decimal.OverrideValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                  IsEnabled="{Binding Path=Override.Decimal.Override}"
                                  Minimum="0"
                                  Maximum="3"
-                                 Visibility="{Binding Path=IsDecimal, Converter={SHBoolToVisibilityConverter Hide=False}}" />
+                                 Visibility="{Binding Path=IsDecimal, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={SHBoolToVisibilityConverter Hide=False}}" />
             </AutoGrid>
         </StackPanel>
     </AutoGrid>

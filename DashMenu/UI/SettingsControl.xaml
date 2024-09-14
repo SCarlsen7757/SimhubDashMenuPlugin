@@ -94,7 +94,9 @@
                                     Background="{DynamicResource GrayBrush10}"
                                     Visibility="{Binding ElementName=FieldDataSettings, Path=SelectedValue, Converter={IsNullToCollapsedConverter}}"
                                     Margin="4">
-                                <local:DataFieldSettingsItem DataContext="{Binding ElementName=FieldDataSettings, Path=SelectedValue}" />
+                                <AutoGrid Columns="auto,*">
+                                <local:DataFieldSettingsItem DataContext="{Binding ElementName=FieldDataSettings, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Path=SelectedValue}" />
+                                </AutoGrid>
                             </Border>
                         </Grid>
                     </StackPanel>
@@ -180,10 +182,10 @@
                                     Grid.Row="1"
                                     Grid.RowSpan="2"
                                     Visibility="{Binding ElementName=FieldGaugeSettings, Path=SelectedValue, Converter={IsNullToCollapsedConverter}}">
-                                <StackPanel Orientation="Horizontal">
-                                    <local:DataFieldSettingsItem DataContext="{Binding ElementName=FieldGaugeSettings, Path=SelectedValue}" />
-                                    <local:GaugeFieldSettingsItem DataContext="{Binding ElementName=FieldGaugeSettings, Path=SelectedValue}" />
-                                </StackPanel>
+                                <AutoGrid Columns="auto, auto, *" >
+                                    <local:DataFieldSettingsItem DataContext="{Binding ElementName=FieldGaugeSettings, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Path=SelectedValue}" />
+                                    <local:GaugeFieldSettingsItem DataContext="{Binding ElementName=FieldGaugeSettings, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Path=SelectedValue}" />
+                                </AutoGrid>
                             </Border>
                         </Grid>
                     </StackPanel>

@@ -21,30 +21,30 @@
             <!--Override settings-->
             <styles:SHSubSectionTitle Content="Gauge override settings" />
             <StackPanel>
+                <!--Maximum override-->
+                    <AutoGrid Columns="auto,*"
+                              Margin="12,0"
+                              Name="MaximumSection">
+                        <Label Content="Override maximum value"
+                               Grid.ColumnSpan="2" />
+                        <styles:SHToggleCheckbox IsChecked="{Binding Path=Override.Maximum.Override, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBox Text="{Binding Path=Override.Maximum.OverrideValue, UpdateSourceTrigger=PropertyChanged}"
+                                 IsEnabled="{Binding Path=Override.Maximum.Override}" />
+                    </AutoGrid>
+                <!--Minimum override-->
                 <AutoGrid Columns="auto,*"
                           Margin="12,0"
-                          Visibility="{Binding Path=IsRangeLocked, Converter={SHBoolToVisibilityConverter Hide=True}}">
-                    <!--Maximum override-->
-                    <Label Content="Override maximum value"
-                           Grid.ColumnSpan="2" />
-                    <styles:SHToggleCheckbox IsChecked="{Binding Path=Override.Maximum.Override, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    <TextBox Text="{Binding Path=Override.Maximum.OverrideValue, UpdateSourceTrigger=PropertyChanged}"
-                             IsEnabled="{Binding Path=Override.Maximum.Override}" />
-                </AutoGrid>
-                <AutoGrid Columns="auto,*"
-                          Margin="12,0"
-                          Visibility="{Binding Path=IsRangeLocked, Converter={SHBoolToVisibilityConverter Hide=True}}">
-                    <!--Minimum override-->
+                          Name="MinimumSection">
                     <Label Content="Override minimum value"
                            Grid.ColumnSpan="2" />
                     <styles:SHToggleCheckbox IsChecked="{Binding Path=Override.Minimum.Override, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <TextBox Text="{Binding Path=Override.Minimum.OverrideValue,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              IsEnabled="{Binding Path=Override.Minimum.Override}" />
                 </AutoGrid>
+                <!--Step override-->
                 <AutoGrid Columns="auto,*"
                           Margin="12,0"
-                          Visibility="{Binding Path=IsStepLocked, Converter={SHBoolToVisibilityConverter Hide=True}}">
-                    <!--Step override-->
+                          Name="StepSection">
                     <Label Content="Override step value"
                            Grid.ColumnSpan="2" />
                     <styles:SHToggleCheckbox IsChecked="{Binding Path=Override.Step.Override, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
