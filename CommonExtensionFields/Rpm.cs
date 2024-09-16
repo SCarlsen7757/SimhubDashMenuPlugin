@@ -11,7 +11,7 @@ namespace CommonExtensionFields
             {
                 Name = "RPM",
                 IsDecimalNumber = false,
-                Color = new ColorScheme("#ffffff", "#000000"),
+                Color = new ColorScheme("#ffffff", "#808080"),
                 IsRangeLocked = true,
                 Minimum = 0.ToString()
             };
