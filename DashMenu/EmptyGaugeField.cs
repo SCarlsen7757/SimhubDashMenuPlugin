@@ -11,7 +11,7 @@ namespace DashMenu
         {
             Name = string.Empty,
             Value = string.Empty,
-            Color = new ColorScheme("#ffffff", "#ffffff"),
+            Color = new ColorScheme("#ffffff", "#808080"),
             IsRangeLocked = true,
             IsStepLocked = true,
             Minimum = 0.ToString(),

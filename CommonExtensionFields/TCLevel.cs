@@ -10,7 +10,7 @@ namespace CommonExtensionFields
             Data = new DataField()
             {
                 Name = "TC",
-                Color = new ColorScheme("#00a3d9", "#ffffff")
+                Color = new ColorScheme("#00a3d9", "#808080")
             };
         }
 

@@ -11,7 +11,7 @@ namespace DashMenu
         {
             Name = "",
             Value = "",
-            Color = new ColorScheme("#ffffff", "#ffffff")
+            Color = new ColorScheme("#ffffff", "#808080")
         };
 
         public void Update(ref GameData data)

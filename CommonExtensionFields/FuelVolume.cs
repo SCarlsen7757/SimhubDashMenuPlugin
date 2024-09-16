@@ -13,7 +13,7 @@ namespace CommonExtensionFields
                 IsDecimalNumber = true,
                 Decimal = 0,
                 Unit = "%",
-                Color = new ColorScheme("#ffffff", "#000000"),
+                Color = new ColorScheme("#ffffff", "#808080"),
                 IsRangeLocked = true,
                 Minimum = 0.ToString()
             };

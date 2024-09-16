@@ -10,7 +10,7 @@ namespace CommonExtensionFields
             Data = new DataField()
             {
                 Name = "MAP",
-                Color = new ColorScheme("#d9c000", "#ffffff")
+                Color = new ColorScheme("#d9c000", "#808080")
             };
         }
 

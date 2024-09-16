@@ -12,7 +12,7 @@ namespace CommonExtensionFields
                 Name = "BB",
                 IsDecimalNumber = true,
                 Decimal = 1,
-                Color = new ColorScheme("#d90028", "#ffffff")
+                Color = new ColorScheme("#d90028", "#808080")
             };
         }
 
