@@ -10,11 +10,11 @@ namespace CommonExtensionFields
             Data = new DataField()
             {
                 Name = "TC",
-                Color = new ColorScheme("#00a3d9", "#808080")
+                Color = new ColorScheme("#00a3d9")
             };
         }
 
-        public string Description { get => "TC Level."; }
+        public string Description => "TC Level.";
         IDataField IDataFieldComponent.Data
         {
             get => Data;

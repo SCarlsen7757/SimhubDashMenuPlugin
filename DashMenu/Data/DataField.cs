@@ -8,7 +8,7 @@
         /// <summary>
         /// Name to be shown in the data field.
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
         /// <summary>
         /// Value to be shown in the data field.
         /// </summary>
@@ -28,6 +28,6 @@
         /// <summary>
         /// Color to be shown in the data field.
         /// </summary>
-        public ColorScheme Color { get; set; }
+        public ColorScheme Color { get; set; } = new ColorScheme();
     }
 }

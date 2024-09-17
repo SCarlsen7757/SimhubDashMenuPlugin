@@ -9,17 +9,17 @@ namespace CommonExtensionFields
         {
             Data = new GaugeField()
             {
-                Name = "Fuel",
+                Name = "FUEL",
                 IsDecimalNumber = true,
                 Decimal = 0,
                 Unit = "%",
-                Color = new ColorScheme("#ffffff", "#808080"),
+                Color = new ColorScheme(),
                 IsRangeLocked = true,
                 Minimum = 0.ToString()
             };
         }
 
-        public string Description { get => "Fuel in liters or gallons depending on what Simhub is configured to display"; }
+        public string Description => "Fuel in liters or gallons depending on what Simhub is configured to display.";
 
         private IGaugeField data;
         new IGaugeField Data

@@ -9,18 +9,18 @@ namespace CommonExtensionFields
         {
             Data = new GaugeField()
             {
-                Name = "Clutch",
+                Name = "CPP",
                 IsDecimalNumber = true,
                 Decimal = 0,
                 Unit = "%",
-                Color = new ColorScheme("#ffffff", "#808080"),
+                Color = new ColorScheme(),
                 IsRangeLocked = true,
                 Maximum = 100.ToString(),
                 Minimum = 0.ToString()
             };
         }
 
-        public string Description { get => "Clutch position"; }
+        public string Description => "Clutch position. CPP stands for Clutch Pedal Position.";
 
         private IGaugeField data;
         new IGaugeField Data

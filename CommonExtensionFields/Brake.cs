@@ -9,21 +9,20 @@ namespace CommonExtensionFields
         {
             Data = new GaugeField()
             {
-                Name = "Brake",
+                Name = "BRK",
                 IsDecimalNumber = true,
                 Decimal = 0,
                 Unit = "%",
-                Color = new ColorScheme("#ffffff", "#808080"),
+                Color = new ColorScheme(),
                 IsRangeLocked = true,
                 Maximum = 100.ToString(),
                 Minimum = 0.ToString()
             };
         }
-
-        public string Description { get => "Brake position"; }
+        public string Description => "Brake position.";
 
         private IGaugeField data;
-        new IGaugeField Data
+        new public IGaugeField Data
         {
             get => data;
             set

@@ -5,7 +5,16 @@ namespace DashMenu.Data
 {
     public class ColorScheme
     {
-        public ColorScheme() { }
+        public ColorScheme()
+        {
+            Primary = "808080";
+            Accent = "000000";
+        }
+        public ColorScheme(string primary)
+        {
+            Primary = primary;
+            Accent = "#000000";
+        }
         public ColorScheme(string primary, string accent)
         {
             Primary = primary;

@@ -12,14 +12,14 @@ namespace CommonExtensionFields
                 Name = "BB",
                 IsDecimalNumber = true,
                 Decimal = 1,
-                Color = new ColorScheme("#d90028", "#808080"),
+                Color = new ColorScheme("#d90028"),
                 IsRangeLocked = true,
                 Maximum = 100.ToString(),
                 Minimum = 0.ToString()
             };
         }
 
-        public string Description { get => "Brake bias"; }
+        public string Description => "Brake bias.";
 
         private IGaugeField data;
         new IGaugeField Data

@@ -9,18 +9,18 @@ namespace CommonExtensionFields
         {
             Data = new GaugeField()
             {
-                Name = "Fuel",
+                Name = "FUEL",
                 IsDecimalNumber = true,
                 Decimal = 0,
                 Unit = "%",
-                Color = new ColorScheme("#ffffff", "#808080"),
+                Color = new ColorScheme(),
                 IsRangeLocked = true,
                 Maximum = 100.ToString(),
                 Minimum = 0.ToString()
             };
         }
 
-        public string Description { get => "Fuel in procent"; }
+        public string Description => "Fuel in procent.";
 
         private IGaugeField data;
         new IGaugeField Data

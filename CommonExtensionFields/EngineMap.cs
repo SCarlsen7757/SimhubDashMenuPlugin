@@ -10,11 +10,11 @@ namespace CommonExtensionFields
             Data = new DataField()
             {
                 Name = "MAP",
-                Color = new ColorScheme("#d9c000", "#808080")
+                Color = new ColorScheme("#d9c000")
             };
         }
 
-        public string Description { get => "Engine map"; }
+        public string Description => "Engine map.";
 
         IDataField IDataFieldComponent.Data
         {

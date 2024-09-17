@@ -7,14 +7,10 @@ namespace DashMenu
     {
         public EmptyGaugeField(string gameName) : base(gameName) { }
         public string Description { get; } = string.Empty;
-        public IGaugeField Data { get; set; } = new GaugeField()
+        new public IGaugeField Data { get; set; } = new GaugeField()
         {
-            Name = string.Empty,
-            Value = string.Empty,
-            Color = new ColorScheme("#ffffff", "#808080"),
             IsRangeLocked = true,
             IsStepLocked = true,
-            Minimum = 0.ToString(),
             Maximum = 0.ToString(),
         };
         IDataField IDataFieldComponent.Data

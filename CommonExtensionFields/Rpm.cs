@@ -11,13 +11,13 @@ namespace CommonExtensionFields
             {
                 Name = "RPM",
                 IsDecimalNumber = false,
-                Color = new ColorScheme("#ffffff", "#808080"),
+                Color = new ColorScheme(),
                 IsRangeLocked = true,
                 Minimum = 0.ToString()
             };
         }
 
-        public string Description { get => "RPM"; }
+        public string Description => "Engine RPM.";
 
         private IGaugeField data;
         new IGaugeField Data

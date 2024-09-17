@@ -7,12 +7,7 @@ namespace DashMenu
     {
         public EmptyDataField(string gameName) : base(gameName) { }
         public string Description { get; } = string.Empty;
-        public IDataField Data { get; set; } = new DataField()
-        {
-            Name = "",
-            Value = "",
-            Color = new ColorScheme("#ffffff", "#808080")
-        };
+        new public IDataField Data { get; set; } = new DataField();
 
         public void Update(ref GameData data)
         {

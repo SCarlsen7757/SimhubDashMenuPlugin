@@ -9,16 +9,16 @@ namespace CommonExtensionFields
         {
             Data = new GaugeField()
             {
-                Name = "Oil Temp",
+                Name = "EOT",
                 IsDecimalNumber = true,
                 Decimal = 0,
-                Color = new ColorScheme("#ffffff", "#808080"),
+                Color = new ColorScheme(),
                 Maximum = 150.ToString(),
                 Minimum = 50.ToString(),
             };
         }
 
-        public string Description { get => "Oil temperature"; }
+        public string Description => "Oil temperature. EOT stands for Engine oil temperature.";
 
         private IGaugeField data;
         new IGaugeField Data

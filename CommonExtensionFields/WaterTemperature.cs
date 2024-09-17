@@ -9,16 +9,16 @@ namespace CommonExtensionFields
         {
             Data = new GaugeField()
             {
-                Name = "Water Temp",
+                Name = "WT",
                 IsDecimalNumber = true,
                 Decimal = 0,
-                Color = new ColorScheme("#ffffff", "#808080"),
+                Color = new ColorScheme(),
                 Maximum = 100.ToString(),
                 Minimum = 20.ToString()
             };
         }
 
-        public string Description { get => "Water temperature"; }
+        public string Description => "Water temperature.";
 
         private IGaugeField data;
         new IGaugeField Data

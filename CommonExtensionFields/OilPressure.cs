@@ -10,15 +10,15 @@ namespace CommonExtensionFields
         {
             Data = new GaugeField()
             {
-                Name = "Oil Press",
+                Name = "EOP",
                 IsDecimalNumber = true,
                 Decimal = 0,
-                Color = new ColorScheme("#ffffff", "#808080"),
+                Color = new ColorScheme(),
                 Maximum = 150.ToString(),
                 Minimum = 50.ToString()
             };
         }
-        public string Description { get => "Oil pressure"; }
+        public string Description => "Oil pressure. EOP stands for Engine oil pressure.";
 
         private IGaugeField data;
         new IGaugeField Data
