@@ -559,7 +559,8 @@ namespace DashMenu
                 SimHub.Logging.Current.Error(type, e);
                 return;
             }
-            var data = fieldInstance.Data;
+            if (!fieldInstance.IsGameSupported) return;
+
             //Get field settings else create field settings
             if (!(Settings.GameSettings[PluginManager.GameName].DataFields.TryGetValue(type.FullName, out Settings.DataField fieldSetting)))
             {
@@ -616,6 +617,8 @@ namespace DashMenu
                 SimHub.Logging.Current.Error(type, e);
                 return;
             }
+            if (!fieldInstance.IsGameSupported) return;
+
             //Get field settings else create field settings
             if (!(Settings.GameSettings[PluginManager.GameName].GaugeFields.TryGetValue(type.FullName, out Settings.GaugeField fieldSetting)))
             {
