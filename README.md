@@ -77,8 +77,8 @@ To display the values of the field data in a widget, use these JavaScript code s
 * `return $prop("variable.data").Color.Primary`
 * `return $prop("variable.data").Color.Accent`
 
-[!NOTE]
-Remember to toggle `Use javascript`
+> [!NOTE]
+> Remember to toggle `Use javascript`
 
 ```mermaid
 erDiagram
