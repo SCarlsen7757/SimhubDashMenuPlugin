@@ -5,19 +5,13 @@ namespace DashMenu.Data
 {
     public class ColorScheme
     {
-        public ColorScheme()
-        {
-            Primary = "808080";
-            Accent = "000000";
-        }
+        public ColorScheme() { }
         public ColorScheme(string primary)
         {
             Primary = primary;
-            Accent = "#000000";
         }
-        public ColorScheme(string primary, string accent)
+        public ColorScheme(string primary, string accent) : this(primary)
         {
-            Primary = primary;
             Accent = accent;
         }
         // Copy constructor for deep copying
@@ -26,7 +20,7 @@ namespace DashMenu.Data
             Primary = other.Primary;
             Accent = other.Accent;
         }
-        private string primary = "#FFFFFF";
+        private string primary = "808080";
         /// <summary>
         /// Primary color.
         /// </summary>
@@ -41,7 +35,7 @@ namespace DashMenu.Data
                 OnPropertyChanged();
             }
         }
-        private string accent = "#000000";
+        private string accent = "000000";
         /// <summary>
         /// Accent color.
         /// </summary>
