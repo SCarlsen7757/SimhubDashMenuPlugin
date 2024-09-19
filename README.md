@@ -7,8 +7,10 @@ This plugin allows you to create and display customizable data fields on the das
 
 **This plugin is still a work in progress** and a changes to the implementation of field and UI can happen.
 
-> [!CAUTION] Known issue
-> After using new fields for the first time for a game. Simhub needs to be restarted for the settings to work properly. :bug:
+> [!CAUTION]
+> Known issue :bug:
+>
+> After using new fields for the first time for a game. Simhub needs to be restarted for the settings to work properly.
 
 ## Using
 
