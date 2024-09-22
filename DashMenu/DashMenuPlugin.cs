@@ -293,19 +293,25 @@ namespace DashMenu
                 const string dashFieldData = "dashfielddata";
                 if (!NCalcEngineMethodsRegistry.GenericMethodsProvider.ContainsKey(dashFieldData.ToLower()))
                 {
+                    const string DATA_FIELD_DESCRIPTION = "Returns the data field object of the specified field.";
+                    const string DATA_FIELD_SYNTAX = "field";
                     NCalcEngineMethodsRegistry.AddMethod(dashFieldData,
-                        "field",
-                        "Returns the data of the specified field.",
+                        DATA_FIELD_SYNTAX,
+                        DATA_FIELD_DESCRIPTION,
                         engine => (Func<int, object>)(field => GetDataField(field)));
+                    NCalcEngineBase.AvailableFunctions.Add(new SimHub.Plugins.OutputPlugins.Dash.WPFUI.FormulaPropertyEntry(dashFieldData, $"{dashFieldData}({DATA_FIELD_SYNTAX})", DATA_FIELD_DESCRIPTION));
                 }
 
                 const string dashFieldGauge = "dashfieldgauge";
                 if (!NCalcEngineMethodsRegistry.GenericMethodsProvider.ContainsKey(dashFieldGauge.ToLower()))
                 {
+                    const string GUAGE_FIELD_DESCRIPTION = "Return the gauge data of the specified field.";
+                    const string GUAGE_FIELD_SYNTAX = "field";
                     NCalcEngineMethodsRegistry.AddMethod(dashFieldGauge,
-                        "field",
-                        "Return the gauge data of the specified field.",
+                        GUAGE_FIELD_SYNTAX,
+                        GUAGE_FIELD_DESCRIPTION,
                         engine => (Func<int, object>)(field => GetGaugeField(field)));
+                    NCalcEngineBase.AvailableFunctions.Add(new SimHub.Plugins.OutputPlugins.Dash.WPFUI.FormulaPropertyEntry(dashFieldGauge, $"{dashFieldGauge}({GUAGE_FIELD_SYNTAX})", GUAGE_FIELD_DESCRIPTION));
                 }
             }
             catch (ArgumentException e)

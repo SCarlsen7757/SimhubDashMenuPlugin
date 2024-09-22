@@ -67,7 +67,7 @@ After installing the plugin and extension fields, mapping of required controls t
 
 ### Data field
 
-You can access the fields in Dash Studio using the NCalc or JavaScript function `dashfielddata(fieldnumber)`. Unfortunately it can't be found in the NCalc Functions list :unamused: but it's available :sunglasses:!
+You can access the fields in Dash Studio using the NCalc or JavaScript function `dashfielddata(fieldnumber)`. It can be found in the function NCalc Functions list :sunglasses:
 The easiest way is to create a widget and pass the field data as a variable.
 
 ![Write NCalc formula to get field data](./Image/PassFieldDataToWidget.png)
