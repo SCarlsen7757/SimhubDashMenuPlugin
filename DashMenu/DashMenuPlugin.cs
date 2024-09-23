@@ -305,7 +305,7 @@ namespace DashMenu
                 const string dashFieldGauge = "dashfieldgauge";
                 if (!NCalcEngineMethodsRegistry.GenericMethodsProvider.ContainsKey(dashFieldGauge.ToLower()))
                 {
-                    const string GUAGE_FIELD_DESCRIPTION = "Return the gauge data of the specified field.";
+                    const string GUAGE_FIELD_DESCRIPTION = "Return the gauge data object of the specified field.";
                     const string GUAGE_FIELD_SYNTAX = "field";
                     NCalcEngineMethodsRegistry.AddMethod(dashFieldGauge,
                         GUAGE_FIELD_SYNTAX,
