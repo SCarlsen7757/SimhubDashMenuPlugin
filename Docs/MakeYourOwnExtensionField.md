@@ -2,6 +2,35 @@
 
 The following examples demonstrate how to create basic extension data fields for use within the `DashMenuPlugin` system. Each extension field includes a description, data/gauge field, name, color scheme, and an update method that is called on every game tick.
 
+```mermaid
+erDiagram
+  GaugeField{
+      bool IsRangeLocked "Is the maximum and minimum range locked"
+      string Maximum "Maximum value"
+      string Minimum "Minimum value"
+      bool IsStepLocked "Is step value locked"
+      string Step "Step value"
+    }
+
+    DataField{
+      string Name "Name of the data"
+      string Value "Value of the data"
+      string Unit "Unit of the value"
+      bool IsDecimal "Is the value as decimal number"
+      int Decimal "How many decimal if the value is a decimal number"
+      ColorScheme Color "Color to be used for easy identification"
+    }
+
+    ColorScheme{
+      string Primary "Primary color"
+      string Accent "Accent color"
+    }
+
+    DataField ||--|| ColorScheme : contains
+
+    GaugeField }|..|{ DataField : inheritance
+```
+
 ## Example 1: Basic Extension Field
 
 This example creates a simple traction control (TC) level field.

@@ -68,65 +68,45 @@ After installing the plugin and extension fields, mapping of required controls t
 ### Data field
 
 You can access the fields in Dash Studio using the NCalc or JavaScript function `dashfielddata(fieldnumber)`. It can be found in the function NCalc Functions list :sunglasses:
-The easiest way is to create a widget and pass the field data as a variable.
+You can access all the fields properties within Dash Studio using the NCalc functions. See the table below.
 
-![Write NCalc formula to get field data](./Image/PassFieldDataToWidget.png)
+|Function|Syntax|Description|
+|---|---|---|
+|`dashfielddataname`|`index`|Returns the name of the data field of the specified field.|
+|`dashfielddatavalue`|`index`|Returns the value of the data field of the specified field.|
+|`dashfielddatadecimal`|`index`|Returns the number of decimals the value has of the data field of the specified field.|
+|`dashfielddataunit`|`index`|Returns the unit of the data field of the specified field.|
+|`dashfielddatacolorprimary`|`index`|Returns the primary color of the data field of the specified field.|
+|`dashfielddatacoloraccent`|`index`|Returns the accent color of the data field of the specified field.|
 
-To get the number of fields for the current car, use the property `AmountOfDataFields`.
+Example how to get the name of the first data field.
 
-To display the values of the field data in a widget, use these JavaScript code snippets for the binding property:
+![Example how to use the NCalc function for data field](./Image/DashFieldDataExample.png)
 
-* `return $prop("variable.data").Name`
-* `return $prop("variable.data").Value`
-* `return $prop("variable.data).Unit`
-* `return $prop("variable.data").Color.Primary`
-* `return $prop("variable.data").Color.Accent`
-
-> [!NOTE]
-> Remember to toggle `Use javascript`
-
-```mermaid
-erDiagram
-    DataField{
-      string Name "Name of the data"
-      string Value "Value of the data"
-      string Unit "Unit of the value"
-      bool IsDecimal "Is the value as decimal number"
-      int Decimal "How many decimal if the value is a decimal number"
-      ColorScheme Color "Color to be used for easy identification"
-    }
-
-    ColorScheme{
-      string Primary "Primary color"
-      string Accent "Accent color"
-    }
-
-    DataField ||--|| ColorScheme : contains
-```
+To get the number of data fields for the current car, use the property `AmountOfDataFields`.
 
 ### Gauge field
 
-The gauge field same properties as the [Data field](#data-field) and more, the gauge field is intended to be used with linear or circular gauges. The field can be accessed the same way as the [Data field](#data-field) using the NCalc or JavaScript but with this function `dashfieldgauge(fieldnumber)`. All gauge fields can also be used as [Data field](#data-field).
+The gauge field same properties as the [Data field](#data-field) and more, the gauge field is intended to be used with linear or circular gauges.
+You can access all the fields properties within Dash Studio using NCalc functions. See the table below.
 
-The gauge field has the same properties as the [Data field](#data-field) and more.
+|Function|Syntax|Description|
+|---|---|---|
+|`dashfieldgaugename`|`index`|Return the name of the gauge field of the specified field.|
+|`dashfieldgaugevalue`|`index`|Return the value of the gauge field of the specified field.|
+|`dashfieldgaugedecimal`|`index`|Returns the number of decimals the value has of the gauge field of the specified field.|
+|`dashfieldgaugeunit`|`index`|Return the unit of the gauge field of the specified field.|
+|`dashfieldgaugemaximum`|`index`|Return the maximum value of the gauge field of the specified field.|
+|`dashfieldgaugeminimum`|`index`|Return the minimum value of the gauge field of the specified field.|
+|`dashfieldgaugestep`|`index`|Return the step value of the gauge field of the specified field.|
+|`dashfieldgaugecolorprimary`|`index`|Return the primary color of the gauge field of the specified field.|
+|`dashfieldgaugecoloraccent`|`index`|Return the accent color of the gauge field of the specified field.|
 
-```mermaid
-erDiagram
-    GaugeField{
-            bool IsRangeLocked "Is the maximum and minimum range locked"
-            string Maximum "Maximum value"
-            string Minimum "Minimum value"
-            bool IsStepLocked "Is step value locked"
-            string Step "Step value"
-    }
+Example how to get the value and unit of the first gauge field.
 
-```
+![Example how to use the NCalc function for gauge field](./Image/DashFieldGaugeExample.png)
 
-To display the values of the field data in a widget, use these JavaScript code snippets for the binding property:
-
-* `return $prop("variable.data").Maximum`
-* `return $prop("variable.data").Minimum`
-* `return $prop("variable.data).Step`
+To get the number of data fields for the current car, use the property `AmountOfGaugeFields`.
 
 ### Config screen
 

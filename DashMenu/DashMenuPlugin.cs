@@ -288,40 +288,81 @@ namespace DashMenu
             //Add NCalc method
             //NCalc Methods are normaly added when Simhub starts. So when this plugin is initialize after the first time, due to settings change or other game selected.
             //It will add the method again, but it's already added.
-            try
-            {
-                const string dashFieldData = "dashfielddata";
-                if (!NCalcEngineMethodsRegistry.GenericMethodsProvider.ContainsKey(dashFieldData.ToLower()))
-                {
-                    const string DATA_FIELD_DESCRIPTION = "Returns the data field object of the specified field.";
-                    const string DATA_FIELD_SYNTAX = "field";
-                    NCalcEngineMethodsRegistry.AddMethod(dashFieldData,
-                        DATA_FIELD_SYNTAX,
-                        DATA_FIELD_DESCRIPTION,
-                        engine => (Func<int, object>)(field => GetDataField(field)));
-                    NCalcEngineBase.AvailableFunctions.Add(new SimHub.Plugins.OutputPlugins.Dash.WPFUI.FormulaPropertyEntry(dashFieldData, $"{dashFieldData}({DATA_FIELD_SYNTAX})", DATA_FIELD_DESCRIPTION));
-                }
+            AddNCalcFunction("dashfielddataname",
+                "Returns the name of the data field of the specified field.",
+                "index",
+                engine => (Func<int, string>)(index => GetDataFieldName(index)));
 
-                const string dashFieldGauge = "dashfieldgauge";
-                if (!NCalcEngineMethodsRegistry.GenericMethodsProvider.ContainsKey(dashFieldGauge.ToLower()))
-                {
-                    const string GUAGE_FIELD_DESCRIPTION = "Return the gauge data object of the specified field.";
-                    const string GUAGE_FIELD_SYNTAX = "field";
-                    NCalcEngineMethodsRegistry.AddMethod(dashFieldGauge,
-                        GUAGE_FIELD_SYNTAX,
-                        GUAGE_FIELD_DESCRIPTION,
-                        engine => (Func<int, object>)(field => GetGaugeField(field)));
-                    NCalcEngineBase.AvailableFunctions.Add(new SimHub.Plugins.OutputPlugins.Dash.WPFUI.FormulaPropertyEntry(dashFieldGauge, $"{dashFieldGauge}({GUAGE_FIELD_SYNTAX})", GUAGE_FIELD_DESCRIPTION));
-                }
-            }
-            catch (ArgumentException e)
-            {
-#if DEBUG
-                throw e;
-#else
-                SimHub.Logging.Current.Error(this, e);
-#endif
-            }
+            AddNCalcFunction("dashfielddatavalue",
+                "Returns the value of the data field of the specified field.",
+                "index",
+                engine => (Func<int, string>)(index => GetDataFieldValue(index)));
+
+            AddNCalcFunction("dashfielddatadecimal",
+                "Returns the number of decimals the value has of the data field of the specified field.",
+                "index",
+                engine => (Func<int, int>)(index => GetDataFieldDecimal(index)));
+
+            AddNCalcFunction("dashfielddataunit",
+                "Returns the unit of the data field of the specified field.",
+                "index",
+                engine => (Func<int, string>)(index => GetDataFieldUnit(index)));
+
+            AddNCalcFunction("dashfielddatacolorprimary",
+                "Returns the primary color of the data field of the specified field.",
+                "index",
+                engine => (Func<int, string>)(index => GetDataFieldColorPrimary(index)));
+
+            AddNCalcFunction("dashfielddatacoloraccent",
+                "Returns the accent color of the data field of the specified field.",
+                "index",
+                engine => (Func<int, string>)(index => GetDataFieldColorAccent(index)));
+
+            AddNCalcFunction("dashfieldgaugename",
+                "Return the name of the gauge field of the specified field.",
+                "index",
+                engine => (Func<int, string>)(index => GetGaugeFieldName(index)));
+
+            AddNCalcFunction("dashfieldgaugevalue",
+                "Return the value of the gauge field of the specified field.",
+                "index",
+                engine => (Func<int, string>)(index => GetGaugeFieldValue(index)));
+
+            AddNCalcFunction("dashfieldgaugedecimal",
+                "Returns the number of decimals the value has of the gauge field of the specified field.",
+                "index",
+                engine => (Func<int, int>)(index => GetGaugeFieldDecimal(index)));
+
+            AddNCalcFunction("dashfieldgaugeunit",
+                "Return the unit of the gauge field of the specified field.",
+                "index",
+                engine => (Func<int, string>)(index => GetGaugeFieldUnit(index)));
+
+            AddNCalcFunction("dashfieldgaugemaximum",
+                "Return the maximum value of the gauge field of the specified field.",
+                "index",
+                engine => (Func<int, string>)(index => GetGaugeFieldMaximum(index)));
+
+            AddNCalcFunction("dashfieldgaugeminimum",
+                "Return the minimum value of the gauge field of the specified field.",
+                "index",
+                engine => (Func<int, string>)(index => GetGaugeFieldMinimum(index)));
+
+            AddNCalcFunction("dashfieldgaugestep",
+                "Return the step value of the gauge field of the specified field.",
+                "index",
+                engine => (Func<int, string>)(index => GetGaugeFieldStep(index)));
+
+            AddNCalcFunction("dashfieldgaugecolorprimary",
+                "Return the primary color of the gauge field of the specified field.",
+                "index",
+                engine => (Func<int, string>)(index => GetGaugeFieldColorPrimary(index)));
+
+            AddNCalcFunction("dashfieldgaugecoloraccent",
+                "Return the accent color of the gauge field of the specified field.",
+                "index",
+                engine => (Func<int, string>)(index => GetGaugeFieldColorAccent(index)));
+
             pluginManager.AddProperty<bool>(PropertyNames.PluginRunning, GetType(), true);
             PluginManagerEvents.Instance.ActiveCarChanged += CarChanged;
             BrightnessConfiguration.Configuration.PropertyChanged += DayNightMode_PropertyChanged;
@@ -409,16 +450,105 @@ namespace DashMenu
                 }
             }
         }
+        private bool AddNCalcFunction(string name, string description, string syntax, Func<NCalcEngineBase, Delegate> func)
+        {
+            if (NCalcEngineMethodsRegistry.GenericMethodsProvider.ContainsKey(name.ToLower())) { return false; }
+
+            NCalcEngineMethodsRegistry.AddMethod(name,
+                syntax,
+                description,
+                func);
+            NCalcEngineBase.AvailableFunctions.Add(new SimHub.Plugins.OutputPlugins.Dash.WPFUI.FormulaPropertyEntry(name, $"{name}({syntax})", description));
+            return true;
+        }
+
         private IDataField GetDataField(int index)
         {
             if (index <= 0 || index > dataFields.Count) return EmptyDataField.Field.Data;
             return dataFields[index - 1].Data;
         }
+
+        private string GetDataFieldName(int index)
+        {
+            return GetDataField(index).Name;
+        }
+
+        private string GetDataFieldValue(int index)
+        {
+            return GetDataField(index).Value;
+        }
+
+        private int GetDataFieldDecimal(int index)
+        {
+            return GetDataField(index).Decimal;
+        }
+
+        private string GetDataFieldUnit(int index)
+        {
+            return GetDataField(index).Unit;
+        }
+
+        private string GetDataFieldColorPrimary(int index)
+        {
+            return GetDataField(index).Color.Primary;
+        }
+
+        private string GetDataFieldColorAccent(int index)
+        {
+            return GetDataField(index).Color.Accent;
+        }
+
         private IGaugeField GetGaugeField(int index)
         {
             if (index <= 0 || index > gaugeFields.Count) return EmptyGaugeField.Field.Data;
             return gaugeFields[index - 1].Data;
         }
+
+        private string GetGaugeFieldName(int index)
+        {
+            return GetGaugeField(index).Name;
+        }
+
+        private string GetGaugeFieldValue(int index)
+        {
+            return GetGaugeField(index).Value;
+        }
+
+        private int GetGaugeFieldDecimal(int index)
+        {
+            return GetGaugeField(index).Decimal;
+        }
+
+        private string GetGaugeFieldUnit(int index)
+        {
+            return GetGaugeField(index).Unit;
+        }
+
+        private string GetGaugeFieldMaximum(int index)
+        {
+            return GetGaugeField(index).Maximum;
+        }
+
+        private string GetGaugeFieldMinimum(int index)
+        {
+            return GetGaugeField(index).Minimum;
+        }
+
+        private string GetGaugeFieldStep(int index)
+        {
+            return GetGaugeField(index).Step;
+        }
+
+        private string GetGaugeFieldColorPrimary(int index)
+        {
+            return GetGaugeField(index).Color.Primary;
+        }
+
+        private string GetGaugeFieldColorAccent(int index)
+        {
+            return GetGaugeField(index).Color.Accent;
+        }
+
         private void CarChanged(object sender, EventArgs e)
         {
             //Save field for previues car before loading new car field data settings
