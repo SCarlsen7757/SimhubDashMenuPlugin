@@ -20,7 +20,7 @@ namespace DashMenu.Data
             Primary = other.Primary;
             Accent = other.Accent;
         }
-        private string primary = "808080";
+        private string primary = "#808080";
         /// <summary>
         /// Primary color.
         /// </summary>
@@ -35,7 +35,7 @@ namespace DashMenu.Data
                 OnPropertyChanged();
             }
         }
-        private string accent = "000000";
+        private string accent = "#000000";
         /// <summary>
         /// Accent color.
         /// </summary>
