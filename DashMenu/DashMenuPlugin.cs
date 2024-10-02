@@ -55,7 +55,7 @@ namespace DashMenu
         /// <summary>
         /// Instance of the current plugin manager.
         /// </summary>
-        public PluginManager PluginManager { get; set; }
+        public PluginManager PluginManager { private get; set; }
         /// <summary>
         /// Gets the left menu icon. Icon must be 24x24 and compatible with black and white display.
         /// </summary>
@@ -69,7 +69,7 @@ namespace DashMenu
         /// </summary>
         /// <param name="pluginManager"></param>
         /// <returns></returns>
-        public System.Windows.Controls.Control GetWPFSettingsControl(PluginManager pluginManager) => new UI.SettingsControl(Settings.GameSettings[PluginManager.GameName]);
+        public System.Windows.Controls.Control GetWPFSettingsControl(PluginManager pluginManager) => new UI.SettingsControl(Settings.GameSettings[pluginManager.GameName]);
 
         internal static class PropertyNames
         {
@@ -114,176 +114,14 @@ namespace DashMenu
             pluginManager.AddProperty(PropertyNames.FieldType, GetType(), MenuConfiguration.FieldType.ToString(), "Field type that selected, that can be changed when in configuration mode.");
             pluginManager.AddProperty(PropertyNames.AmountOfDataFields, GetType(), dataFields.Count, "Amount of data fields for the current car.");
             pluginManager.AddProperty(PropertyNames.AmountOfGaugeFields, GetType(), gaugeFields.Count, "Amount of gauge fields for the current car.");
-            pluginManager.AddAction<DashMenuPlugin>(ActionNames.ToggleConfigMode, (pm, a) =>
-            {
-                if (string.IsNullOrWhiteSpace(PluginManager.LastCarId)) return;
-                MenuConfiguration.ConfigurationMode = !MenuConfiguration.ConfigurationMode;
-
-                //When entering configuration mode, reset the active field to 1.
-                if (MenuConfiguration.ConfigurationMode)
-                {
-                    MenuConfiguration.ActiveField = 0;
-                    MenuConfiguration.FieldType = FieldType.Data;
-                }
-                else
-                {
-                    //Save displaye field when exiting config mode.
-                    SaveDisplayedField(PluginManager.LastCarId, PluginManager.GameManager.CarManager.LastCarSettings.CarModel);
-                }
-
-                pluginManager.SetPropertyValue(PropertyNames.ConfigMode, GetType(), MenuConfiguration.ConfigurationMode);
-                pluginManager.SetPropertyValue(PropertyNames.ActiveConfigField, GetType(), MenuConfiguration.ActiveField + 1);
-                pluginManager.SetPropertyValue(PropertyNames.FieldType, GetType(), MenuConfiguration.FieldType.ToString());
-            });
-            pluginManager.AddAction<DashMenuPlugin>(ActionNames.ChangeFieldType, (pm, a) =>
-            {
-                if (!MenuConfiguration.ConfigurationMode) return;
-                //It works for now.
-                if (MenuConfiguration.FieldType == FieldType.Data)
-                {
-                    MenuConfiguration.FieldType = FieldType.Gauge;
-                }
-                else
-                {
-                    MenuConfiguration.FieldType = FieldType.Data;
-                }
-
-                MenuConfiguration.ActiveField = 0;
-                pluginManager.SetPropertyValue(PropertyNames.FieldType, GetType(), MenuConfiguration.FieldType.ToString());
-                pluginManager.SetPropertyValue(PropertyNames.ActiveConfigField, GetType(), MenuConfiguration.ActiveField + 1);
-            });
-
-            pluginManager.AddAction<DashMenuPlugin>(ActionNames.ConfigNextField, (pm, a) =>
-            {
-                if (!MenuConfiguration.ConfigurationMode) return;
-                int count = CurrentFieldTypeCount() - 1;
-                if (count <= 0) return;
-                if (MenuConfiguration.ActiveField < count)
-                {
-                    MenuConfiguration.ActiveField++;
-                }
-                else
-                {
-                    MenuConfiguration.ActiveField = 0;
-                }
-                pluginManager.SetPropertyValue(PropertyNames.ActiveConfigField, GetType(), MenuConfiguration.ActiveField + 1);
-                SimHub.Logging.Current.Debug($"Dash menu action ConfigNextField. New active field: {MenuConfiguration.ActiveField + 1}.");
-            });
-
-            pluginManager.AddAction<DashMenuPlugin>(ActionNames.ConfigPrevField, (pm, a) =>
-            {
-                if (!MenuConfiguration.ConfigurationMode) return;
-                int count = CurrentFieldTypeCount() - 1;
-                if (count <= 0) return;
-                if (MenuConfiguration.ActiveField > 0)
-                {
-                    MenuConfiguration.ActiveField--;
-                }
-                else
-                {
-                    MenuConfiguration.ActiveField = count;
-                }
-                pluginManager.SetPropertyValue(PropertyNames.ActiveConfigField, GetType(), MenuConfiguration.ActiveField + 1);
-                SimHub.Logging.Current.Debug($"Dash menu action ConfigPrevField. New active field {MenuConfiguration.ActiveField + 1}.");
-            });
-
-            pluginManager.AddAction<DashMenuPlugin>(ActionNames.ChangeFieldTypeNext, (pm, a) =>
-            {
-                if (!MenuConfiguration.ConfigurationMode) return;
-                switch (MenuConfiguration.FieldType)
-                {
-                    case FieldType.Data:
-                        var currentDataField = dataFields[MenuConfiguration.ActiveField];
-                        dataFields[MenuConfiguration.ActiveField] = NextField(currentDataField);
-                        break;
-                    case FieldType.Gauge:
-                        var currentGuageField = gaugeFields[MenuConfiguration.ActiveField];
-                        gaugeFields[MenuConfiguration.ActiveField] = NextField(currentGuageField);
-                        break;
-                    default:
-#if DEBUG
-                        throw new ArgumentOutOfRangeException();
-#else
-                        SimHub.Logging.Current.Error($"Invalid FieldType: {MenuConfiguration.FieldType}");
-                        break;
-#endif
-                }
-                SimHub.Logging.Current.Debug($"Dash menu action ChangeFieldTypeNext of field type: {MenuConfiguration.FieldType}.");
-            });
-
-            pluginManager.AddAction<DashMenuPlugin>(ActionNames.ChangeFieldTypePrev, (pm, a) =>
-            {
-                if (!MenuConfiguration.ConfigurationMode) return;
-                switch (MenuConfiguration.FieldType)
-                {
-                    case FieldType.Data:
-                        var currentDataField = dataFields[MenuConfiguration.ActiveField];
-                        dataFields[MenuConfiguration.ActiveField] = PrevField(currentDataField);
-                        break;
-                    case FieldType.Gauge:
-                        var currentGuageField = gaugeFields[MenuConfiguration.ActiveField];
-                        gaugeFields[MenuConfiguration.ActiveField] = PrevFied(currentGuageField);
-                        break;
-                    default:
-#if DEBUG
-                        throw new ArgumentOutOfRangeException();
-#else
-                        SimHub.Logging.Current.Error($"Invalid FieldType: {MenuConfiguration.FieldType}");
-                        break;
-#endif
-                }
-                SimHub.Logging.Current.Debug($"Dash menu action ChangeFieldTypePrev of field type: {MenuConfiguration.FieldType}.");
-            });
-
-            pluginManager.AddAction<DashMenuPlugin>(ActionNames.IncreaseNumberOfField, (pm, a) =>
-            {
-                if (!MenuConfiguration.ConfigurationMode) return;
-                int count = CurrentFieldTypeCount();
-                if (count <= 0 || count >= 20) return;
-                switch (MenuConfiguration.FieldType)
-                {
-                    case FieldType.Data:
-                        dataFields.Add(EmptyDataField.Field);
-                        pluginManager.SetPropertyValue(PropertyNames.AmountOfDataFields, GetType(), dataFields.Count);
-                        break;
-                    case FieldType.Gauge:
-                        gaugeFields.Add(EmptyGaugeField.Field);
-                        pluginManager.SetPropertyValue(PropertyNames.AmountOfGaugeFields, GetType(), gaugeFields.Count);
-                        break;
-                    default:
-#if DEBUG
-                        throw new ArgumentOutOfRangeException();
-#else
-                        SimHub.Logging.Current.Error($"Invalid FieldType: {MenuConfiguration.FieldType}");
-                        break;
-#endif
-                }
-            });
-
-            pluginManager.AddAction<DashMenuPlugin>(ActionNames.DecreaseNumberOfField, (pm, a) =>
-            {
-                if (!MenuConfiguration.ConfigurationMode) return;
-                switch (MenuConfiguration.FieldType)
-                {
-                    case FieldType.Data:
-                        if (dataFields.Count <= 0) return;
-                        dataFields.RemoveAt(dataFields.Count - 1);
-                        pluginManager.SetPropertyValue(PropertyNames.AmountOfDataFields, GetType(), dataFields.Count);
-                        break;
-                    case FieldType.Gauge:
-                        if (gaugeFields.Count <= 0) return;
-                        gaugeFields.RemoveAt(gaugeFields.Count - 1);
-                        pluginManager.SetPropertyValue(PropertyNames.AmountOfGaugeFields, GetType(), gaugeFields.Count);
-                        break;
-                    default:
-#if DEBUG
-                        throw new ArgumentOutOfRangeException();
-#else
-                        SimHub.Logging.Current.Error($"Invalid FieldType: {MenuConfiguration.FieldType}");
-                        break;
-#endif
-                }
-            });
+            pluginManager.AddAction<DashMenuPlugin>(ActionNames.ToggleConfigMode, (pm, a) => ToggleConfigMode(pm));
+            pluginManager.AddAction<DashMenuPlugin>(ActionNames.ChangeFieldType, (pm, a) => ChangeFieldType(pm));
+            pluginManager.AddAction<DashMenuPlugin>(ActionNames.ConfigNextField, (pm, a) => ConfigNextField(pm));
+            pluginManager.AddAction<DashMenuPlugin>(ActionNames.ConfigPrevField, (pm, a) => ConfigPrevField(pm));
+            pluginManager.AddAction<DashMenuPlugin>(ActionNames.ChangeFieldTypeNext, (pm, a) => ChangeFieldTypeNext());
+            pluginManager.AddAction<DashMenuPlugin>(ActionNames.ChangeFieldTypePrev, (pm, a) => ChangeFieldTypePrev());
+            pluginManager.AddAction<DashMenuPlugin>(ActionNames.IncreaseNumberOfField, (pm, a) => IncreaseNumberOfField(pm));
+            pluginManager.AddAction<DashMenuPlugin>(ActionNames.DecreaseNumberOfField, (pm, a) => DecreaseNumberOfField(pm));
 
             //Add NCalc method
             //NCalc Methods are normaly added when Simhub starts. So when this plugin is initialize after the first time, due to settings change or other game selected.
@@ -391,6 +229,7 @@ namespace DashMenu
                 field.Update(ref data);
             }
         }
+
         /// <summary>
         /// Called at plugin manager stop, close/dispose anything needed here!
         /// Plugins are rebuilt at game change.
@@ -402,6 +241,7 @@ namespace DashMenu
             BrightnessConfiguration.Configuration.PropertyChanged -= DayNightMode_PropertyChanged;
 
         }
+
         private void LoadSettings()
         {
             //Get field settings else create field settings
@@ -412,11 +252,13 @@ namespace DashMenu
                 Settings.GameSettings.Add(PluginManager.GameName, new Settings.GameSettings());
             }
         }
+
         public void SaveSettings()
         {
             SaveDisplayedField(PluginManager.LastCarId, oldCarModel);
             this.SaveCommonSettings("DashMenuSettings", Settings);
         }
+
         private int CurrentFieldTypeCount()
         {
             switch (MenuConfiguration.FieldType)
@@ -429,6 +271,7 @@ namespace DashMenu
                     throw new ArgumentOutOfRangeException();
             }
         }
+
         private void SettingsExtensionFieldsCleanUp()
         {
             foreach (var gameSettings in Settings.GameSettings.Values)
@@ -450,6 +293,182 @@ namespace DashMenu
                 }
             }
         }
+
+        private void ToggleConfigMode(PluginManager pluginManager)
+        {
+            if (string.IsNullOrWhiteSpace(pluginManager.LastCarId)) return;
+            MenuConfiguration.ConfigurationMode = !MenuConfiguration.ConfigurationMode;
+
+            //When entering configuration mode, reset the active field to 1.
+            if (MenuConfiguration.ConfigurationMode)
+            {
+                MenuConfiguration.ActiveField = 0;
+                MenuConfiguration.FieldType = FieldType.Data;
+            }
+            else
+            {
+                //Save displaye field when exiting config mode.
+                SaveDisplayedField(pluginManager.LastCarId, pluginManager.GameManager.CarManager.LastCarSettings.CarModel);
+            }
+
+            pluginManager.SetPropertyValue(PropertyNames.ConfigMode, GetType(), MenuConfiguration.ConfigurationMode);
+            pluginManager.SetPropertyValue(PropertyNames.ActiveConfigField, GetType(), MenuConfiguration.ActiveField + 1);
+            pluginManager.SetPropertyValue(PropertyNames.FieldType, GetType(), MenuConfiguration.FieldType.ToString());
+        }
+
+        private void ChangeFieldType(PluginManager pluginManager)
+        {
+            if (!MenuConfiguration.ConfigurationMode) return;
+            //It works for now.
+            switch (MenuConfiguration.FieldType)
+            {
+                case FieldType.Data:
+                    MenuConfiguration.FieldType = FieldType.Gauge;
+                    break;
+                case FieldType.Gauge:
+                    MenuConfiguration.FieldType = FieldType.Data;
+                    break;
+                default:
+                    break;
+            }
+
+            MenuConfiguration.ActiveField = 0;
+            pluginManager.SetPropertyValue(PropertyNames.FieldType, GetType(), MenuConfiguration.FieldType.ToString());
+            pluginManager.SetPropertyValue(PropertyNames.ActiveConfigField, GetType(), MenuConfiguration.ActiveField + 1);
+        }
+
+        private void ConfigNextField(PluginManager pluginManager)
+        {
+            if (!MenuConfiguration.ConfigurationMode) return;
+            int count = CurrentFieldTypeCount() - 1;
+            if (count <= 0) return;
+            if (MenuConfiguration.ActiveField < count)
+            {
+                MenuConfiguration.ActiveField++;
+            }
+            else
+            {
+                MenuConfiguration.ActiveField = 0;
+            }
+            pluginManager.SetPropertyValue(PropertyNames.ActiveConfigField, GetType(), MenuConfiguration.ActiveField + 1);
+            SimHub.Logging.Current.Debug($"Dash menu action ConfigNextField. New active field: {MenuConfiguration.ActiveField + 1}.");
+        }
+
+        private void ConfigPrevField(PluginManager pluginManager)
+        {
+            if (!MenuConfiguration.ConfigurationMode) return;
+            int count = CurrentFieldTypeCount() - 1;
+            if (count <= 0) return;
+            if (MenuConfiguration.ActiveField > 0)
+            {
+                MenuConfiguration.ActiveField--;
+            }
+            else
+            {
+                MenuConfiguration.ActiveField = count;
+            }
+            pluginManager.SetPropertyValue(PropertyNames.ActiveConfigField, GetType(), MenuConfiguration.ActiveField + 1);
+            SimHub.Logging.Current.Debug($"Dash menu action ConfigPrevField. New active field {MenuConfiguration.ActiveField + 1}.");
+        }
+
+        private void ChangeFieldTypeNext()
+        {
+            if (!MenuConfiguration.ConfigurationMode) return;
+            switch (MenuConfiguration.FieldType)
+            {
+                case FieldType.Data:
+                    var currentDataField = dataFields[MenuConfiguration.ActiveField];
+                    dataFields[MenuConfiguration.ActiveField] = NextField(currentDataField);
+                    break;
+                case FieldType.Gauge:
+                    var currentGuageField = gaugeFields[MenuConfiguration.ActiveField];
+                    gaugeFields[MenuConfiguration.ActiveField] = NextField(currentGuageField);
+                    break;
+                default:
+#if DEBUG
+                    throw new ArgumentOutOfRangeException();
+#else
+                        SimHub.Logging.Current.Error($"Invalid FieldType: {MenuConfiguration.FieldType}");
+                        break;
+#endif
+            }
+            SimHub.Logging.Current.Debug($"Dash menu action ChangeFieldTypeNext of field type: {MenuConfiguration.FieldType}.");
+        }
+
+        private void ChangeFieldTypePrev()
+        {
+            if (!MenuConfiguration.ConfigurationMode) return;
+            switch (MenuConfiguration.FieldType)
+            {
+                case FieldType.Data:
+                    var currentDataField = dataFields[MenuConfiguration.ActiveField];
+                    dataFields[MenuConfiguration.ActiveField] = PrevField(currentDataField);
+                    break;
+                case FieldType.Gauge:
+                    var currentGuageField = gaugeFields[MenuConfiguration.ActiveField];
+                    gaugeFields[MenuConfiguration.ActiveField] = PrevFied(currentGuageField);
+                    break;
+                default:
+#if DEBUG
+                    throw new ArgumentOutOfRangeException();
+#else
+                        SimHub.Logging.Current.Error($"Invalid FieldType: {MenuConfiguration.FieldType}");
+                        break;
+#endif
+            }
+            SimHub.Logging.Current.Debug($"Dash menu action ChangeFieldTypePrev of field type: {MenuConfiguration.FieldType}.");
+        }
+
+        private void IncreaseNumberOfField(PluginManager pluginManager)
+        {
+            if (!MenuConfiguration.ConfigurationMode) return;
+            int count = CurrentFieldTypeCount();
+            if (count <= 0 || count >= 20) return;
+            switch (MenuConfiguration.FieldType)
+            {
+                case FieldType.Data:
+                    dataFields.Add(EmptyDataField.Field);
+                    pluginManager.SetPropertyValue(PropertyNames.AmountOfDataFields, GetType(), dataFields.Count);
+                    break;
+                case FieldType.Gauge:
+                    gaugeFields.Add(EmptyGaugeField.Field);
+                    pluginManager.SetPropertyValue(PropertyNames.AmountOfGaugeFields, GetType(), gaugeFields.Count);
+                    break;
+                default:
+#if DEBUG
+                    throw new ArgumentOutOfRangeException();
+#else
+                        SimHub.Logging.Current.Error($"Invalid FieldType: {MenuConfiguration.FieldType}");
+                        break;
+#endif
+            }
+        }
+
+        private void DecreaseNumberOfField(PluginManager pluginManager)
+        {
+            if (!MenuConfiguration.ConfigurationMode) return;
+            switch (MenuConfiguration.FieldType)
+            {
+                case FieldType.Data:
+                    if (dataFields.Count <= 0) return;
+                    dataFields.RemoveAt(dataFields.Count - 1);
+                    pluginManager.SetPropertyValue(PropertyNames.AmountOfDataFields, GetType(), dataFields.Count);
+                    break;
+                case FieldType.Gauge:
+                    if (gaugeFields.Count <= 0) return;
+                    gaugeFields.RemoveAt(gaugeFields.Count - 1);
+                    pluginManager.SetPropertyValue(PropertyNames.AmountOfGaugeFields, GetType(), gaugeFields.Count);
+                    break;
+                default:
+#if DEBUG
+                    throw new ArgumentOutOfRangeException();
+#else
+                        SimHub.Logging.Current.Error($"Invalid FieldType: {MenuConfiguration.FieldType}");
+                        break;
+#endif
+            }
+        }
+
         private bool AddNCalcFunction(string name, string description, string syntax, Func<NCalcEngineBase, Delegate> func)
         {
             if (NCalcEngineMethodsRegistry.GenericMethodsProvider.ContainsKey(name.ToLower())) { return false; }
@@ -599,10 +618,12 @@ namespace DashMenu
             oldCarId = PluginManager.LastCarId;
             oldCarModel = PluginManager.GameManager.CarManager.LastCarSettings.CarModel;
         }
+
         private void FieldComponent_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             UpdateAvailableFields((DataFieldComponent)sender);
         }
+
         private void SaveDisplayedField(string carId, string carModel)
         {
             if (string.IsNullOrWhiteSpace(carId) || string.IsNullOrWhiteSpace(carModel)) return;
@@ -620,6 +641,7 @@ namespace DashMenu
             }
             Settings.GameSettings[PluginManager.GameName].UpdateDisplayedFields(carId, carModel, fieldDataSettings, fieldGaugeSettings);
         }
+
         private static IEnumerable<Type> GetExtensionFieldsType(string sub_dir)
         {
             string rootDirectory = Path.Combine(Path.GetDirectoryName((Assembly.GetExecutingAssembly().Location)), sub_dir);
@@ -663,6 +685,7 @@ namespace DashMenu
                 }
             }
         }
+
         private void GetCustomFields()
         {
             foreach (Type type in GetExtensionFieldsType("DashMenuExtensionFields"))
@@ -741,6 +764,7 @@ namespace DashMenu
             UpdateColorOveride(fieldSetting);
             UpdateDecimalOverride(fieldSetting);
         }
+
         private void AddGaugeFieldExtensionComponent(Type type)
         {
             IGaugeFieldComponent fieldInstance;
