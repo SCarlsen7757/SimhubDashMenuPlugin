@@ -165,3 +165,10 @@ If the field value is a decimal number, you can adjust the number of decimal pla
 ## Future features
 
 * [ ] Sort the data fields to make cycling through them easier.
+
+## Attributions
+
+* <a href="https://www.flaticon.com/free-icons/car-indicator" title="car indicator icons">Car indicator icons created by verluk - Flaticon</a>
+* <a href="https://www.flaticon.com/free-icons/dots" title="dots icons">Dots icons created by meaicon - Flaticon</a>
+* <a href="https://www.flaticon.com/free-icons/wiper" title="wiper icons">Wiper icons created by LAFS - Flaticon</a>
+* <a href="https://www.flaticon.com/free-icons/lighting" title="lighting icons">Lighting icons created by muhammad atho' - Flaticon</a>
