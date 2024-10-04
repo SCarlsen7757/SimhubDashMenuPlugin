@@ -54,6 +54,7 @@
     <Compile Include="EngineMap.cs" />
     <Compile Include="FuelProcent.cs" />
     <Compile Include="FuelVolume.cs" />
+    <Compile Include="HeartRate.cs" />
     <Compile Include="OilPressure.cs" />
     <Compile Include="OilTemperature.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
