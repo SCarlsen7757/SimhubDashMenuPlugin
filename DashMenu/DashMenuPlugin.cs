@@ -218,16 +218,8 @@ namespace DashMenu
         /// <param name="data">Current game data, including current and previous data frame.</param>
         public void DataUpdate(PluginManager pluginManager, ref GameData data)
         {
-            foreach (IDataFieldComponent field in dataFields)
-            {
-                if (!field.IsGameSupported) continue;
-                field.Update(ref data);
-            }
-            foreach (IGaugeFieldComponent field in gaugeFields)
-            {
-                if (!field.IsGameSupported) continue;
-                field.Update(ref data);
-            }
+            foreach (IDataFieldComponent field in dataFields) field.Update(pluginManager, ref data);
+            foreach (IGaugeFieldComponent field in gaugeFields) field.Update(pluginManager, ref data);
         }
 
         /// <summary>
@@ -239,7 +231,6 @@ namespace DashMenu
         {
             PluginManagerEvents.Instance.ActiveCarChanged -= CarChanged;
             BrightnessConfiguration.Configuration.PropertyChanged -= DayNightMode_PropertyChanged;
-
         }
 
         private void LoadSettings()

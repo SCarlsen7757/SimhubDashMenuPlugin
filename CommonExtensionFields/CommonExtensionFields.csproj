@@ -36,6 +36,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Libs\GameReaderCommon.dll</HintPath>
     </Reference>
+    <Reference Include="SimHub.Plugins, Version=1.0.9034.18950, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />

@@ -1,5 +1,6 @@
 ﻿using DashMenu.Data;
 using GameReaderCommon;
+using SimHub.Plugins;
 
 namespace CommonExtensionFields
 {
@@ -42,7 +43,7 @@ namespace CommonExtensionFields
             set => Data = value; //Make sure to set base Data
         }
 
-        public void Update(ref GameData data)
+        public void Update(PluginManager pluginManager, ref GameData data)
         {
             if (!data.GameRunning) return;
             Data.Maximum = data.NewData.CarSettings.MaxRpm.ToString();

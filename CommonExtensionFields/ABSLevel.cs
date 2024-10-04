@@ -1,5 +1,6 @@
 ﻿using DashMenu.Data;
 using GameReaderCommon;
+using SimHub.Plugins;
 
 namespace CommonExtensionFields
 {
@@ -18,7 +19,7 @@ namespace CommonExtensionFields
 
         IDataField IDataFieldComponent.Data { get => Data; set => Data = value; }
 
-        public void Update(ref GameData data)
+        public void Update(PluginManager pluginManager, ref GameData data)
         {
             if (!data.GameRunning) return;
             if (data.NewData.ABSLevel < 0)

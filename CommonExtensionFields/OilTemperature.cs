@@ -1,5 +1,6 @@
 ﻿using DashMenu.Data;
 using GameReaderCommon;
+using SimHub.Plugins;
 
 namespace CommonExtensionFields
 {
@@ -43,7 +44,7 @@ namespace CommonExtensionFields
             set => Data = value;
         }
 
-        public void Update(ref GameData data)
+        public void Update(PluginManager pluginManager, ref GameData data)
         {
             if (!data.GameRunning) return;
             if (data.NewData.OilTemperature <= 0)

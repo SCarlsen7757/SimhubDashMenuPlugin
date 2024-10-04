@@ -1,4 +1,5 @@
 ﻿using GameReaderCommon;
+using SimHub.Plugins;
 
 namespace DashMenu.Data
 {
@@ -21,6 +22,6 @@ namespace DashMenu.Data
         /// Update field.
         /// </summary>
         /// <param name="data"></param>
-        void Update(ref GameData data);
+        void Update(PluginManager pluginManager, ref GameData data);
     }
 }

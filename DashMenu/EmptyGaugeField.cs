@@ -1,5 +1,6 @@
 ﻿using DashMenu.Data;
 using GameReaderCommon;
+using SimHub.Plugins;
 
 namespace DashMenu
 {
@@ -18,7 +19,7 @@ namespace DashMenu
             get => Data;
             set => Data = (IGaugeField)value;
         }
-        public void Update(ref GameData data)
+        public void Update(PluginManager pluginManager, ref GameData data)
         {
             return;
         }

@@ -1,5 +1,6 @@
 ﻿using DashMenu.Data;
 using GameReaderCommon;
+using SimHub.Plugins;
 
 namespace DashMenu
 {
@@ -9,7 +10,7 @@ namespace DashMenu
         public string Description { get; } = string.Empty;
         new public IDataField Data { get; set; } = new DataField();
 
-        public void Update(ref GameData data)
+        public void Update(PluginManager pluginManager, ref GameData data)
         {
             return;
         }
