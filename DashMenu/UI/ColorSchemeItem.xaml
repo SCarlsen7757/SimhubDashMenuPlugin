@@ -16,18 +16,18 @@
         <settings:ColorSchemePropertyOverride />
     </UserControl.DataContext>
     <UserControl.Resources>
-        <local:ColorToStringConverter x:Key="ColorToStringConverter" />
+        <local:ColorStringToColorConverter x:Key="ColorStringToColorConverter" />
     </UserControl.Resources>
     <AutoGrid Columns="auto,100"
               Rows="auto,auto,*">
         <Label Content="Primary" />
         <xctk:ColorPicker FrameworkElement.Margin="4"
                           IsEnabled="{Binding Path=Override}"
-                          SelectedColor="{Binding Path=OverrideValue.Primary, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ColorToStringConverter}}" />
+                          SelectedColor="{Binding Path=OverrideValue.Primary, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ColorStringToColorConverter}}" />
 
         <Label Content="Accent" />
         <xctk:ColorPicker FrameworkElement.Margin="4"
                           IsEnabled="{Binding Path=Override}"
-                          SelectedColor="{Binding Path=OverrideValue.Accent, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ColorToStringConverter}}" />
+                          SelectedColor="{Binding Path=OverrideValue.Accent, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ColorStringToColorConverter}}" />
     </AutoGrid>
 </UserControl>

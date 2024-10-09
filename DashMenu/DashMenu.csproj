@@ -143,7 +143,7 @@
     <Compile Include="UI\ColorSchemeItem.xaml.cs">
       <DependentUpon>ColorSchemeItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\ColorToStringConverter.cs" />
+    <Compile Include="UI\ColorStringToColorConverter.cs" />
     <Compile Include="UI\DataFieldSettingsItem.xaml.cs">
       <DependentUpon>DataFieldSettingsItem.xaml</DependentUpon>
     </Compile>

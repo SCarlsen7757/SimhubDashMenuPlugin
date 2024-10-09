@@ -4,7 +4,7 @@ using System.Windows.Data;
 using System.Windows.Media;
 namespace DashMenu.UI
 {
-    public class ColorToStringConverter : IValueConverter
+    public class ColorStringToColorConverter : IValueConverter
     {
         private static Color defaultColor = Color.FromRgb(255, 255, 255);
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
