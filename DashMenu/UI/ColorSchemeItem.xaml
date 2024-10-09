@@ -8,24 +8,26 @@
              xmlns:ui="clr-namespace:SimHub.Plugins.UI;assembly=SimHub.Plugins"
              xmlns:styles="clr-namespace:SimHub.Plugins.Styles;assembly=SimHub.Plugins"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800">
     <UserControl.DataContext>
         <settings:ColorSchemePropertyOverride />
     </UserControl.DataContext>
-    <AutoGrid Columns="auto,auto">
+    <UserControl.Resources>
+        <local:ColorToStringConverter x:Key="ColorToStringConverter" />
+    </UserControl.Resources>
+    <AutoGrid Columns="auto,100"
+              Rows="auto,auto,*">
         <Label Content="Primary" />
-        <TextBox Text="{Binding Path=OverrideValue.Primary, UpdateSourceTrigger=PropertyChanged}"
-                 Margin="2"
-                 IsEnabled="{Binding Path=Override}"
-                 Width="80"
-                 FontFamily="Consolas" />
+        <xctk:ColorPicker FrameworkElement.Margin="4"
+                          IsEnabled="{Binding Path=Override}"
+                          SelectedColor="{Binding Path=OverrideValue.Primary, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ColorToStringConverter}}" />
+
         <Label Content="Accent" />
-        <TextBox Text="{Binding Path=OverrideValue.Accent, UpdateSourceTrigger=PropertyChanged}"
-                 Margin="2"
-                 IsEnabled="{Binding Path=Override}"
-                 Width="80"
-                 FontFamily="Consolas" />
+        <xctk:ColorPicker FrameworkElement.Margin="4"
+                          IsEnabled="{Binding Path=Override}"
+                          SelectedColor="{Binding Path=OverrideValue.Accent, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ColorToStringConverter}}" />
     </AutoGrid>
 </UserControl>

@@ -69,7 +69,9 @@
       <Name>DashMenu</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Libs\GameReaderCommon.dll" />
     <Content Include="Libs\log4net.dll" />

@@ -932,6 +932,11 @@ namespace DashMenu
 
             if (!settings.Override.DayNightColorScheme.DayModeColor.Override)
             {
+                settings.Override.DayNightColorScheme.NightModeColor.Override = false;
+            }
+
+            if (!settings.Override.DayNightColorScheme.DayModeColor.Override)
+            {
                 datafield.FieldComponent.Data.Color = settings.Override.DayNightColorScheme.DayModeColor.DefaultValue;
                 return;
             }

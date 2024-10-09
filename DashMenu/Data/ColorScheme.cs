@@ -1,5 +1,7 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows.Media;
 
 namespace DashMenu.Data
 {
@@ -29,7 +31,7 @@ namespace DashMenu.Data
             get => primary;
             set
             {
-                var color = value.ToUpper();
+                string color = ColorStringValid(value) ? value : defaultColor.ToString();
                 if (color == primary) return;
                 primary = color;
                 OnPropertyChanged();
@@ -44,7 +46,7 @@ namespace DashMenu.Data
             get => accent;
             set
             {
-                var color = value.ToUpper();
+                string color = ColorStringValid(value) ? value : defaultColor.ToString();
                 if (color == accent) return;
                 accent = color;
                 OnPropertyChanged();
@@ -53,6 +55,21 @@ namespace DashMenu.Data
         public ColorScheme Clone()
         {
             return new ColorScheme(this); // Use the copy constructor
+        }
+
+        private static Color defaultColor = Color.FromRgb(255, 255, 255);
+
+        private static bool ColorStringValid(string value)
+        {
+            try
+            {
+                ColorConverter.ConvertFromString(value);
+                return true;
+            }
+            catch (FormatException)
+            {
+                return false;
+            }
         }
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
