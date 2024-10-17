@@ -191,12 +191,6 @@ namespace DashMenu
             GaugeFieldManager.DayNightModeChanged(Settings.GetCurrentGameSettings().GaugeFields);
         }
 
-        private void FieldComponent_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            //FIX
-            //UpdateAvailableFields((DataFieldComponent)sender);
-        }
-
         private static IEnumerable<Type> GetExtensionFieldsType(string sub_dir)
         {
             string rootDirectory = Path.Combine(Path.GetDirectoryName((Assembly.GetExecutingAssembly().Location)), sub_dir);
