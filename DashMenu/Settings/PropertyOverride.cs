@@ -29,7 +29,6 @@ namespace DashMenu.Settings
             {
                 if (EqualityComparer<T>.Default.Equals(defaultValue, value)) return;
                 defaultValue = value;
-                OnPropertyChanged();
             }
         }
         private bool @override = false;

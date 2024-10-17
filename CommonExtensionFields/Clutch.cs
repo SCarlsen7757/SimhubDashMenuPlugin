@@ -4,7 +4,7 @@ using SimHub.Plugins;
 
 namespace CommonExtensionFields
 {
-    public class Clutch : FieldExtensionBase, IGaugeFieldComponent
+    public class Clutch : FieldExtensionBase, IGaugeFieldExtension
     {
         public Clutch(string gameName) : base(gameName)
         {
@@ -34,13 +34,13 @@ namespace CommonExtensionFields
             }
         }
 
-        IDataField IDataFieldComponent.Data
+        IDataField IDataFieldExtension.Data
         {
             get => Data; // Return the same GaugeField instance
             set => Data = (IGaugeField)value; // Set the same instance
         }
 
-        IGaugeField IGaugeFieldComponent.Data
+        IGaugeField IGaugeFieldExtension.Data
         {
             get => Data;
             set => Data = value; //Make sure to set base Data

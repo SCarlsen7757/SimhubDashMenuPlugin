@@ -3,10 +3,10 @@ using System.Runtime.CompilerServices;
 
 namespace DashMenu
 {
-    internal abstract class FieldComponentBase
+    internal abstract class FieldComponentBase<T>
     {
-        public bool enabled = true;
-        private string fullName = string.Empty;
+        protected bool enabled = true;
+        private string fullName = null;
         public bool Enabled
         {
             get => enabled; set
@@ -18,17 +18,20 @@ namespace DashMenu
         }
         public string FullName
         {
-            get => fullName;
-            set
+            get
             {
-                if (fullName == value) return;
-                fullName = value;
-                OnPropertyChanged();
+                if (fullName == null)
+                {
+                    fullName = FieldExtension.GetType().FullName;
+                }
+                return fullName;
             }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+        public T FieldExtension { get; set; }
     }
 }

@@ -1,16 +1,14 @@
-﻿using System.ComponentModel;
+﻿using DashMenu.Data;
+using System.ComponentModel;
 
 namespace DashMenu
 {
-    internal class GaugeFieldComponent : FieldComponentBase, INotifyPropertyChanged
+    internal class GaugeFieldComponent : FieldComponentBase<IGaugeFieldExtension>, INotifyPropertyChanged
     {
         public GaugeFieldComponent() : base() { }
-        public GaugeFieldComponent(Data.IGaugeFieldComponent fieldComponent)
+        public GaugeFieldComponent(IGaugeFieldExtension fieldExtension)
         {
-            FieldComponent = fieldComponent;
-            FullName = FieldComponent.GetType().FullName;
+            FieldExtension = fieldExtension;
         }
-        public Data.IGaugeFieldComponent FieldComponent { get; set; }
-
     }
 }

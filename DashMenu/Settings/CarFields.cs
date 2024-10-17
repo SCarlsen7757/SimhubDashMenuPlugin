@@ -1,12 +1,27 @@
-﻿using Newtonsoft.Json;
+﻿using DashMenu.Extensions;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Windows;
 
 namespace DashMenu.Settings
 {
-    internal class CarFields : INotifyPropertyChanged
+    internal class CarFields : INotifyPropertyChanged, ICarFields
     {
+        public CarFields()
+        {
+        }
+        public CarFields(string carId, string carModel, IList<string> dataFields, IList<string> gaugeFields)
+        {
+            CarId = carId;
+            CarModel = carModel;
+            DisplayedDataFields = dataFields.ToObservableCollection();
+            DisplayedGaugeFields = gaugeFields.ToObservableCollection();
+        }
+
         private bool isActive = false;
         /// <summary>
         /// Car model active
@@ -50,20 +65,70 @@ namespace DashMenu.Settings
                 OnPropertyChanged();
             }
         }
-        public ObservableCollection<string> DisplayedDataFields { get; set; }
-        public ObservableCollection<string> DisplayedGaugeFields { get; set; }
+        private readonly ObservableCollection<string> displayedDataFields = new ObservableCollection<string>();
+        private readonly object collectionDisplayedDataFieldsLock = new object();
 
-        public CarFields()
+        public ObservableCollection<string> DisplayedDataFields
         {
-            DisplayedDataFields = new ObservableCollection<string>();
-            DisplayedGaugeFields = new ObservableCollection<string>();
+            get
+            {
+                return Application.Current.Dispatcher.Invoke(() =>
+                {
+                    lock (collectionDisplayedDataFieldsLock)
+                    {
+                        return displayedDataFields;
+                    }
+                });
+            }
+            set => Application.Current.Dispatcher.Invoke(() =>
+            {
+                lock (collectionDisplayedDataFieldsLock)
+                {
+                    // Only clear and repopulate if the incoming value is different
+                    if (value != null && !displayedDataFields.SequenceEqual(value))
+                    {
+                        displayedDataFields.Clear();
+                        foreach (string field in value)
+                        {
+                            displayedDataFields.Add(field);
+                        }
+                        OnPropertyChanged();
+                    }
+                }
+            });
         }
-        public CarFields(string carId, string carModel, ObservableCollection<string> dataFields, ObservableCollection<string> gaugeFields)
+
+        private readonly ObservableCollection<string> displayedGaugeFields = new ObservableCollection<string>();
+        private readonly object collectionDisplayedGaugeFieldsLock = new object();
+
+        public ObservableCollection<string> DisplayedGaugeFields
         {
-            CarId = carId;
-            CarModel = carModel;
-            DisplayedDataFields = dataFields;
-            DisplayedGaugeFields = gaugeFields;
+            get
+            {
+                return Application.Current.Dispatcher.Invoke(() =>
+                {
+                    lock (collectionDisplayedGaugeFieldsLock)
+                    {
+                        return displayedGaugeFields;
+                    }
+                });
+            }
+            set => Application.Current.Dispatcher.Invoke(() =>
+            {
+                lock (collectionDisplayedGaugeFieldsLock)
+                {
+                    // Only clear and repopulate if the incoming value is different
+                    if (value != null && !displayedGaugeFields.SequenceEqual(value))
+                    {
+                        displayedGaugeFields.Clear();
+                        foreach (string field in value)
+                        {
+                            displayedGaugeFields.Add(field);
+                        }
+                        OnPropertyChanged();
+                    }
+                }
+            });
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

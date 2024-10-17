@@ -1,16 +1,14 @@
-﻿using System.ComponentModel;
+﻿using DashMenu.Data;
+using System.ComponentModel;
 
 namespace DashMenu
 {
-    internal class DataFieldComponent : FieldComponentBase, INotifyPropertyChanged
+    internal class DataFieldComponent : FieldComponentBase<IDataFieldExtension>, INotifyPropertyChanged
     {
         public DataFieldComponent() { }
-        public DataFieldComponent(Data.IDataFieldComponent fieldComponent)
+        public DataFieldComponent(IDataFieldExtension fieldExtension)
         {
-            FieldComponent = fieldComponent;
-            FullName = FieldComponent.GetType().FullName;
+            FieldExtension = fieldExtension;
         }
-        public Data.IDataFieldComponent FieldComponent { get; set; }
-
     }
 }

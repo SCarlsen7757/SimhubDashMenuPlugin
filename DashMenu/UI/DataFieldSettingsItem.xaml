@@ -27,7 +27,8 @@
                    Margin="0,4,0,0"
                    ContentStringFormat="Namespace : {0}"
                    Padding="0" />
-            <StackPanel Margin="0,0,20,0">
+            <StackPanel Margin="0,0,20,0"
+                        Width="300">
                 <!--General settings-->
                 <styles:SHSubSectionTitle Content="General settings" />
                 <AutoGrid Columns="auto,*"
@@ -37,10 +38,14 @@
                     <Label Content="Enable field extension, to be selectable." />
                 </AutoGrid>
                 <styles:SHSubSectionTitle Content="Supported Games" />
-                <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <TextBlock Text="{Binding Path=SupportedGames}"
-                               Margin="12,0" />
-                </ScrollViewer>
+                <TextBlock Text="{Binding Path=SupportedGames}"
+                           Margin="12,0" 
+                           TextWrapping="Wrap"/>
+                <styles:SHSubSectionTitle Content="Description" />
+                <TextBlock Text="{Binding Path=Description}"
+                           Margin="12,0"
+                           TextWrapping="Wrap"
+                           HorizontalAlignment="Stretch"/>
             </StackPanel>
         </StackPanel>
 

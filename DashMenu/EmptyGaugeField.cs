@@ -4,7 +4,7 @@ using SimHub.Plugins;
 
 namespace DashMenu
 {
-    internal class EmptyGaugeField : FieldExtensionBase, IGaugeFieldComponent
+    internal class EmptyGaugeField : FieldExtensionBase, IGaugeFieldExtension
     {
         public EmptyGaugeField(string gameName) : base(gameName) { }
         public string Description { get; } = string.Empty;
@@ -14,7 +14,7 @@ namespace DashMenu
             IsStepLocked = true,
             Maximum = 0.ToString(),
         };
-        IDataField IDataFieldComponent.Data
+        IDataField IDataFieldExtension.Data
         {
             get => Data;
             set => Data = (IGaugeField)value;

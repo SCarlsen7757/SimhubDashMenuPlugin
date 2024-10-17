@@ -4,7 +4,7 @@ using SimHub.Plugins;
 
 namespace CommonExtensionFields
 {
-    public class ABSLevel : FieldExtensionBase, IDataFieldComponent
+    public class ABSLevel : FieldExtensionBase, IDataFieldExtension
     {
         public ABSLevel(string gameName) : base(gameName)
         {
@@ -17,7 +17,7 @@ namespace CommonExtensionFields
 
         public string Description => "ABS Level.";
 
-        IDataField IDataFieldComponent.Data { get => Data; set => Data = value; }
+        IDataField IDataFieldExtension.Data { get => Data; set => Data = value; }
 
         public void Update(PluginManager pluginManager, ref GameData data)
         {

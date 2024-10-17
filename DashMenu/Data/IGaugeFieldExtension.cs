@@ -1,10 +1,10 @@
 ﻿namespace DashMenu.Data
 {
-    public interface IDataFieldComponent : IFieldExtensionBasic
+    public interface IGaugeFieldExtension : IDataFieldExtension
     {
         /// <summary>
         /// Field data.
         /// </summary>
-        IDataField Data { get; set; }
+        new IGaugeField Data { get; set; }
     }
 }

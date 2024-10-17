@@ -4,7 +4,7 @@ using SimHub.Plugins;
 
 namespace DashMenu
 {
-    internal class EmptyDataField : FieldExtensionBase, IDataFieldComponent
+    internal class EmptyDataField : FieldExtensionBase, IDataFieldExtension
     {
         public EmptyDataField(string gameName) : base(gameName) { }
         public string Description { get; } = string.Empty;

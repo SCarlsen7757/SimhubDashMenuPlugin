@@ -20,6 +20,8 @@ namespace DashMenu.Settings
         public bool GameSupported { get; internal set; }
         [JsonIgnore]
         public string SupportedGames { get; internal set; }
+        [JsonIgnore]
+        public string Description { get; internal set; }
         private bool enabled = true;
         /// <summary>
         /// Is the field enabled.
@@ -46,7 +48,6 @@ namespace DashMenu.Settings
             {
                 if (isDecimal == value) return;
                 isDecimal = value;
-                OnPropertyChanged();
             }
         }
         public OverrideProperties Override { get; set; }
@@ -63,17 +64,9 @@ namespace DashMenu.Settings
                 DayNightColorScheme.NightModeColor.OverrideValue.PropertyChanged += ColorScheme_PropertyChanged;
             }
 
-            public OverrideProperties(DataField parent)
+            public OverrideProperties(DataField parent) : base()
             {
                 this.parent = parent;
-
-                Name.PropertyChanged += Name_PropertyChanged;
-                Decimal.PropertyChanged += Decimal_PropertyChanged;
-
-                DayNightColorScheme.DayModeColor.PropertyChanged += ColorScheme_PropertyChanged;
-                DayNightColorScheme.DayModeColor.OverrideValue.PropertyChanged += ColorScheme_PropertyChanged;
-                DayNightColorScheme.NightModeColor.PropertyChanged += ColorScheme_PropertyChanged;
-                DayNightColorScheme.NightModeColor.OverrideValue.PropertyChanged += ColorScheme_PropertyChanged;
             }
 
             [JsonIgnore]
