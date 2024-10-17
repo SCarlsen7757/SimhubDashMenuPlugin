@@ -64,7 +64,7 @@ namespace DashMenu.Settings
                 DayNightColorScheme.NightModeColor.OverrideValue.PropertyChanged += ColorScheme_PropertyChanged;
             }
 
-            public OverrideProperties(DataField parent) : base()
+            public OverrideProperties(DataField parent) : this()
             {
                 this.parent = parent;
             }
