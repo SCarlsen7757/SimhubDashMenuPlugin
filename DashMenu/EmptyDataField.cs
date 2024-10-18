@@ -4,11 +4,13 @@ using SimHub.Plugins;
 
 namespace DashMenu
 {
-    internal class EmptyDataField : FieldExtensionBase, IDataFieldExtension
+    internal class EmptyDataField : FieldExtensionBase<IDataField>, IDataFieldExtension
     {
-        public EmptyDataField(string gameName) : base(gameName) { }
+        public EmptyDataField(string gameName) : base(gameName)
+        {
+            Data = new DataField();
+        }
         public string Description { get; } = string.Empty;
-        new public IDataField Data { get; set; } = new DataField();
 
         public void Update(PluginManager pluginManager, ref GameData data)
         {

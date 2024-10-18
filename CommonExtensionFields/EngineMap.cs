@@ -4,7 +4,7 @@ using SimHub.Plugins;
 
 namespace CommonExtensionFields
 {
-    public class EngineMap : FieldExtensionBase, IDataFieldExtension
+    public class EngineMap : FieldExtensionBase<IDataField>, IDataFieldExtension
     {
         public EngineMap(string gameName) : base(gameName)
         {
@@ -16,12 +16,6 @@ namespace CommonExtensionFields
         }
 
         public string Description => "Engine map.";
-
-        IDataField IDataFieldExtension.Data
-        {
-            get => Data;
-            set => Data = value;
-        }
 
         public void Update(PluginManager pluginManager, ref GameData data)
         {

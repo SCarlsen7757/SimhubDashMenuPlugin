@@ -2,7 +2,7 @@
 
 namespace DashMenu.Data
 {
-    public abstract class FieldExtensionBase
+    public abstract class FieldExtensionBase<T> where T : IDataField
     {
         protected readonly string gameName = string.Empty;
 
@@ -17,7 +17,7 @@ namespace DashMenu.Data
             isGameSupported = GameSupported(gameName);
         }
 
-        public virtual IDataField Data { get; set; }
+        public T Data { get; set; }
 
         protected virtual bool GameSupported(string gameName) => true;
 

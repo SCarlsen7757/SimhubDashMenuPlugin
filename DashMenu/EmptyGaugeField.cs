@@ -4,27 +4,29 @@ using SimHub.Plugins;
 
 namespace DashMenu
 {
-    internal class EmptyGaugeField : FieldExtensionBase, IGaugeFieldExtension
+    internal class EmptyGaugeField : FieldExtensionBase<IGaugeField>, IGaugeFieldExtension
     {
-        public EmptyGaugeField(string gameName) : base(gameName) { }
-        public string Description { get; } = string.Empty;
-        new public IGaugeField Data { get; set; } = new GaugeField()
+        public EmptyGaugeField(string gameName) : base(gameName)
         {
-            IsRangeLocked = true,
-            IsStepLocked = true,
-            Maximum = 0.ToString(),
-        };
-        IDataField IDataFieldExtension.Data
-        {
-            get => Data;
-            set => Data = (IGaugeField)value;
+            Data = new GaugeField()
+            {
+                IsRangeLocked = true,
+                IsStepLocked = true,
+                Maximum = 0.ToString(),
+            };
         }
+
+        public string Description { get; } = string.Empty;
+
+        IDataField IDataFieldExtension.Data { get => Data; set => Data = (IGaugeField)value; }
+
         public void Update(PluginManager pluginManager, ref GameData data)
         {
             return;
         }
 
         private readonly static EmptyGaugeField @field = new EmptyGaugeField("");
+
         /// <summary>
         /// Empty field
         /// </summary>

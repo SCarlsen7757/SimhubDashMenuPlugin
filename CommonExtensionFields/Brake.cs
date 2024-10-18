@@ -4,7 +4,7 @@ using SimHub.Plugins;
 
 namespace CommonExtensionFields
 {
-    public class Brake : FieldExtensionBase, IGaugeFieldExtension
+    public class Brake : FieldExtensionBase<IGaugeField>, IGaugeFieldExtension
     {
         public Brake(string gameName) : base(gameName)
         {
@@ -21,29 +21,7 @@ namespace CommonExtensionFields
             };
         }
         public string Description => "Brake position.";
-
-        private IGaugeField data;
-        new public IGaugeField Data
-        {
-            get => data;
-            set
-            {
-                data = value;
-                base.Data = value;
-            }
-        }
-
-        IDataField IDataFieldExtension.Data
-        {
-            get => Data; // Return the same GaugeField instance
-            set => Data = (IGaugeField)value; // Set the same instance
-        }
-
-        IGaugeField IGaugeFieldExtension.Data
-        {
-            get => Data;
-            set => Data = value; //Make sure to set base Data
-        }
+        IDataField IDataFieldExtension.Data { get => Data; set => Data = (IGaugeField)value; }
 
         public void Update(PluginManager pluginManager, ref GameData data)
         {

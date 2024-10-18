@@ -4,7 +4,7 @@ using SimHub.Plugins;
 
 namespace CommonExtensionFields
 {
-    public class FuelProcent : FieldExtensionBase, IGaugeFieldExtension
+    public class FuelProcent : FieldExtensionBase<IGaugeField>, IGaugeFieldExtension
     {
         public FuelProcent(string gameName) : base(gameName)
         {
@@ -22,29 +22,7 @@ namespace CommonExtensionFields
         }
 
         public string Description => "Fuel in procent.";
-
-        private IGaugeField data;
-        new IGaugeField Data
-        {
-            get => data;
-            set
-            {
-                data = value;
-                base.Data = value;
-            }
-        }
-
-        IDataField IDataFieldExtension.Data
-        {
-            get => Data; // Return the same GaugeField instance
-            set => Data = (IGaugeField)value; // Set the same instance
-        }
-
-        IGaugeField IGaugeFieldExtension.Data
-        {
-            get => Data;
-            set => Data = value; //Make sure to set base Data
-        }
+        IDataField IDataFieldExtension.Data { get => Data; set => Data = (IGaugeField)value; }
 
         public void Update(PluginManager pluginManager, ref GameData data)
         {

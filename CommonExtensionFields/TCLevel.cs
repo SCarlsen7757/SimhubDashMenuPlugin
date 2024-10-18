@@ -4,7 +4,7 @@ using SimHub.Plugins;
 
 namespace CommonExtensionFields
 {
-    public class TCLevel : FieldExtensionBase, IDataFieldExtension
+    public class TCLevel : FieldExtensionBase<IDataField>, IDataFieldExtension
     {
         public TCLevel(string gameName) : base(gameName)
         {
@@ -16,11 +16,6 @@ namespace CommonExtensionFields
         }
 
         public string Description => "TC Level.";
-        IDataField IDataFieldExtension.Data
-        {
-            get => Data;
-            set => Data = value;
-        }
 
         public void Update(PluginManager pluginManager, ref GameData data)
         {
