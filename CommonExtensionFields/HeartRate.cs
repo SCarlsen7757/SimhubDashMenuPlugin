@@ -4,7 +4,7 @@ using SimHub.Plugins;
 
 namespace CommonExtensionFields
 {
-    public class HeartRate : FieldExtensionBase<IGaugeField>, IGaugeFieldExtension
+    public class HeartRate : FieldExtensionBase<IGaugeField>, IDataFieldExtension, IGaugeFieldExtension
     {
         public HeartRate(string gameName) : base(gameName)
         {
@@ -19,7 +19,7 @@ namespace CommonExtensionFields
         }
 
         public string Description => "Heart rate.";
-        IDataField IDataFieldExtension.Data { get => Data; set => Data = (IGaugeField)value; }
+        IDataField IFieldExtensionBasic<IDataField>.Data { get => Data; set => Data = (IGaugeField)value; }
 
         public void Update(PluginManager pluginManager, ref GameData data)
         {

@@ -3,7 +3,8 @@ using SimHub.Plugins;
 
 namespace DashMenu.Data
 {
-    public interface IFieldExtensionBasic
+    public interface IFieldExtensionBasic<TData> : IDashMenuPluginExtension
+        where TData : IDataField
     {
         /// <summary>
         /// Description of the field.
@@ -23,5 +24,9 @@ namespace DashMenu.Data
         /// </summary>
         /// <param name="data"></param>
         void Update(PluginManager pluginManager, ref GameData data);
+        /// <summary>
+        /// Field data.
+        /// </summary>
+        TData Data { get; set; }
     }
 }

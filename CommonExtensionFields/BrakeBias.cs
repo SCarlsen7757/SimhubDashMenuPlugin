@@ -4,7 +4,7 @@ using SimHub.Plugins;
 
 namespace CommonExtensionFields
 {
-    public class BrakeBias : FieldExtensionBase<IGaugeField>, IGaugeFieldExtension
+    public class BrakeBias : FieldExtensionBase<IGaugeField>, IDataFieldExtension, IGaugeFieldExtension
     {
         public BrakeBias(string gameName) : base(gameName)
         {
@@ -21,7 +21,7 @@ namespace CommonExtensionFields
         }
 
         public string Description => "Brake bias.";
-        IDataField IDataFieldExtension.Data { get => Data; set => Data = (IGaugeField)value; }
+        IDataField IFieldExtensionBasic<IDataField>.Data { get => Data; set => Data = (IGaugeField)value; }
 
         public void Update(PluginManager pluginManager, ref GameData data)
         {

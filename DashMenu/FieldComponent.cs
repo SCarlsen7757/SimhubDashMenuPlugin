@@ -1,10 +1,18 @@
-﻿using System.ComponentModel;
+﻿using DashMenu.Data;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace DashMenu
 {
-    internal abstract class FieldComponentBase<T>
+    internal class FieldComponent<TFieldExtension, TField> : INotifyPropertyChanged
+        where TFieldExtension : class, IFieldExtensionBasic<TField>
+        where TField : class, IDataField
     {
+        public FieldComponent(TFieldExtension fieldExtension)
+        {
+            FieldExtension = fieldExtension;
+        }
+
         protected bool enabled = true;
         private string fullName = null;
         public bool Enabled
@@ -32,6 +40,6 @@ namespace DashMenu
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-        public T FieldExtension { get; set; }
+        public TFieldExtension FieldExtension { get; set; }
     }
 }

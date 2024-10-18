@@ -4,9 +4,9 @@ using SimHub.Plugins;
 
 namespace DashMenu
 {
-    internal class EmptyGaugeField : FieldExtensionBase<IGaugeField>, IGaugeFieldExtension
+    internal class EmptyField : FieldExtensionBase<IGaugeField>, IDataFieldExtension, IGaugeFieldExtension
     {
-        public EmptyGaugeField(string gameName) : base(gameName)
+        public EmptyField(string gameName) : base(gameName)
         {
             Data = new GaugeField()
             {
@@ -18,19 +18,19 @@ namespace DashMenu
 
         public string Description { get; } = string.Empty;
 
-        IDataField IDataFieldExtension.Data { get => Data; set => Data = (IGaugeField)value; }
+        IDataField IFieldExtensionBasic<IDataField>.Data { get => Data; set => Data = (IGaugeField)value; }
 
         public void Update(PluginManager pluginManager, ref GameData data)
         {
             return;
         }
 
-        private readonly static EmptyGaugeField @field = new EmptyGaugeField("");
+        private readonly static EmptyField @field = new EmptyField("");
 
         /// <summary>
         /// Empty field
         /// </summary>
-        public static EmptyGaugeField Field => @field;
+        public static EmptyField Field => @field;
         private static string fullname = null;
         public static string FullName
         {

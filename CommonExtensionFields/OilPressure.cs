@@ -5,7 +5,7 @@ using SimHub.Plugins;
 namespace CommonExtensionFields
 {
 
-    public class OilPressure : FieldExtensionBase<IGaugeField>, IGaugeFieldExtension
+    public class OilPressure : FieldExtensionBase<IGaugeField>, IDataFieldExtension, IGaugeFieldExtension
     {
         public OilPressure(string gameName) : base(gameName)
         {
@@ -20,7 +20,7 @@ namespace CommonExtensionFields
             };
         }
         public string Description => "Oil pressure. EOP stands for Engine oil pressure.";
-        IDataField IDataFieldExtension.Data { get => Data; set => Data = (IGaugeField)value; }
+        IDataField IFieldExtensionBasic<IDataField>.Data { get => Data; set => Data = (IGaugeField)value; }
 
         public void Update(PluginManager pluginManager, ref GameData data)
         {

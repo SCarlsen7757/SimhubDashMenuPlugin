@@ -10,58 +10,50 @@ using System.Linq;
 
 namespace DashMenu.FieldManager
 {
-    internal class DataFieldManager : FieldManagerBase, IFieldManager<Settings.DataField>
+    internal class DataFieldManager : FieldManagerBase
     {
-
-        private static class PropertyNames
+        private const string FIELD_TYPE_NAME = "Data";
+        internal DataFieldManager(PluginManager pluginManager, Type pluginType) : base(pluginManager, pluginType, FIELD_TYPE_NAME)
         {
-            public const string AmountOfFields = "AmountOfDataFields";
-        }
-        private readonly PluginManager pluginManager;
-        private readonly Type pluginType;
-        internal ObservableCollection<IDataFieldExtension> SelectedFields { get; private set; } = new ObservableCollection<IDataFieldExtension>();
-        protected readonly ObservableCollection<DataFieldComponent> allFields = new ObservableCollection<DataFieldComponent>();
-
-        internal event SelectedFieldsChangedEventHandler SelectedFieldsChanged;
-
-        internal DataFieldManager(PluginManager pluginManager, Type pluginType) : base()
-        {
-            this.pluginManager = pluginManager;
-            this.pluginType = pluginType;
-
-            this.pluginManager.AddProperty(PropertyNames.AmountOfFields, this.pluginType, SelectedFields.Count);
+            this.pluginManager.AddProperty(AmountOfFieldName, this.pluginType, SelectedFields.Count);
             SelectedFields.CollectionChanged += SelectedFields_CollectionChanged;
 
-            SimhubHelper.AddNCalcFunction("dashfielddataname",
-                "Returns the name of the data field of the specified field.",
+            SimhubHelper.AddNCalcFunction($"dashfield{FIELD_TYPE_NAME.ToLower()}name",
+                "Returns the name of the field of the specified field.",
                 "index",
                 engine => (Func<int, string>)(index => GetField(index - 1).Name));
 
-            SimhubHelper.AddNCalcFunction("dashfielddatavalue",
-                "Returns the value of the data field of the specified field.",
+            SimhubHelper.AddNCalcFunction($"dashfield{FIELD_TYPE_NAME.ToLower()}value",
+                "Returns the value of the field of the specified field.",
                 "index",
                 engine => (Func<int, string>)(index => GetField(index - 1).Value));
 
-            SimhubHelper.AddNCalcFunction("dashfielddatadecimal",
-                "Returns the number of decimals the value has of the data field of the specified field.",
+            SimhubHelper.AddNCalcFunction($"dashfield{FIELD_TYPE_NAME.ToLower()}decimal",
+                "Returns the number of decimals the value has of the field of the specified field.",
                 "index",
                 engine => (Func<int, int>)(index => GetField(index - 1).Decimal));
 
-            SimhubHelper.AddNCalcFunction("dashfielddataunit",
-                "Returns the unit of the data field of the specified field.",
+            SimhubHelper.AddNCalcFunction($"dashfield{FIELD_TYPE_NAME.ToLower()}unit",
+                "Returns the unit of the  field of the specified field.",
                 "index",
                 engine => (Func<int, string>)(index => GetField(index - 1).Unit));
 
-            SimhubHelper.AddNCalcFunction("dashfielddatacolorprimary",
-                "Returns the primary color of the data field of the specified field.",
+            SimhubHelper.AddNCalcFunction($"dashfield{FIELD_TYPE_NAME.ToLower()}colorprimary",
+                "Returns the primary color of the field of the specified field.",
                 "index",
                 engine => (Func<int, string>)(index => GetField(index - 1).Color.Primary));
 
-            SimhubHelper.AddNCalcFunction("dashfielddatacoloraccent",
-                "Returns the accent color of the data field of the specified field.",
+            SimhubHelper.AddNCalcFunction($"dashfield{FIELD_TYPE_NAME.ToLower()}coloraccent",
+                "Returns the accent color of the field of the specified field.",
                 "index",
                 engine => (Func<int, string>)(index => GetField(index - 1).Color.Accent));
+
         }
+        internal ObservableCollection<IDataFieldExtension> SelectedFields { get; private set; } = new ObservableCollection<IDataFieldExtension>();
+        protected readonly ObservableCollection<FieldComponent<IDataFieldExtension, IDataField>> allFields = new ObservableCollection<FieldComponent<IDataFieldExtension, IDataField>>();
+        internal IList<FieldComponent<IDataFieldExtension, IDataField>> AllFields { get => allFields; }
+
+        internal event SelectedFieldsChangedEventHandler SelectedFieldsChanged;
 
         private void SelectedFields_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
@@ -69,10 +61,36 @@ namespace DashMenu.FieldManager
             {
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
-                    pluginManager.SetPropertyValue(PropertyNames.AmountOfFields, pluginType, SelectedFields.Count);
+                    pluginManager.SetPropertyValue(AmountOfFieldName, pluginType, SelectedFields.Count);
                     break;
                 default:
                     break;
+            }
+        }
+        protected IDataField GetField(int index)
+        {
+            if (index < 0 || index >= SelectedFields.Count) return EmptyField.Field.Data;
+            return SelectedFields[index].Data;
+        }
+
+        public void UpdateSelectedFields(Settings.ICarFields carFields)
+        {
+            UpdateSelectedFields(carFields.DisplayedDataFields);
+        }
+
+        protected void UpdateSelectedFields(IList<string> selectedFields)
+        {
+            SelectedFields.Clear();
+            for (int i = 0; i < selectedFields.Count; i++)
+            {
+                string fieldName = selectedFields[i];
+                //Check if DisplayField is valid
+                if (string.IsNullOrEmpty(fieldName) || !AllFields.Any(x => fieldName == x.FullName) || !AllFields.First(x => fieldName == x.FullName).Enabled)
+                {
+                    selectedFields[i] = EmptyField.FullName;
+                }
+
+                SelectedFields.Add(AllFields.First(x => x.FullName == selectedFields[i]).FieldExtension);
             }
         }
 
@@ -106,7 +124,7 @@ namespace DashMenu.FieldManager
             }
 
             //Make sure that empty field can't be disabled.
-            if (fieldInstance.GetType().FullName == EmptyDataField.FullName) fieldSetting.Enabled = true;
+            if (fieldInstance.GetType().FullName == EmptyField.FullName) fieldSetting.Enabled = true;
 
             fieldSetting.Namespace = type.Namespace;
             fieldSetting.Name = type.Name;
@@ -123,38 +141,17 @@ namespace DashMenu.FieldManager
             fieldSetting.SupportedGames = fieldInstance.SupportedGames;
             fieldSetting.Description = fieldInstance.Description;
 
-            allFields.Add(new DataFieldComponent(fieldInstance) { Enabled = fieldSetting.Enabled });
+            AllFields.Add(new FieldComponent<IDataFieldExtension, IDataField>(fieldInstance) { Enabled = fieldSetting.Enabled });
 
             UpdateNameOverride(fieldSetting);
             UpdateColorOveride(fieldSetting);
             UpdateDecimalOverride(fieldSetting);
         }
 
-        public void UpdateSelectedFields(Settings.ICarFields carFields)
-        {
-            UpdateSelectedFields(carFields.DisplayedDataFields);
-        }
-
-        private void UpdateSelectedFields(IList<string> selectedFields)
-        {
-            SelectedFields.Clear();
-            for (int i = 0; i < selectedFields.Count; i++)
-            {
-                string fieldName = selectedFields[i];
-                //Check if DisplayField is valid
-                if (string.IsNullOrEmpty(fieldName) || !allFields.Any(x => fieldName == x.FullName) || !allFields.First(x => fieldName == x.FullName).Enabled)
-                {
-                    selectedFields[i] = EmptyDataField.FullName;
-                }
-
-                SelectedFields.Add(allFields.First(x => x.FullName == selectedFields[i]).FieldExtension);
-            }
-        }
-
         public void AddField()
         {
             if (SelectedFields.Count >= 20) return;
-            SelectedFields.Add(allFields.First(x => x.FullName == EmptyDataField.FullName).FieldExtension);
+            SelectedFields.Add(AllFields.First(x => x.FullName == EmptyField.FullName).FieldExtension);
             SelectedFieldsChanged?.Invoke(SelectedFields.Select(field => field.GetType().FullName).ToList());
         }
 
@@ -167,7 +164,7 @@ namespace DashMenu.FieldManager
 
         public void DayNightModeChanged(IDictionary<string, Settings.DataField> settings)
         {
-            foreach (var field in allFields)
+            foreach (var field in AllFields)
             {
                 if (!(settings.TryGetValue(field.GetType().FullName, out var fieldSettings))) continue;
                 UpdateColorOveride(fieldSettings);
@@ -176,8 +173,7 @@ namespace DashMenu.FieldManager
 
         internal void UpdateProperties(Settings.DataField settings)
         {
-            var field = allFields.First(x => x.FullName == settings.FullName);
-            if (field == null) return;
+            var field = AllFields.First(x => x.FullName == settings.FullName) ?? throw new ArgumentException($"Field not found! {settings.FullName}");
 
             field.Enabled = settings.Enabled;
             if (SelectedFields.Any(x => x.GetType().FullName == field.FullName))
@@ -186,7 +182,7 @@ namespace DashMenu.FieldManager
                 {
                     if (!field.Enabled && SelectedFields[i].GetType().FullName == field.FullName)
                     {
-                        SelectedFields[i] = allFields.First(x => x.FullName == EmptyDataField.FullName).FieldExtension;
+                        SelectedFields[i] = AllFields.First(x => x.FullName == EmptyField.FullName).FieldExtension;
                     }
                 }
             }
@@ -194,8 +190,7 @@ namespace DashMenu.FieldManager
 
         internal void UpdateColorOveride(Settings.DataField settings)
         {
-            var field = allFields.First(x => x.FullName == settings.FullName);
-            if (field == null) return;
+            var field = AllFields.First(x => x.FullName == settings.FullName) ?? throw new ArgumentException($"Field not found! {settings.FullName}");
 
             if (!settings.Override.DayNightColorScheme.DayModeColor.Override)
             {
@@ -218,8 +213,7 @@ namespace DashMenu.FieldManager
 
         internal void UpdateDecimalOverride(Settings.DataField settings)
         {
-            var field = allFields.First(x => x.FullName == settings.FullName);
-            if (field == null) return;
+            var field = AllFields.First(x => x.FullName == settings.FullName) ?? throw new ArgumentException($"Field not found! {settings.FullName}");
 
             field.FieldExtension.Data.Decimal = settings.Override.Decimal.Override
                 ? settings.Override.Decimal.OverrideValue
@@ -228,12 +222,7 @@ namespace DashMenu.FieldManager
 
         internal void UpdateNameOverride(Settings.DataField settings)
         {
-            var field = allFields.First(x => x.FullName == settings.FullName);
-            if (field == null)
-            {
-                SimHub.Logging.Current.Error($"{settings.FullName} field not found in loaded fields.");
-                return;
-            }
+            var field = AllFields.First(x => x.FullName == settings.FullName) ?? throw new ArgumentException($"Field not found! {settings.FullName}");
 
             field.FieldExtension.Data.Name = settings.Override.Name.Override
                 ? settings.Override.Name.OverrideValue
@@ -245,18 +234,18 @@ namespace DashMenu.FieldManager
             if (index < 0 || index > SelectedFields.Count - 1) throw new ArgumentOutOfRangeException($"{nameof(index)}");
 
             string fieldName = SelectedFields[index].GetType().FullName;
-            int allFieldIndex = allFields.IndexOf(allFields.First(x => x.FullName == fieldName));
+            int allFieldIndex = AllFields.IndexOf(AllFields.First(x => x.FullName == fieldName));
 
             do
             {
                 allFieldIndex++;
-                if (allFieldIndex >= allFields.Count)
+                if (allFieldIndex >= AllFields.Count)
                 {
                     allFieldIndex = 0;
                 }
-            } while (!allFields[allFieldIndex].Enabled);
+            } while (!AllFields[allFieldIndex].Enabled);
 
-            SelectedFields[index] = allFields[allFieldIndex].FieldExtension;
+            SelectedFields[index] = AllFields[allFieldIndex].FieldExtension;
 
             SelectedFieldsChanged?.Invoke(SelectedFields.Select(field => field.GetType().FullName).ToList());
         }
@@ -266,25 +255,19 @@ namespace DashMenu.FieldManager
             if (index < 0 || index > SelectedFields.Count - 1) throw new ArgumentOutOfRangeException($"{nameof(index)}");
 
             string fieldName = SelectedFields[index].GetType().FullName;
-            int allFieldIndex = allFields.IndexOf(allFields.First(x => x.FullName == fieldName));
+            int allFieldIndex = AllFields.IndexOf(AllFields.First(x => x.FullName == fieldName));
 
             do
             {
                 allFieldIndex--;
                 if (allFieldIndex < 0)
                 {
-                    allFieldIndex = allFields.Count - 1;
+                    allFieldIndex = AllFields.Count - 1;
                 }
-            } while (!allFields[allFieldIndex].Enabled);
-            SelectedFields[index] = allFields[allFieldIndex].FieldExtension;
+            } while (!AllFields[allFieldIndex].Enabled);
+            SelectedFields[index] = AllFields[allFieldIndex].FieldExtension;
 
             SelectedFieldsChanged?.Invoke(SelectedFields.Select(field => field.GetType().FullName).ToList());
-        }
-
-        private IDataField GetField(int index)
-        {
-            if (index < 0 || index >= SelectedFields.Count) return EmptyDataField.Field.Data;
-            return SelectedFields[index].Data;
         }
     }
 }

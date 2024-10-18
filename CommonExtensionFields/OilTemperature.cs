@@ -4,7 +4,7 @@ using SimHub.Plugins;
 
 namespace CommonExtensionFields
 {
-    public class OilTemperature : FieldExtensionBase<IGaugeField>, IGaugeFieldExtension
+    public class OilTemperature : FieldExtensionBase<IGaugeField>, IDataFieldExtension, IGaugeFieldExtension
     {
         public OilTemperature(string gameName) : base(gameName)
         {
@@ -20,7 +20,7 @@ namespace CommonExtensionFields
         }
 
         public string Description => "Oil temperature. EOT stands for Engine oil temperature.";
-        IDataField IDataFieldExtension.Data { get => Data; set => Data = (IGaugeField)value; }
+        IDataField IFieldExtensionBasic<IDataField>.Data { get => Data; set => Data = (IGaugeField)value; }
 
         public void Update(PluginManager pluginManager, ref GameData data)
         {

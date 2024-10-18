@@ -4,7 +4,7 @@ using SimHub.Plugins;
 
 namespace CommonExtensionFields
 {
-    public class WaterTemperature : FieldExtensionBase<IGaugeField>, IGaugeFieldExtension
+    public class WaterTemperature : FieldExtensionBase<IGaugeField>, IDataFieldExtension, IGaugeFieldExtension
     {
         public WaterTemperature(string gameName) : base(gameName)
         {
@@ -21,7 +21,7 @@ namespace CommonExtensionFields
 
         public string Description => "Water temperature.";
 
-        IDataField IDataFieldExtension.Data { get => Data; set => Data = (IGaugeField)value; }
+        IDataField IFieldExtensionBasic<IDataField>.Data { get => Data; set => Data = (IGaugeField)value; }
 
         public void Update(PluginManager pluginManager, ref GameData data)
         {

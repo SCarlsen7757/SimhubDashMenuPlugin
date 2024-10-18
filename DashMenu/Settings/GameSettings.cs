@@ -112,11 +112,11 @@ namespace DashMenu.Settings
         }
         private IList<string> DefaultDataFieldsList()
         {
-            return new List<string>(Enumerable.Repeat(EmptyDataField.FullName, DefaultAmountOfDataFields));
+            return new List<string>(Enumerable.Repeat(EmptyField.FullName, DefaultAmountOfDataFields));
         }
         private IList<string> DefaultGaugeFieldsList()
         {
-            return new List<string>(Enumerable.Repeat(EmptyGaugeField.FullName, DefaultAmountOfGaugeFields));
+            return new List<string>(Enumerable.Repeat(EmptyField.FullName, DefaultAmountOfGaugeFields));
         }
         #endregion
 
@@ -203,7 +203,15 @@ namespace DashMenu.Settings
                 switch (e.PropertyName)
                 {
                     case nameof(overrideProperties.Name):
-                        DataFieldOverrideNameSettingsChanged?.Invoke(overrideProperties.parent);
+                        try
+                        {
+                            DataFieldOverrideNameSettingsChanged?.Invoke(overrideProperties.parent);
+                        }
+                        catch (ArgumentException)
+                        {
+
+                            throw;
+                        }
                         return;
                     case nameof(overrideProperties.Decimal):
                         DataFieldOverrideDecimalSettingsChanged?.Invoke(overrideProperties.parent);
@@ -275,6 +283,15 @@ namespace DashMenu.Settings
                         item.Value.Override.ColorSchemePropertyChanged += DataField_PropertyChanged;
                     }
                     break;
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
+                    foreach (KeyValuePair<string, DataField> item in e.OldItems)
+                    {
+                        item.Value.PropertyChanged -= DataField_PropertyChanged;
+                        item.Value.Override.NamePropertyChanged -= DataField_PropertyChanged;
+                        item.Value.Override.DecimalPropertyChanged -= DataField_PropertyChanged;
+                        item.Value.Override.ColorSchemePropertyChanged -= DataField_PropertyChanged;
+                    }
+                    break;
                 default:
                     throw new NotImplementedException();
 
@@ -295,6 +312,18 @@ namespace DashMenu.Settings
                         item.Value.Override.MaximumPropertyChanged += GaugeField_PropertyChanged;
                         item.Value.Override.MinimumPropertyChanged += GaugeField_PropertyChanged;
                         item.Value.Override.StepPropertyChanged += GaugeField_PropertyChanged;
+                    }
+                    break;
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
+                    foreach (KeyValuePair<string, GaugeField> item in e.OldItems)
+                    {
+                        item.Value.PropertyChanged -= GaugeField_PropertyChanged;
+                        item.Value.Override.NamePropertyChanged -= GaugeField_PropertyChanged;
+                        item.Value.Override.DecimalPropertyChanged -= GaugeField_PropertyChanged;
+                        item.Value.Override.ColorSchemePropertyChanged -= GaugeField_PropertyChanged;
+                        item.Value.Override.MaximumPropertyChanged -= GaugeField_PropertyChanged;
+                        item.Value.Override.MinimumPropertyChanged -= GaugeField_PropertyChanged;
+                        item.Value.Override.StepPropertyChanged -= GaugeField_PropertyChanged;
                     }
                     break;
                 default:

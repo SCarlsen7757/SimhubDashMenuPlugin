@@ -4,7 +4,7 @@ using SimHub.Plugins;
 
 namespace CommonExtensionFields
 {
-    public class FuelVolume : FieldExtensionBase<IGaugeField>, IGaugeFieldExtension
+    public class FuelVolume : FieldExtensionBase<IGaugeField>, IDataFieldExtension, IGaugeFieldExtension
     {
         public FuelVolume(string gameName) : base(gameName)
         {
@@ -21,7 +21,7 @@ namespace CommonExtensionFields
         }
 
         public string Description => "Fuel in liters or gallons depending on what Simhub is configured to display.";
-        IDataField IDataFieldExtension.Data { get => Data; set => Data = (IGaugeField)value; }
+        IDataField IFieldExtensionBasic<IDataField>.Data { get => Data; set => Data = (IGaugeField)value; }
 
         public void Update(PluginManager pluginManager, ref GameData data)
         {

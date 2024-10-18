@@ -1,10 +1,6 @@
 ﻿namespace DashMenu.Data
 {
-    public interface IDataFieldExtension : IFieldExtensionBasic
+    public interface IDataFieldExtension : IFieldExtensionBasic<IDataField>
     {
-        /// <summary>
-        /// Field data.
-        /// </summary>
-        IDataField Data { get; set; }
     }
 }

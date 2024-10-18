@@ -4,7 +4,7 @@ using SimHub.Plugins;
 
 namespace CommonExtensionFields
 {
-    public class Clutch : FieldExtensionBase<IGaugeField>, IGaugeFieldExtension
+    public class Clutch : FieldExtensionBase<IGaugeField>, IDataFieldExtension, IGaugeFieldExtension
     {
         public Clutch(string gameName) : base(gameName)
         {
@@ -22,7 +22,7 @@ namespace CommonExtensionFields
         }
 
         public string Description => "Clutch position. CPP stands for Clutch Pedal Position.";
-        IDataField IDataFieldExtension.Data { get => Data; set => Data = (IGaugeField)value; }
+        IDataField IFieldExtensionBasic<IDataField>.Data { get => Data; set => Data = (IGaugeField)value; }
 
         public void Update(PluginManager pluginManager, ref GameData data)
         {

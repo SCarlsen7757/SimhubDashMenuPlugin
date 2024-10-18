@@ -84,10 +84,11 @@ namespace DashMenu
             DataFieldManager = new DataFieldManager(pluginManager, GetType());
             GaugeFieldManager = new GaugeFieldManager(pluginManager, GetType());
 
-            DataFieldManager.AddExtensionField(typeof(EmptyDataField), Settings.GetCurrentGameSettings().DataFields);
-            GaugeFieldManager.AddExtensionField(typeof(EmptyGaugeField), Settings.GetCurrentGameSettings().GaugeFields);
+            DataFieldManager.AddExtensionField(typeof(EmptyField), Settings.GetCurrentGameSettings().DataFields);
+            GaugeFieldManager.AddExtensionField(typeof(EmptyField), Settings.GetCurrentGameSettings().GaugeFields);
 
             GetCustomFields();
+            SettingsExtensionFieldsCleanUp();
 
             MenuConfiguration.ChangeDataFieldNext += DataFieldManager.NextSelectedField;
             MenuConfiguration.ChangeDataFieldPrev += DataFieldManager.PrevSelectedField;
@@ -172,6 +173,25 @@ namespace DashMenu
             this.SaveCommonSettings("DashMenuSettings", Settings);
         }
 
+        public void SettingsExtensionFieldsCleanUp()
+        {
+            var gameSettings = Settings.GetCurrentGameSettings();
+
+            CleanUpFields(gameSettings.DataFields, DataFieldManager.AllFields.Select(x => x.FullName));
+            CleanUpFields(gameSettings.GaugeFields, GaugeFieldManager.AllFields.Select(x => x.FullName));
+        }
+
+        private void CleanUpFields<TSettingsField>(IDictionary<string, TSettingsField> fields, IEnumerable<string> allFieldNames)
+        {
+            var validFieldNames = new HashSet<string>(allFieldNames);
+
+            foreach (var field in fields.Keys.ToList())
+            {
+                if (validFieldNames.Contains(field)) continue;
+                fields.Remove(field);
+            }
+        }
+
         private int CurrentFieldTypeCount()
         {
             switch (MenuConfiguration.FieldType)
@@ -206,7 +226,7 @@ namespace DashMenu
                 Directory.CreateDirectory(rootDirectory);
                 yield break;
             }
-            Type interfaceType = typeof(IFieldExtensionBasic);
+            Type interfaceType = typeof(IDashMenuPluginExtension);
 
             // Iterate through each DLL file
             foreach (string dllFile in dllFiles)

@@ -20,12 +20,12 @@ namespace DashMenu.UI
             if (DataContext is Settings.GaugeField gaugeField)
             {
                 //Can't disable empty gauge field extension.
-                EnabledCheckBox.IsEnabled = !(gaugeField.FullName == EmptyGaugeField.FullName);
+                EnabledCheckBox.IsEnabled = !(gaugeField.FullName == EmptyField.FullName);
             }
             else if (DataContext is Settings.DataField dataField)
             {
                 //Can't disable empty data field extension.
-                EnabledCheckBox.IsEnabled = !(dataField.FullName == EmptyDataField.FullName);
+                EnabledCheckBox.IsEnabled = !(dataField.FullName == EmptyField.FullName);
             }
         }
     }

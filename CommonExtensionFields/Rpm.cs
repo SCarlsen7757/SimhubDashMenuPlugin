@@ -4,7 +4,7 @@ using SimHub.Plugins;
 
 namespace CommonExtensionFields
 {
-    public class Rpm : FieldExtensionBase<IGaugeField>, IGaugeFieldExtension
+    public class Rpm : FieldExtensionBase<IGaugeField>, IDataFieldExtension, IGaugeFieldExtension
     {
         public Rpm(string gameName) : base(gameName)
         {
@@ -20,7 +20,7 @@ namespace CommonExtensionFields
 
         public string Description => "Engine RPM.";
 
-        IDataField IDataFieldExtension.Data { get => Data; set => Data = (IGaugeField)value; }
+        IDataField IFieldExtensionBasic<IDataField>.Data { get => Data; set => Data = (IGaugeField)value; }
 
         public void Update(PluginManager pluginManager, ref GameData data)
         {
