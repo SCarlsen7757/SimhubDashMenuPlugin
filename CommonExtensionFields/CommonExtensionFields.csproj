@@ -37,9 +37,9 @@
       <HintPath>Libs\GameReaderCommon.dll</HintPath>
     </Reference>
     <Reference Include="SimHub.Plugins, Version=1.0.9034.18950, Culture=neutral, processorArchitecture=MSIL">
-		<SpecificVersion>False</SpecificVersion>
-		<HintPath>Libs\SimHub.Plugins.dll</HintPath>
-	</Reference>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Libs\SimHub.Plugins.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -77,16 +77,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Libs\GameReaderCommon.dll" />
-    <Content Include="Libs\log4net.dll" />
-    <Content Include="Libs\SimHub.Logging.dll" />
     <Content Include="Libs\SimHub.Plugins.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>if $(ConfigurationName)==Debug (
 copy /Y "$(SimhubDir)GameReaderCommon.dll" "$(ProjectDir)Libs\GameReaderCommon.dll"
-copy /Y "$(SimhubDir)log4net.dll" "$(ProjectDir)Libs\log4net.dll"
-copy /Y "$(SimhubDir)SimHub.Logging.dll" "$(ProjectDir)Libs\SimHub.Logging.dll"
 copy /Y "$(SimhubDir)SimHub.Plugins.dll" "$(ProjectDir)Libs\SimHub.Plugins.dll"
 )</PreBuildEvent>
   </PropertyGroup>
