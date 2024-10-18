@@ -50,8 +50,8 @@ namespace DashMenu.FieldManager
 
         }
         internal ObservableCollection<IDataFieldExtension> SelectedFields { get; private set; } = new ObservableCollection<IDataFieldExtension>();
-        protected readonly ObservableCollection<FieldComponent<IDataFieldExtension, IDataField>> allFields = new ObservableCollection<FieldComponent<IDataFieldExtension, IDataField>>();
-        internal IList<FieldComponent<IDataFieldExtension, IDataField>> AllFields { get => allFields; }
+        protected readonly ObservableCollection<IFieldComponent<IDataFieldExtension, IDataField>> allFields = new ObservableCollection<IFieldComponent<IDataFieldExtension, IDataField>>();
+        internal ObservableCollection<IFieldComponent<IDataFieldExtension, IDataField>> AllFields { get => allFields; }
 
         internal event SelectedFieldsChangedEventHandler SelectedFieldsChanged;
 
@@ -129,6 +129,7 @@ namespace DashMenu.FieldManager
             fieldSetting.Namespace = type.Namespace;
             fieldSetting.Name = type.Name;
             fieldSetting.FullName = type.FullName;
+
             fieldSetting.IsDecimal = fieldInstance.Data.IsDecimalNumber;
 
             //Get default values before they are overriden

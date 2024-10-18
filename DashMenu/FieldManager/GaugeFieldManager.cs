@@ -65,8 +65,8 @@ namespace DashMenu.FieldManager
         }
 
         internal ObservableCollection<IGaugeFieldExtension> SelectedFields { get; private set; } = new ObservableCollection<IGaugeFieldExtension>();
-        protected readonly ObservableCollection<FieldComponent<IGaugeFieldExtension, IGaugeField>> allFields = new ObservableCollection<FieldComponent<IGaugeFieldExtension, IGaugeField>>();
-        internal IList<FieldComponent<IGaugeFieldExtension, IGaugeField>> AllFields { get => allFields; }
+        protected readonly ObservableCollection<IFieldComponent<IGaugeFieldExtension, IGaugeField>> allFields = new ObservableCollection<IFieldComponent<IGaugeFieldExtension, IGaugeField>>();
+        internal ObservableCollection<IFieldComponent<IGaugeFieldExtension, IGaugeField>> AllFields { get => allFields; }
 
         internal event SelectedFieldsChangedEventHandler SelectedFieldsChanged;
 
@@ -144,6 +144,7 @@ namespace DashMenu.FieldManager
             fieldSetting.Namespace = type.Namespace;
             fieldSetting.Name = type.Name;
             fieldSetting.FullName = type.FullName;
+
             fieldSetting.IsDecimal = fieldInstance.Data.IsDecimalNumber;
             fieldSetting.IsRangeLocked = fieldInstance.Data.IsRangeLocked;
             fieldSetting.IsStepLocked = fieldInstance.Data.IsStepLocked;

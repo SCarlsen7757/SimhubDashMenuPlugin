@@ -1,5 +1,4 @@
 ﻿using DashMenu.Data;
-using DashMenu.FieldManager;
 using GameReaderCommon;
 using SimHub.Plugins;
 using SimHub.Plugins.BrightnessControl;
@@ -22,8 +21,9 @@ namespace DashMenu
 
         private Settings.Settings Settings { get; set; }
         private MenuConfiguration MenuConfiguration { get; set; }
-        private DataFieldManager DataFieldManager { get; set; }
-        private GaugeFieldManager GaugeFieldManager { get; set; }
+        private FieldManager.DataFieldManager DataFieldManager { get; set; }
+        private FieldManager.GaugeFieldManager GaugeFieldManager { get; set; }
+        private FieldManager.AlertManager AlertManager { get; set; }
 
         public string PluginName
         {
@@ -81,14 +81,17 @@ namespace DashMenu
 
             LoadSettings();
 
-            DataFieldManager = new DataFieldManager(pluginManager, GetType());
-            GaugeFieldManager = new GaugeFieldManager(pluginManager, GetType());
+            DataFieldManager = new FieldManager.DataFieldManager(pluginManager, GetType());
+            GaugeFieldManager = new FieldManager.GaugeFieldManager(pluginManager, GetType());
+            AlertManager = new FieldManager.AlertManager();
 
             DataFieldManager.AddExtensionField(typeof(EmptyField), Settings.GetCurrentGameSettings().DataFields);
             GaugeFieldManager.AddExtensionField(typeof(EmptyField), Settings.GetCurrentGameSettings().GaugeFields);
 
             GetCustomFields();
             SettingsExtensionFieldsCleanUp();
+
+            AlertManager.AddAlerts(DataFieldManager.AllFields, Settings.GetCurrentGameSettings().Alerts);
 
             MenuConfiguration.ChangeDataFieldNext += DataFieldManager.NextSelectedField;
             MenuConfiguration.ChangeDataFieldPrev += DataFieldManager.PrevSelectedField;

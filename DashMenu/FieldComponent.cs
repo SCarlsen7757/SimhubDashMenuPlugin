@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace DashMenu
 {
-    internal class FieldComponent<TFieldExtension, TField> : INotifyPropertyChanged
+    internal class FieldComponent<TFieldExtension, TField> : IFieldComponent<TFieldExtension, TField>
         where TFieldExtension : class, IFieldExtensionBasic<TField>
         where TField : class, IDataField
     {

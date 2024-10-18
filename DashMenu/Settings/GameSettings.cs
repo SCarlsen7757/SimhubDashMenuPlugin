@@ -16,6 +16,7 @@ namespace DashMenu.Settings
         {
             DataFields.CollectionChanged += DataFields_CollectionChanged;
             GaugeFields.CollectionChanged += GaugeFields_CollectionChanged;
+            //TODO: Add Alert Collection changed.
         }
 
         #region Default amount of fields
@@ -185,14 +186,20 @@ namespace DashMenu.Settings
         public event GaugeFieldSettingsChangedEventHandler GaugeFieldOverrideRangeSettingsChanged;
         public event GaugeFieldSettingsChangedEventHandler GaugeFieldOverrideStepSettingsChanged;
 
+        //TODO: Make event when alert or datafield enabled property have changed.
+
         /// <summary>
-        /// All data fields. Used for enabling and disabling the fields to be able to select them.
+        /// All data fields. Used for enabling and disabling the fields. To be able to select them.
         /// </summary> 
         public ObservableDictionary<string, DataField> DataFields { get; set; } = new ObservableDictionary<string, DataField>();
         /// <summary>
-        /// All gauge fields. Used for enabling and disabling the fields to be able to select them.
+        /// All gauge fields. Used for enabling and disabling the fields. To be able to select them.
         /// </summary>
         public ObservableDictionary<string, GaugeField> GaugeFields { get; set; } = new ObservableDictionary<string, GaugeField>();
+        /// <summary>
+        /// All alerts. Used for enabling and disabling the alert. To be able to be shown.
+        /// </summary>
+        public ObservableDictionary<string, Alert> Alerts { get; set; } = new ObservableDictionary<string, Alert>();
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -209,7 +216,6 @@ namespace DashMenu.Settings
                         }
                         catch (ArgumentException)
                         {
-
                             throw;
                         }
                         return;
@@ -231,7 +237,6 @@ namespace DashMenu.Settings
             {
                 throw new NotImplementedException(e.PropertyName);
             }
-
         }
         private void GaugeField_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -267,7 +272,6 @@ namespace DashMenu.Settings
             {
                 throw new NotImplementedException(e.PropertyName);
             }
-
         }
         private void DataFields_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
@@ -294,7 +298,6 @@ namespace DashMenu.Settings
                     break;
                 default:
                     throw new NotImplementedException();
-
             }
         }
         private void GaugeFields_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)

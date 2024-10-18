@@ -106,9 +106,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DashMenuPlugin.cs" />
+    <Compile Include="Data\AlertBase.cs" />
     <Compile Include="Data\ColorScheme.cs" />
     <Compile Include="Data\FieldExtensionBase.cs" />
     <Compile Include="Data\GaugeField.cs" />
+    <Compile Include="Data\IAlert.cs" />
     <Compile Include="Data\IDashMenuPluginExtension.cs" />
     <Compile Include="Data\IDataField.cs" />
     <Compile Include="Data\IFieldExtensionBasic.cs" />
@@ -120,11 +122,13 @@
     <Compile Include="Data\IDataFieldExtension.cs" />
     <Compile Include="Extensions\SimhubHelper.cs" />
     <Compile Include="FieldComponent.cs" />
+    <Compile Include="FieldManager\AlertManager.cs" />
     <Compile Include="FieldManager\DataFieldManager.cs" />
     <Compile Include="FieldManager\FieldManagerBase.cs" />
     <Compile Include="FieldManager\GaugeFieldManager.cs" />
     <Compile Include="FieldManager\IFieldManager.cs" />
     <Compile Include="FieldType.cs" />
+    <Compile Include="IFieldComponent.cs" />
     <Compile Include="MenuConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -132,12 +136,14 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Alert.cs" />
     <Compile Include="Settings\ColorSchemePropertyOverride.cs" />
     <Compile Include="Settings\DayNightColorScheme.cs" />
     <Compile Include="Settings\CarFields.cs" />
     <Compile Include="Settings\GameSettings.cs" />
     <Compile Include="Settings\DataField.cs" />
     <Compile Include="Settings\GaugeField.cs" />
+    <Compile Include="Settings\IBasicSettings.cs" />
     <Compile Include="Settings\ICarFields.cs" />
     <Compile Include="Settings\PropertyOverride.cs" />
     <Compile Include="Settings\Settings.cs" />

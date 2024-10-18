@@ -1,23 +1,20 @@
 ﻿using System;
+using System.ComponentModel;
 
 namespace DashMenu.Data
 {
-    public abstract class FieldExtensionBase<T> where T : IDataField
+    public abstract class FieldExtensionBase<TField>
+        where TField : IDataField, INotifyPropertyChanged
     {
         protected readonly string gameName = string.Empty;
 
-        // Default constructor throws an exception, enforcing the other constructor to be used.
-        public FieldExtensionBase()
-        {
-            throw new NotImplementedException("Use the other constructor. The game name is required.");
-        }
         protected FieldExtensionBase(string gameName)
         {
             this.gameName = gameName ?? throw new ArgumentNullException(nameof(gameName));
             isGameSupported = GameSupported(gameName);
         }
 
-        public T Data { get; set; }
+        public TField Data { get; set; }
 
         protected virtual bool GameSupported(string gameName) => true;
 

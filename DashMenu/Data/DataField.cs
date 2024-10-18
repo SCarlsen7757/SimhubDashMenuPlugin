@@ -1,33 +1,65 @@
-﻿namespace DashMenu.Data
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
+
+namespace DashMenu.Data
 {
-    /// <summary>
-    /// Data type to be used in the dash. 
-    /// </summary>
     public class DataField : IDataField
     {
-        /// <summary>
-        /// Name to be shown in the data field.
-        /// </summary>
-        public string Name { get; set; } = string.Empty;
-        /// <summary>
-        /// Value to be shown in the data field.
-        /// </summary>
-        public string Value { get; set; } = "-";
-        /// <summary>
-        /// Unit of the value.
-        /// </summary>
-        public string Unit { get; set; } = string.Empty;
-        /// <summary>
-        /// Is value a Decimal number
-        /// </summary>
+        private string name = string.Empty;
+
+        public string Name
+        {
+            get => name;
+            set
+            {
+                if (name == value) return;
+                name = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string @value = "-";
+
+        public string Value
+        {
+            get => @value;
+            set
+            {
+                if (this.@value == value) return;
+                this.@value = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string unit = string.Empty;
+
+        public string Unit
+        {
+            get => unit;
+            set
+            {
+                if (unit == value) return;
+                unit = value;
+                OnPropertyChanged();
+            }
+        }
+
         public bool IsDecimalNumber { get; set; } = false;
-        /// <summary>
-        /// Number of decimal of the value is a decimal number.
-        /// </summary>
-        public int Decimal { get; set; } = 0;
-        /// <summary>
-        /// Color to be shown in the data field.
-        /// </summary>
+
+        public int @decimal = 0;
+
+        public int Decimal
+        {
+            get => @decimal; set
+            {
+                if (this.@decimal == value) return;
+                @decimal = value;
+                OnPropertyChanged();
+            }
+        }
         public ColorScheme Color { get; set; } = new ColorScheme();
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

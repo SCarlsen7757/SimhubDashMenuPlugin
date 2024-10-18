@@ -1,9 +1,8 @@
-﻿namespace DashMenu.Data
+﻿using System.ComponentModel;
+
+namespace DashMenu.Data
 {
-    /// <summary>
-    /// Interface for field data.
-    /// </summary>
-    public interface IDataField
+    public interface IDataField : INotifyPropertyChanged
     {
         ColorScheme Color { get; set; }
         int Decimal { get; set; }
