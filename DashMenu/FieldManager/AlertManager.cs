@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 
 namespace DashMenu.FieldManager
@@ -41,7 +42,7 @@ namespace DashMenu.FieldManager
             }
         }
 
-        internal void UpdateSelectedAlerts(IDictionary<string, Settings.DataField> dataFieldsSettings, IDictionary<string, Settings.Alert> alertsSettings)
+        internal void UpdateSelectedAlerts(IDictionary<string, Settings.IDataField> dataFieldsSettings, IDictionary<string, Settings.IAlert> alertsSettings)
         {
             foreach (var key in alertsSettings.Keys)
             {
@@ -58,7 +59,22 @@ namespace DashMenu.FieldManager
             }
         }
 
-        internal void UpdateProperties(Settings.DataField dataFieldSettings, Settings.Alert alertSettings)
+        internal void UpdateProperties(Settings.IDataField dataFieldSettings, Settings.IAlert alertSettings, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(alertSettings.Enabled):
+                    UpdateProperties(dataFieldSettings, alertSettings);
+                    return;
+                case nameof(alertSettings.ShowTimeDuration):
+                    UpdateShowTimeDuration(alertSettings);
+                    return;
+                default:
+                    break;
+            }
+        }
+
+        internal void UpdateProperties(Settings.IDataField dataFieldSettings, Settings.IAlert alertSettings)
         {
             var field = AllAlerts.First(x => x.FullName == alertSettings.FullName);
             if (field == null) return;
@@ -70,11 +86,10 @@ namespace DashMenu.FieldManager
             else
             {
                 SelectedAlerts.Remove((IAlert<IDataField>)AllAlerts.First(x => x.FullName == field.FullName).FieldExtension);
-
             }
         }
 
-        internal void UpdateShowTimeDuration(Settings.Alert settings)
+        internal void UpdateShowTimeDuration(Settings.IAlert settings)
         {
             var field = AllAlerts.First(x => x.FullName == settings.FullName) ?? throw new ArgumentException($"Alert not found! {settings.FullName}");
             var fieldExtionsion = (IAlert<IDataField>)field.FieldExtension;

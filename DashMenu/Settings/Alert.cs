@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace DashMenu.Settings
 {
-    internal class Alert : INotifyPropertyChanged, IBasicSettings
+    internal class Alert : IAlert, INotifyPropertyChanged
     {
         [JsonIgnore]
         public string Description { get; internal set; }

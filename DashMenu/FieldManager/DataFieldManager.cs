@@ -1,16 +1,16 @@
 ﻿using DashMenu.Data;
 using DashMenu.Extensions;
-using DashMenu.Settings;
 using SimHub.Plugins;
 using SimHub.Plugins.BrightnessControl;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 
 namespace DashMenu.FieldManager
 {
-    internal class DataFieldManager : FieldManagerBase
+    internal class DataFieldManager : FieldManagerBase, IFieldManager<Settings.DataField>
     {
         private const string FIELD_TYPE_NAME = "Data";
         internal DataFieldManager(PluginManager pluginManager, Type pluginType) : base(pluginManager, pluginType, FIELD_TYPE_NAME)
@@ -117,9 +117,9 @@ namespace DashMenu.FieldManager
                 {
                     Enabled = true,
                 };
-                fieldSetting.Override.Name = new PropertyOverride<string>(fieldInstance.Data.Name);
-                fieldSetting.Override.Decimal = new PropertyOverride<int>(fieldInstance.Data.Decimal);
-                fieldSetting.Override.DayNightColorScheme = new DayNightColorScheme(fieldInstance.Data.Color);
+                fieldSetting.Override.Name = new Settings.PropertyOverride<string>(fieldInstance.Data.Name);
+                fieldSetting.Override.Decimal = new Settings.PropertyOverride<int>(fieldInstance.Data.Decimal);
+                fieldSetting.Override.DayNightColorScheme = new Settings.DayNightColorScheme(fieldInstance.Data.Color);
                 settings.Add(type.FullName, fieldSetting);
             }
 
@@ -172,7 +172,27 @@ namespace DashMenu.FieldManager
             }
         }
 
-        internal void UpdateProperties(Settings.DataField settings)
+        internal void UpdateProperties(Settings.IDataField settings, PropertyChangedEventArgs e)
+        {
+
+            switch (e.PropertyName)
+            {
+                case nameof(settings.Override.Name):
+                    UpdateNameOverride(settings);
+                    return;
+                case nameof(settings.Override.Decimal):
+                    UpdateDecimalOverride(settings);
+                    return;
+                case nameof(settings.Override.DayNightColorScheme):
+                    UpdateColorOveride(settings);
+                    return;
+                default:
+                    UpdateProperties(settings);
+                    return;
+            }
+        }
+
+        private void UpdateProperties(Settings.IDataField settings)
         {
             var field = AllFields.First(x => x.FullName == settings.FullName) ?? throw new ArgumentException($"Field not found! {settings.FullName}");
 
@@ -189,7 +209,7 @@ namespace DashMenu.FieldManager
             }
         }
 
-        internal void UpdateColorOveride(Settings.DataField settings)
+        private void UpdateColorOveride(Settings.IDataField settings)
         {
             var field = AllFields.First(x => x.FullName == settings.FullName) ?? throw new ArgumentException($"Field not found! {settings.FullName}");
 
@@ -212,7 +232,7 @@ namespace DashMenu.FieldManager
             field.FieldExtension.Data.Color = settings.Override.DayNightColorScheme.DayModeColor.OverrideValue;
         }
 
-        internal void UpdateDecimalOverride(Settings.DataField settings)
+        private void UpdateDecimalOverride(Settings.IDataField settings)
         {
             var field = AllFields.First(x => x.FullName == settings.FullName) ?? throw new ArgumentException($"Field not found! {settings.FullName}");
 
@@ -221,7 +241,7 @@ namespace DashMenu.FieldManager
                 : settings.Override.Decimal.DefaultValue;
         }
 
-        internal void UpdateNameOverride(Settings.DataField settings)
+        private void UpdateNameOverride(Settings.IDataField settings)
         {
             var field = AllFields.First(x => x.FullName == settings.FullName) ?? throw new ArgumentException($"Field not found! {settings.FullName}");
 

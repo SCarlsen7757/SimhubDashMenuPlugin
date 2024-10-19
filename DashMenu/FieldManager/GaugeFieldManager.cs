@@ -1,16 +1,16 @@
 ﻿using DashMenu.Data;
 using DashMenu.Extensions;
-using DashMenu.Settings;
 using SimHub.Plugins;
 using SimHub.Plugins.BrightnessControl;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 
 namespace DashMenu.FieldManager
 {
-    internal class GaugeFieldManager : FieldManagerBase
+    internal class GaugeFieldManager : FieldManagerBase, IFieldManager<Settings.GaugeField>
     {
         private const string FIELD_TYPE_NAME = "Gauge";
         internal GaugeFieldManager(PluginManager pluginManager, Type pluginType) : base(pluginManager, pluginType, FIELD_TYPE_NAME)
@@ -132,9 +132,9 @@ namespace DashMenu.FieldManager
                 {
                     Enabled = true,
                 };
-                fieldSetting.Override.Name = new PropertyOverride<string>(fieldInstance.Data.Name);
-                fieldSetting.Override.Decimal = new PropertyOverride<int>(fieldInstance.Data.Decimal);
-                fieldSetting.Override.DayNightColorScheme = new DayNightColorScheme(fieldInstance.Data.Color);
+                fieldSetting.Override.Name = new Settings.PropertyOverride<string>(fieldInstance.Data.Name);
+                fieldSetting.Override.Decimal = new Settings.PropertyOverride<int>(fieldInstance.Data.Decimal);
+                fieldSetting.Override.DayNightColorScheme = new Settings.DayNightColorScheme(fieldInstance.Data.Color);
                 settings.Add(type.FullName, fieldSetting);
             }
 
@@ -195,7 +195,35 @@ namespace DashMenu.FieldManager
             }
         }
 
-        internal void UpdateProperties(Settings.GaugeField settings)
+        internal void UpdateProperties(Settings.IGaugeField settings, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(settings.Override.Name):
+                    UpdateNameOverride(settings);
+                    return;
+                case nameof(settings.Override.Decimal):
+                    UpdateDecimalOverride(settings);
+                    return;
+                case nameof(settings.Override.DayNightColorScheme):
+                    UpdateColorOveride(settings);
+                    return;
+                case nameof(settings.Override.Maximum):
+                    UpdateMaximumOverride(settings);
+                    return;
+                case nameof(settings.Override.Minimum):
+                    UpdateMinimumOverride(settings);
+                    return;
+                case nameof(settings.Override.Step):
+                    UpdateStepOverride(settings);
+                    return;
+                default:
+                    UpdateProperties(settings);
+                    return;
+            }
+        }
+
+        private void UpdateProperties(Settings.IGaugeField settings)
         {
             var field = AllFields.First(x => x.FullName == settings.FullName) ?? throw new ArgumentException($"Field not found! {settings.FullName}");
 
@@ -212,7 +240,7 @@ namespace DashMenu.FieldManager
             }
         }
 
-        internal void UpdateColorOveride(Settings.GaugeField settings)
+        private void UpdateColorOveride(Settings.IGaugeField settings)
         {
             var field = AllFields.First(x => x.FullName == settings.FullName) ?? throw new ArgumentException($"Field not found! {settings.FullName}");
 
@@ -235,7 +263,7 @@ namespace DashMenu.FieldManager
             field.FieldExtension.Data.Color = settings.Override.DayNightColorScheme.DayModeColor.OverrideValue;
         }
 
-        internal void UpdateDecimalOverride(Settings.GaugeField settings)
+        private void UpdateDecimalOverride(Settings.IGaugeField settings)
         {
             var field = AllFields.First(x => x.FullName == settings.FullName) ?? throw new ArgumentException($"Field not found! {settings.FullName}");
 
@@ -244,7 +272,7 @@ namespace DashMenu.FieldManager
                 : settings.Override.Decimal.DefaultValue;
         }
 
-        internal void UpdateNameOverride(Settings.GaugeField settings)
+        private void UpdateNameOverride(Settings.IGaugeField settings)
         {
             var field = AllFields.First(x => x.FullName == settings.FullName) ?? throw new ArgumentException($"Field not found! {settings.FullName}");
 
@@ -253,7 +281,7 @@ namespace DashMenu.FieldManager
                 : settings.Override.Name.DefaultValue;
         }
 
-        internal void UpdateMaximumOverride(Settings.GaugeField settings)
+        private void UpdateMaximumOverride(Settings.IGaugeField settings)
         {
             var field = AllFields.First(x => x.FullName == settings.FullName) ?? throw new ArgumentException($"Field not found! {settings.FullName}");
 
@@ -262,7 +290,7 @@ namespace DashMenu.FieldManager
                 : settings.Override.Maximum.DefaultValue;
         }
 
-        internal void UpdateMinimumOverride(Settings.GaugeField settings)
+        private void UpdateMinimumOverride(Settings.IGaugeField settings)
         {
             var field = AllFields.First(x => x.FullName == settings.FullName) ?? throw new ArgumentException($"Field not found! {settings.FullName}");
 
@@ -271,7 +299,7 @@ namespace DashMenu.FieldManager
                 : settings.Override.Minimum.DefaultValue;
         }
 
-        internal void UpdateStepOverride(Settings.GaugeField settings)
+        private void UpdateStepOverride(Settings.IGaugeField settings)
         {
             var field = AllFields.First(x => x.FullName == settings.FullName) ?? throw new ArgumentException($"Field not found! {settings.FullName}");
 

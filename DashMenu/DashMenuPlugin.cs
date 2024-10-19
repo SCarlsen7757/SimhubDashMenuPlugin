@@ -111,17 +111,10 @@ namespace DashMenu
             gameSettings.CurrentCarFieldChanged += GaugeFieldManager.UpdateSelectedFields;
 
             gameSettings.DataFieldSettingsChanged += DataFieldManager.UpdateProperties;
-            gameSettings.DataFieldOverrideNameSettingsChanged += DataFieldManager.UpdateNameOverride;
-            gameSettings.DataFieldOverrideDecimalSettingsChanged += DataFieldManager.UpdateDecimalOverride;
-            gameSettings.DataFieldOverrideColorSchemeSettingsChanged += DataFieldManager.UpdateColorOveride;
 
             gameSettings.GaugeFieldSettingsChanged += GaugeFieldManager.UpdateProperties;
-            gameSettings.GaugeFieldOverrideNameSettingsChanged += GaugeFieldManager.UpdateNameOverride;
-            gameSettings.GaugeFieldOverrideDecimalSettingsChanged += GaugeFieldManager.UpdateDecimalOverride;
-            gameSettings.GaugeFieldOverrideColorSchemeSettingsChanged += GaugeFieldManager.UpdateColorOveride;
-            gameSettings.GaugeFieldOverrideRangeSettingsChanged += GaugeFieldManager.UpdateMaximumOverride;
-            gameSettings.GaugeFieldOverrideRangeSettingsChanged += GaugeFieldManager.UpdateMinimumOverride;
-            gameSettings.GaugeFieldOverrideStepSettingsChanged += GaugeFieldManager.UpdateStepOverride;
+
+            gameSettings.AlertSettingsChanged += AlertManager.UpdateProperties;
 
             pluginManager.AddAction<DashMenuPlugin>(ActionNames.ToggleConfigMode, (pm, a) => MenuConfiguration.ToggleConfigMode(pm));
             pluginManager.AddAction<DashMenuPlugin>(ActionNames.ChangeFieldType, (pm, a) => MenuConfiguration.ChangeFieldType());

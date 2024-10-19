@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace DashMenu.Settings
 {
-    internal class GaugeField : DataField
+    internal class GaugeField : DataField, IGaugeField
     {
         public GaugeField() : base()
         {

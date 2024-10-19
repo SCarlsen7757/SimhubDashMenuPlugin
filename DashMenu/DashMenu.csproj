@@ -143,8 +143,11 @@
     <Compile Include="Settings\GameSettings.cs" />
     <Compile Include="Settings\DataField.cs" />
     <Compile Include="Settings\GaugeField.cs" />
+    <Compile Include="Settings\IAlert.cs" />
     <Compile Include="Settings\IBasicSettings.cs" />
     <Compile Include="Settings\ICarFields.cs" />
+    <Compile Include="Settings\IDataField.cs" />
+    <Compile Include="Settings\IGaugeField.cs" />
     <Compile Include="Settings\PropertyOverride.cs" />
     <Compile Include="Settings\Settings.cs" />
     <Compile Include="UI\CarFieldsItem.xaml.cs">

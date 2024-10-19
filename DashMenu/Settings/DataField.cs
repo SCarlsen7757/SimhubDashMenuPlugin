@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace DashMenu.Settings
 {
-    internal class DataField : INotifyPropertyChanged, IBasicSettings
+    internal class DataField : INotifyPropertyChanged, IDataField
     {
         public DataField()
         {
