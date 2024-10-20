@@ -18,24 +18,13 @@
             <styles:SHSection Title="General settings">
                 <AutoGrid Rows="auto,*">
                     <!--Default amount of fields-->
-                    <StackPanel>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="auto" />
-                                <RowDefinition Height="auto" />
-                            </Grid.RowDefinitions>
-
-                            <ui:TitledSlider Title="Default amount data of fields"
-                                             Maximum="20"
-                                             Minimum="1"
-                                             MaxWidth="600"
-                                             Value="{Binding Path=DefaultAmountOfDataFields, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                        </Grid>
-                    </StackPanel>
+                    <AutoGrid Columns="*,*">
+                        <ui:TitledSlider Title="Default amount data of fields"
+                                         Maximum="20"
+                                         Minimum="1"
+                                         MaxWidth="600"
+                                         Value="{Binding Path=DefaultAmountOfDataFields, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    </AutoGrid>
                     <!--Field data settings-->
                     <StackPanel>
                         <Grid>
@@ -95,13 +84,76 @@
                                     Visibility="{Binding ElementName=FieldDataSettings, Path=SelectedValue, Converter={IsNullToCollapsedConverter}}"
                                     Margin="4">
                                 <AutoGrid Columns="auto,*">
-                                <local:DataFieldSettingsItem DataContext="{Binding ElementName=FieldDataSettings, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Path=SelectedValue}" />
+                                    <local:DataFieldSettingsItem DataContext="{Binding ElementName=FieldDataSettings, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Path=SelectedValue}" />
                                 </AutoGrid>
                             </Border>
                         </Grid>
                     </StackPanel>
                 </AutoGrid>
             </styles:SHSection>
+        </styles:SHTabItem>
+        <styles:SHTabItem Header="Alerts">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition MinWidth="300"
+                                      Width="auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <styles:SHSubSectionTitle Content="Alerts"
+                                          Grid.Column="0"
+                                          Grid.Row="0"
+                                          Grid.ColumnSpan="2" />
+                <styles:SHListBox Name="AlertSettings"
+                                  Margin="0,0,4,0"
+                                  Grid.Column="0"
+                                  Grid.Row="1"
+                                  ItemsSource="{Binding Path=Alerts.Values}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <AutoGrid Margin="0,0"
+                                      Columns="1,*">
+                                <Border Background="{DynamicResource AccentColorBrush}"
+                                        Margin="-4,-4,1,-4"
+                                        Visibility="{Binding Path=Enabled, Converter={SHBoolToVisibilityConverter Hide=true}}" />
+                                <Label Padding="4,1,1,1"
+                                       Content="{Binding Path=FullName}" />
+                            </AutoGrid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </styles:SHListBox>
+                <Border CornerRadius="6"
+                        BorderBrush="#33000000"
+                        Background="{DynamicResource GrayBrush10}"
+                        Margin="4"
+                        Grid.Column="1"
+                        Grid.Row="1"
+                        Grid.RowSpan="2"
+                        Visibility="{Binding ElementName=AlertSettings, Path=SelectedValue, Converter={IsNotNullToCollapsedConverter}}">
+                    <StackPanel VerticalAlignment="Center">
+                        <Label VerticalAlignment="Center"
+                               HorizontalAlignment="Center"
+                               Content="Select a field data to edit it" />
+                    </StackPanel>
+                </Border>
+                <Border Grid.Column="1"
+                        Grid.Row="1"
+                        Grid.RowSpan="2"
+                        BorderThickness="0"
+                        CornerRadius="6"
+                        BorderBrush="#33000000"
+                        Background="{DynamicResource GrayBrush10}"
+                        Visibility="{Binding ElementName=AlertSettings, Path=SelectedValue, Converter={IsNullToCollapsedConverter}}"
+                        Margin="4">
+                    <AutoGrid Columns="auto,*">
+                        <local:AlertSettingsItem DataContext="{Binding ElementName=AlertSettings, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Path=SelectedValue}" />
+                    </AutoGrid>
+                </Border>
+            </Grid>
         </styles:SHTabItem>
         <styles:SHTabItem Header="Gauge fields">
             <styles:SHSection Title="General settings">
@@ -182,7 +234,7 @@
                                     Grid.Row="1"
                                     Grid.RowSpan="2"
                                     Visibility="{Binding ElementName=FieldGaugeSettings, Path=SelectedValue, Converter={IsNullToCollapsedConverter}}">
-                                <AutoGrid Columns="auto, auto, *" >
+                                <AutoGrid Columns="auto, auto, *">
                                     <local:DataFieldSettingsItem DataContext="{Binding ElementName=FieldGaugeSettings, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Path=SelectedValue}" />
                                     <local:GaugeFieldSettingsItem DataContext="{Binding ElementName=FieldGaugeSettings, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Path=SelectedValue}" />
                                 </AutoGrid>

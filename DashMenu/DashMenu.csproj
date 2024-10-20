@@ -151,6 +151,9 @@
     <Compile Include="Settings\IGaugeField.cs" />
     <Compile Include="Settings\PropertyOverride.cs" />
     <Compile Include="Settings\Settings.cs" />
+    <Compile Include="UI\AlertSettingsItem.xaml.cs">
+      <DependentUpon>AlertSettingsItem.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\CarFieldsItem.xaml.cs">
       <DependentUpon>CarFieldsItem.xaml</DependentUpon>
     </Compile>
@@ -164,6 +167,7 @@
     <Compile Include="UI\GaugeFieldSettingsItem.xaml.cs">
       <DependentUpon>GaugeFieldSettingsItem.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\MillisecondsToTimeSpanConverter.cs" />
     <Compile Include="UI\ObservableDictionary.cs" />
     <Compile Include="UI\SettingsControl.xaml.cs">
       <DependentUpon>SettingsControl.xaml</DependentUpon>
@@ -190,6 +194,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <ContainsDesignTimeResources>true</ContainsDesignTimeResources>
+    </Page>
+    <Page Include="UI\AlertSettingsItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\CarFieldsItem.xaml">
       <SubType>Designer</SubType>
