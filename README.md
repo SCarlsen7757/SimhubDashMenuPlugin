@@ -25,7 +25,7 @@ To install the plugin:
 1. Download the newest [DashMenu.dll file](https://github.com/SCarlsen7757/SimhubDashMenuPlugin/releases).
 2. Paste the DLL file into the root directory of Simhub: `C:\Program Files (x86)\SimHub`.
 
-## Install Data fields
+## Install Extension fields
 
 This plugin supports an expandable approach, similar to Simhub plugins, for adding more extension fields:
 
@@ -38,7 +38,7 @@ To get started you can use this [CommonExtensionFields.dll](https://github.com/S
 
 ## Configure Control Mapping
 
-After installing the plugin and additional data fields, you need to configure the control mapping to manage actions. This is done in the "Controls and Events" menu.
+After installing the plugin and additional fields, you need to configure the control mapping to manage actions. This is done in the "Controls and Events" menu.
 
 1. Select the "Controls and Events" menu.
 2. Navigate to the "Controls" tab.
@@ -53,24 +53,24 @@ Available Actions:
 | `ToggleConfigMode` | :heavy_check_mark: | Toggle configuration mode |
 | `ChangeFieldType` | :x: | Change field type for configuration mode ( Change between Data field and Gauge fields) |
 | `ConfigNextField` | :heavy_check_mark: | Select next field when in configuration mode |
-| `ConfigPrevField` | :heavy_check_mark: | Select previous field when in configuration mode |
+| `ConfigPrevField` | :x: | Select previous field when in configuration mode |
 | `ChangeFieldTypeNext` | :heavy_check_mark: | Change field type of the selected field when in configuration mode |
-| `ChangeFieldTypePrev` | :heavy_check_mark: | Change field type of the selected field when in configuration mode |
+| `ChangeFieldTypePrev` | :x: | Change field type of the selected field when in configuration mode |
 | `IncreaseNumberOfField` | :x: | Increase number of fields for the current car (maximum 20) |
 | `DecreaseNumberOfField` | :x: | Decrease number of fields for the current car (minimum 1) |
 
 ![Select "Controls and events" menu then "Controls" tab and click the "New mapping" button.](./Image/ControlsAndEvents.png)
 
-After installing the plugin and extension fields, mapping of required controls to configure various in-game actions, you are good to go and use dashboard that implement this plugin.
+After installing the plugin and extension fields and mapping of required controls, you are good to go and use dashboards that implement this plugin.
 
 ## Using in Dashboard
 
 ### Data field
 
-You can access the fields in Dash Studio using the NCalc or JavaScript function `dashfielddata(fieldnumber)`. It can be found in the function NCalc Functions list :sunglasses:
+You can access the fields in Dash Studio using the NCalc or JavaScript function that are listed below. They can also be found in the function NCalc Functions list :sunglasses:
 You can access all the fields properties within Dash Studio using the NCalc functions. See the table below.
 
-|Function|Syntax|Description|
+|Function|Arguments|Description|
 |---|---|---|
 |`dashfielddataname`|`index`|Returns the name of the data field of the specified field.|
 |`dashfielddatavalue`|`index`|Returns the value of the data field of the specified field.|
@@ -85,12 +85,25 @@ Example how to get the name of the first data field.
 
 To get the number of data fields for the current car, use the property `AmountOfDataFields`.
 
+### Alerts
+
+Alerts are when a data field have changed and will be displayed on the dashboard for a short amount of time. To the the latest alert use the NCalc or JavaScript functions.
+
+|Function|Arguments|Description|
+|---|---|---|
+|`dashalertshow`||Returns true when an alert is present.|
+|`dashalertname`||Returns the name of latest alert.|
+|`dashalertvalue`||Returns the value of latest alert.|
+|`dashalertunit`||Returns the unit of latest alert.|
+|`dashalertcolorprimary`||Returns the primary color of latest alert.|
+|`dashalertcoloraccent`||Returns the accent color of latest alert.|
+
 ### Gauge field
 
-The gauge field same properties as the [Data field](#data-field) and more, the gauge field is intended to be used with linear or circular gauges.
+The gauge field have some of the same properties as the [Data field](#data-field) and more, the gauge field is intended to be used with linear or circular gauges.
 You can access all the fields properties within Dash Studio using NCalc functions. See the table below.
 
-|Function|Syntax|Description|
+|Function|Arguments|Description|
 |---|---|---|
 |`dashfieldgaugename`|`index`|Return the name of the gauge field of the specified field.|
 |`dashfieldgaugevalue`|`index`|Return the value of the gauge field of the specified field.|
@@ -112,15 +125,9 @@ To get the number of data fields for the current car, use the property `AmountOf
 
 It's possible to make a configuration screen by using the the following properties:
 
-* `ConfigMode`
-* `ActiveConfigField`
-* `FieldType`
-
-`ConfigMode` is true when it's possible to navigate and change the configuration of the displayed fields.
-
-`ActiveConfigField` is the current index of the displayed field that can be changed.
-
-`FieldType` is the type of field that is in configuration mode. It can have the value `Data` or `Gauge`.
+* `ConfigMode` is true when it's possible to navigate and change the configuration of the displayed fields.
+* `ActiveConfigField` is the current index of the displayed field that can be changed.
+* `FieldType` is the type of field that is in configuration mode. It can have the value `Data` or `Gauge`.
 
 Changes are automatically saved, and it is not possible to undo changes to the configuration except by manually reverting the changes yourself.
 
@@ -130,45 +137,21 @@ In the Dash field and Gauge field tab, you can adjust the default amount of fiel
 
 You can change the number of fields for the current car by assigning the `IncreaseNumberOfField` and `DecreaseNumberOfField` actions. When using a new car, the fields will be created with the default number of fields or the default set of fields. When increasing the number of fields, the new field will be added at the end, and existing fields will remain unchanged. When decreasing the number of fields, the last field will be removed. The other fields won't be affected.
 
-## Configuring Fields
+## Settings
 
 You can change or configure various settings for the fields.
 
 ![Configuration of fields](./Image/FieldSettings.png)
 
-### Data field settings
+More information can be found for the specific topics See list below.
 
-#### Enable
-
-The field data extension can be enabled to make it selectable or disabled to reduce the number of selectable fields.
-
-### Override
-
-You can override some of the default behavior of the field.
-
-#### Name
-
-Override the displayed name of the field data.
-
-#### Color
-
-Simhub includes a built-in function for day/night settings, allowing you to configure a color scheme for both day and night. This ensures that the field colors change appropriately with the day/night mode.
-
-##### Day Night mode
-
-Simhub includes a built-in function for day/night settings, allowing you to configure a color scheme for both day and night. This ensures that the field colors change appropriately with the day/night mode.
-
-### Decimal
-
-If the field value is a decimal number, you can adjust the number of decimal places displayed. This setting is only visible if the field value can be a decimal number.
-
-## Future features
-
-* [ ] Sort the data fields to make cycling through them easier.
+* [Data field settings](./Docs/Settings/DataFieldSettings.md)
+* [Alert settings](./Docs/Settings/AlertSettings.md)
+* [Gauge field settings](./Docs/Settings/GaugeFieldSettings.md)
 
 ## Attributions
 
-* <a href="https://www.flaticon.com/free-icons/car-indicator" title="car indicator icons">Car indicator icons created by verluk - Flaticon</a>
-* <a href="https://www.flaticon.com/free-icons/dots" title="dots icons">Dots icons created by meaicon - Flaticon</a>
-* <a href="https://www.flaticon.com/free-icons/wiper" title="wiper icons">Wiper icons created by TravisAvery - Flaticon</a>
-* <a href="https://www.flaticon.com/free-icons/lighting" title="lighting icons">Lighting icons created by muhammad atho' - Flaticon</a>
+* [Car indicator icons created by verluk - Flaticon]([sd](https://www.flaticon.com/free-icons/car-indicator))
+* [Dots icons created by meaicon - Flaticon](https://www.flaticon.com/free-icons/dots)
+* [Wiper icons created by TravisAvery - Flaticon](https://www.flaticon.com/free-icons/wiper)
+* [Lighting icons created by muhammad atho' - Flaticon](https://www.flaticon.com/free-icons/lighting)

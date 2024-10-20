@@ -1,8 +1,30 @@
 {
     "cSpell.words": [
-        "dashfielddata",
-        "dashfieldgauge",
-        "fieldnumber",
-        "Simhub"
+        "atho",
+        "dashalertcoloraccent",
+        "dashalertcolorprimary",
+        "dashalertname",
+        "dashalertshow",
+        "dashalertunit",
+        "dashalertvalue",
+        "dashfielddatacoloraccent",
+        "dashfielddatacolorprimary",
+        "dashfielddatadecimal",
+        "dashfielddataname",
+        "dashfielddataunit",
+        "dashfielddatavalue",
+        "dashfieldgaugecoloraccent",
+        "dashfieldgaugecolorprimary",
+        "dashfieldgaugedecimal",
+        "dashfieldgaugemaximum",
+        "dashfieldgaugeminimum",
+        "dashfieldgaugename",
+        "dashfieldgaugestep",
+        "dashfieldgaugeunit",
+        "dashfieldgaugevalue",
+        "Flaticon",
+        "meaicon",
+        "Simhub",
+        "verluk"
     ]
 }
