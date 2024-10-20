@@ -1,14 +1,12 @@
 ﻿using System;
-using System.ComponentModel;
 
 namespace DashMenu.Data
 {
-    public interface IAlert<T>
-        where T : IDataField, INotifyPropertyChanged
+    public interface IAlert
     {
         bool Show { get; }
         TimeSpan ShowTimeDuration { get; set; }
-        T Data { get; set; }
+        IDataField Data { get; set; }
         DateTime EndTime { get; }
     }
 }

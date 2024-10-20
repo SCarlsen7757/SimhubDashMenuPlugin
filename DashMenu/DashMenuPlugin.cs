@@ -93,6 +93,7 @@ namespace DashMenu
             SettingsExtensionFieldsCleanUp();
 
             AlertManager.AddAlerts(DataFieldManager.AllFields, Settings.GetCurrentGameSettings().Alerts);
+            AlertManager.UpdateSelectedAlerts(Settings.GetCurrentGameSettings().DataFields, Settings.GetCurrentGameSettings().Alerts);
 
             MenuConfiguration.ChangeDataFieldNext += DataFieldManager.NextSelectedField;
             MenuConfiguration.ChangeDataFieldPrev += DataFieldManager.PrevSelectedField;
@@ -145,7 +146,6 @@ namespace DashMenu
         {
             foreach (IDataFieldExtension field in DataFieldManager.SelectedFields) field.Update(pluginManager, ref data);
             foreach (IGaugeFieldExtension field in GaugeFieldManager.SelectedFields) field.Update(pluginManager, ref data);
-
         }
 
         /// <summary>

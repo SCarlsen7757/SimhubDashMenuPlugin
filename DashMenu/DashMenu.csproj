@@ -121,6 +121,7 @@
     <Compile Include="Data\DataField.cs" />
     <Compile Include="Data\IDataFieldExtension.cs" />
     <Compile Include="Extensions\SimhubHelper.cs" />
+    <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="FieldComponent.cs" />
     <Compile Include="FieldManager\AlertManager.cs" />
     <Compile Include="FieldManager\DataFieldManager.cs" />
