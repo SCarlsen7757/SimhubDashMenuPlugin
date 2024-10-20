@@ -33,24 +33,30 @@ erDiagram
 
 ## Example 1: Basic Extension Field
 
-This example creates a simple traction control (TC) level field.
+This example creates a simple traction control (TC) level field. That also is an alert.
 
 ```C#
 using DashMenu.Data;
 using GameReaderCommon;
+using SimHub.Plugins;
 
 namespace CommonExtensionFields
 {
-    public class TCLevel : FieldExtensionBase, IDataFieldComponent
+    public class TCLevel : AlertBase, IDataFieldExtension
     {
-        public TCLevel(string gameName) : base(gameName) { }
-        public string Description { get => "TC Level."; }
-        public IDataField Data { get; set; } = new DataField()
+        public TCLevel(string gameName) : base(gameName)
         {
-            Name = "TC",
-            Color = new ColorScheme("#00a3d9", "#ffffff")
-        };
-        public void Update(ref GameData data)
+            Data = new DataField()
+            {
+                Name = "TC",
+                Color = new ColorScheme("#00a3d9")
+            };
+            Data.PropertyChanged += DataAlert_PropertyChanged;
+        }
+
+        public string Description => "TC Level.";
+
+        public void Update(PluginManager pluginManager, ref GameData data)
         {
             if (!data.GameRunning) return;
             if (data.NewData.TCLevel < 0)
@@ -62,44 +68,47 @@ namespace CommonExtensionFields
         }
     }
 }
-
-
 ```
 
 ## Example 2: Decimal Number Field
 
-This example creates a brake bias field, which can represent decimal numbers.
+This example creates a throttle position field, which can represent decimal numbers.
 
 ```c#
 using DashMenu.Data;
 using GameReaderCommon;
+using SimHub.Plugins;
 
 namespace CommonExtensionFields
 {
-    public class BrakeBias : FieldExtensionBase, IDataFieldComponent
+    public class Throttle : FieldExtensionBase<IGaugeField>, IDataFieldExtension, IGaugeFieldExtension
     {
-        public BrakeBias(string gameName) : base(gameName) { }
-        public string Description { get => "Brake bias."; }
-        public IDataField Data { get; set; } = new DataField()
+        public Throttle(string gameName) : base(gameName)
         {
-            Name = "BB",
-            IsDecimalNumber = true,
-            Decimal = 1,
-            Color = new ColorScheme("#d90028", "#ffffff")
-        };
-        public void Update(ref GameData data)
+            Data = new GaugeField()
+            {
+                Name = "THR",
+                IsDecimalNumber = true,
+                Decimal = 0,
+                Unit = "%",
+                Color = new ColorScheme(),
+                IsRangeLocked = true,
+                Maximum = 100.ToString(),
+                Minimum = 0.ToString()
+            };
+        }
+
+        public string Description => "Throttle position.";
+
+        IDataField IFieldExtensionBasic<IDataField>.Data { get => Data; set => Data = (IGaugeField)value; }
+
+        public void Update(PluginManager pluginManager, ref GameData data)
         {
             if (!data.GameRunning) return;
-            if (data.NewData.BrakeBias < 0)
-            {
-                Data.Value = "-";
-                return;
-            }
-            Data.Value = data.NewData.BrakeBias.ToString($"N{Data.Decimal}");
+            Data.Value = DecimalValue(data.NewData.Throttle);
         }
     }
 }
-
 ```
 
 ## Example 3: Field with Unit
@@ -109,29 +118,30 @@ This example creates a water temperature field, which includes a unit derived fr
 ```c#
 using DashMenu.Data;
 using GameReaderCommon;
+using SimHub.Plugins;
 
 namespace CommonExtensionFields
 {
-    public class WaterTemperature : FieldExtensionBase, IGaugeFieldComponent
+    public class WaterTemperature : FieldExtensionBase<IGaugeField>, IDataFieldExtension, IGaugeFieldExtension
     {
-        public WaterTemperature(string gameName) : base(gameName) { }
-        public string Description { get => "Water temperature"; }
-        public IGaugeField Data { get; set; } = new GaugeField()
+        public WaterTemperature(string gameName) : base(gameName)
         {
-            Name = "Water Temp",
-            IsDecimalNumber = true,
-            Decimal = 0,
-            Color = new ColorScheme("#ffffff", "#000000"),
-            Maximum = 100.ToString(),
-            Minimum = 20.ToString()
-        };
-        IDataField IDataFieldComponent.Data
-        {
-            get => Data; // Return the same GaugeField instance
-            set => Data = (IGaugeField)value; // Set the same instance
+            Data = new GaugeField()
+            {
+                Name = "WT",
+                IsDecimalNumber = true,
+                Decimal = 0,
+                Color = new ColorScheme(),
+                Maximum = 100.ToString(),
+                Minimum = 20.ToString()
+            };
         }
 
-        public void Update(ref GameData data)
+        public string Description => "Water temperature.";
+
+        IDataField IFieldExtensionBasic<IDataField>.Data { get => Data; set => Data = (IGaugeField)value; }
+
+        public void Update(PluginManager pluginManager, ref GameData data)
         {
             if (!data.GameRunning) return;
             if (data.NewData.WaterTemperature <= 0)
@@ -139,24 +149,76 @@ namespace CommonExtensionFields
                 Data.Value = "-";
                 return;
             }
-            Data.Value = data.NewData.WaterTemperature.ToString($"N{Data.Decimal}");
+            Data.Value = DecimalValue(data.NewData.WaterTemperature);
             Data.Unit = "°" + data.NewData.TemperatureUnit[0];
         }
     }
 }
 ```
 
-## Extension field class structure
+## Example 4: Gauge field that also is an alert
 
-```mermaid
-classDiagram
-    class DashMenuPlugin{
-      +bool ConfigMode
-      +int ActiveConfigField
-      +string FieldType
-      +int AmountOfDataFields
-      +int AmountOfGaugeFields
-      +DataField dashfielddata(int index)
-      +GaugeField dashfieldgauge(int index)
+```c#
+using DashMenu.Data;
+using GameReaderCommon;
+using SimHub.Plugins;
+using System;
+using System.ComponentModel;
+
+namespace CommonExtensionFields
+{
+    public class BrakeBias : FieldExtensionBase<IGaugeField>, IDataFieldExtension, IGaugeFieldExtension, IAlert
+    {
+        public BrakeBias(string gameName) : base(gameName)
+        {
+            Data = new GaugeField()
+            {
+                Name = "BB",
+                IsDecimalNumber = true,
+                Decimal = 1,
+                Color = new ColorScheme("#d90028"),
+                IsRangeLocked = true,
+                Maximum = 100.ToString(),
+                Minimum = 0.ToString()
+            };
+            Data.PropertyChanged += DataAlert_PropertyChanged;
+        }
+
+        private void DataAlert_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (!(sender is IDataField)) return;
+            switch (e.PropertyName)
+            {
+                case nameof(IDataField.Value):
+                    EndTime = DateTime.Now + ShowTimeDuration;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public string Description => "Brake bias.";
+
+        IDataField IFieldExtensionBasic<IDataField>.Data { get => Data; set => Data = (IGaugeField)value; }
+
+        IDataField IAlert.Data { get => Data; set => Data = (IGaugeField)value; }
+
+        public void Update(PluginManager pluginManager, ref GameData data)
+        {
+            if (!data.GameRunning) return;
+            if (data.NewData.BrakeBias < 0)
+            {
+                Data.Value = "-";
+                return;
+            }
+            Data.Value = data.NewData.BrakeBias.ToString($"N{Data.Decimal}");
+        }
+
+        public bool Show { get => DateTime.Now < EndTime; }
+
+        public TimeSpan ShowTimeDuration { get; set; } = TimeSpan.Zero;
+
+        public DateTime EndTime { get; protected set; } = DateTime.Now;
     }
+}
 ```
