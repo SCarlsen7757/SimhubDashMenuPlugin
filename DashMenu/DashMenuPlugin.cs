@@ -1,4 +1,5 @@
 ﻿using DashMenu.Data;
+using DashMenu.Extensions;
 using GameReaderCommon;
 using SimHub.Plugins;
 using SimHub.Plugins.BrightnessControl;
@@ -243,7 +244,7 @@ namespace DashMenu
                 foreach (Type type in assembly.GetTypes())
                 {
                     // Check if the type implements the interface
-                    if (type.GetInterfaces().Contains(interfaceType))
+                    if (type.ContainsInterface(interfaceType))
                     {
                         yield return type;
                     }
@@ -261,11 +262,11 @@ namespace DashMenu
 
         private void AddExtensionComponent(Type type)
         {
-            if (type.GetInterfaces().Contains(typeof(IDataFieldExtension)))
+            if (type.ContainsInterface(typeof(IDataFieldExtension)))
             {
                 DataFieldManager.AddExtensionField(type, Settings.GetCurrentGameSettings().DataFields);
             }
-            if (type.GetInterfaces().Contains(typeof(IGaugeFieldExtension)))
+            if (type.ContainsInterface(typeof(IGaugeFieldExtension)))
             {
                 GaugeFieldManager.AddExtensionField(type, Settings.GetCurrentGameSettings().GaugeFields);
             }
