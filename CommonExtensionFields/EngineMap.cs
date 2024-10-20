@@ -4,7 +4,7 @@ using SimHub.Plugins;
 
 namespace CommonExtensionFields
 {
-    public class EngineMap : FieldExtensionBase<IDataField>, IDataFieldExtension
+    public class EngineMap : AlertBase, IDataFieldExtension
     {
         public EngineMap(string gameName) : base(gameName)
         {
@@ -13,6 +13,7 @@ namespace CommonExtensionFields
                 Name = "MAP",
                 Color = new ColorScheme("#d9c000")
             };
+            Data.PropertyChanged += DataAlert_PropertyChanged;
         }
 
         public string Description => "Engine map.";

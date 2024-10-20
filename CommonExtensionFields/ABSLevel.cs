@@ -4,7 +4,7 @@ using SimHub.Plugins;
 
 namespace CommonExtensionFields
 {
-    public class ABSLevel : FieldExtensionBase<IDataField>, IDataFieldExtension
+    public class ABSLevel : AlertBase, IDataFieldExtension
     {
         public ABSLevel(string gameName) : base(gameName)
         {
@@ -13,6 +13,7 @@ namespace CommonExtensionFields
                 Name = "ABS",
                 Color = new ColorScheme("#00ff2a")
             };
+            Data.PropertyChanged += DataAlert_PropertyChanged;
         }
 
         public string Description => "ABS Level.";

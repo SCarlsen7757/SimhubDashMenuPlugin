@@ -4,7 +4,7 @@ using SimHub.Plugins;
 
 namespace CommonExtensionFields
 {
-    public class TCLevel : FieldExtensionBase<IDataField>, IDataFieldExtension
+    public class TCLevel : AlertBase, IDataFieldExtension
     {
         public TCLevel(string gameName) : base(gameName)
         {
@@ -13,6 +13,7 @@ namespace CommonExtensionFields
                 Name = "TC",
                 Color = new ColorScheme("#00a3d9")
             };
+            Data.PropertyChanged += DataAlert_PropertyChanged;
         }
 
         public string Description => "TC Level.";
