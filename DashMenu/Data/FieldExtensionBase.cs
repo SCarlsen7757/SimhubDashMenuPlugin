@@ -14,6 +14,11 @@ namespace DashMenu.Data
             isGameSupported = GameSupported(gameName);
         }
 
+        protected FieldExtensionBase(string gameName, string supportedGames) : this(gameName)
+        {
+            this.supportedGames = supportedGames ?? throw new ArgumentNullException(nameof(supportedGames));
+        }
+
         public TField Data { get; set; }
 
         protected virtual bool GameSupported(string gameName) => true;
@@ -21,7 +26,7 @@ namespace DashMenu.Data
         private readonly bool isGameSupported = true;
         public bool IsGameSupported => isGameSupported;
 
-        protected readonly string supportedGames = "All games.";
+        private readonly string supportedGames = "All games.";
 
         public string SupportedGames => supportedGames;
 
