@@ -1,4 +1,6 @@
-﻿using System;
+﻿using GameReaderCommon;
+using SimHub.Plugins;
+using System;
 using System.ComponentModel;
 
 namespace DashMenu.Data
@@ -27,5 +29,7 @@ namespace DashMenu.Data
         public TimeSpan ShowTimeDuration { get; set; } = TimeSpan.Zero;
 
         public DateTime EndTime { get; protected set; } = DateTime.Now;
+
+        public abstract void Update(PluginManager pluginManager, ref GameData data);
     }
 }

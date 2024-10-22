@@ -146,6 +146,7 @@ namespace DashMenu
         {
             foreach (IDataFieldExtension field in DataFieldManager.SelectedFields) field.Update(pluginManager, ref data);
             foreach (IGaugeFieldExtension field in GaugeFieldManager.SelectedFields) field.Update(pluginManager, ref data);
+            foreach (var alert in AlertManager.SelectedAlerts) alert.Update(pluginManager, ref data);
         }
 
         /// <summary>
