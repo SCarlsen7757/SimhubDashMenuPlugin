@@ -18,7 +18,7 @@ namespace CommonExtensionFields
 
         public string Description => "TC Level.";
 
-        public void Update(PluginManager pluginManager, ref GameData data)
+        public override void Update(PluginManager pluginManager, ref GameData data)
         {
             if (!data.GameRunning) return;
             if (data.NewData.TCLevel < 0)
