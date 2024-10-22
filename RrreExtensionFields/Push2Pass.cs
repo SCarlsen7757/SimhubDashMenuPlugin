@@ -26,7 +26,14 @@ namespace RrreExtensionFields
         {
             if (!data.GameRunning) return;
             var r3eGameData = (R3E.Data.Shared)data.NewData.GetRawDataObject();
-            Data.Value = r3eGameData.PushToPass.AmountLeft.ToString();
+            if (r3eGameData.PushToPass.Available != 1)
+            {
+                Data.Value = "-";
+            }
+            else
+            {
+                Data.Value = r3eGameData.PushToPass.AmountLeft.ToString();
+            }
         }
     }
 }

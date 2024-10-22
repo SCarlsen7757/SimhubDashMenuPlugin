@@ -26,7 +26,15 @@ namespace RrreExtensionFields
         {
             if (!data.GameRunning) return;
             var r3eGameData = (R3E.Data.Shared)data.NewData.GetRawDataObject();
-            Data.Value = r3eGameData.IncidentPoints.ToString();
+            int incidentPoints = r3eGameData.IncidentPoints;
+            if (incidentPoints < 0)
+            {
+                Data.Value = "-";
+            }
+            else
+            {
+                Data.Value = r3eGameData.IncidentPoints.ToString();
+            }
         }
     }
 }
