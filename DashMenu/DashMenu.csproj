@@ -167,6 +167,7 @@
     <Compile Include="UI\GaugeFieldSettingsItem.xaml.cs">
       <DependentUpon>GaugeFieldSettingsItem.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\InvertedBooleanConverter.cs" />
     <Compile Include="UI\MillisecondsToTimeSpanConverter.cs" />
     <Compile Include="UI\ObservableDictionary.cs" />
     <Compile Include="UI\SettingsControl.xaml.cs">

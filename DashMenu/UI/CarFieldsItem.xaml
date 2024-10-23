@@ -16,6 +16,10 @@
         <settings:CarFields />
     </UserControl.DataContext>
 
+    <UserControl.Resources>
+        <local:InvertedBooleanConverter x:Key="InvertedBooleanConverter" />
+    </UserControl.Resources>
+
     <Border BorderThickness="0"
             CornerRadius="6"
             BorderBrush="#33000000"
@@ -42,7 +46,8 @@
                                      Height="15"
                                      HorizontalAlignment="Right"
                                      Content="Forget this car"
-                                     Click="DefaultDataFields_Click" />
+                                     IsEnabled="{Binding Path=IsActive, Converter={StaticResource InvertedBooleanConverter}}"
+                                     Click="ForgetCar_Click" />
             </StackPanel>
             <!--Data fields-->
             <styles:SHSubSectionTitle Content="Displayed Data Fields"

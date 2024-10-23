@@ -34,15 +34,7 @@ namespace DashMenu.UI
 
             // Retrieve the settings from the parent's DataContext
             GameSettings gameSettings = (GameSettings)parent.DataContext;
-
-            // Retrieve the ObservableDictionary from the settings using the game name
-            System.Collections.Generic.IDictionary<string, CarFields> carFieldsDictionary = gameSettings.CarFields;
-
-            // Remove the car from the dictionary using the CarId key
-            if (carFieldsDictionary.ContainsKey(carFields.CarId))
-            {
-                carFieldsDictionary.Remove(carFields.CarId);
-            }
+            gameSettings.RemoveCar(carFields.CarId);
         }
         private void DefaultDataFields_Click(object sender, System.Windows.RoutedEventArgs e)
         {

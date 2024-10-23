@@ -16,7 +16,7 @@ namespace DashMenu.UI
         private void ButtonForgetAllCars_Click(object sender, RoutedEventArgs e)
         {
             var settings = (Settings.GameSettings)DataContext;
-            settings.RemoveAllDisplayedFields();
+            settings.RemoveCar();
         }
 
         private void ButtonForgetDefaultDataFields_Click(object sender, RoutedEventArgs e)

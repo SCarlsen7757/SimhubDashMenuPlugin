@@ -327,14 +327,32 @@ namespace DashMenu.Settings
         }
         #endregion
 
-        internal void RemoveDisplayedField(string carId)
+        /// <summary>
+        /// Remove the specific car, except if it's the current car.
+        /// </summary>
+        /// <param name="carId"></param>
+        internal void RemoveCar(string carId)
         {
+            if (!CarFields.ContainsKey(carId)) return;
             CarFields.Remove(carId);
         }
 
-        internal void RemoveAllDisplayedFields()
+        /// <summary>
+        /// Remove all cars, except the current car.
+        /// </summary>
+        internal void RemoveCar()
         {
-            CarFields.Clear();
+            if (CurrentCarId == null)
+            {
+                CarFields.Clear();
+                return;
+            }
+
+            var carsToRemove = CarFields.Keys.Where(key => key != CurrentCarId).ToList();
+            foreach (var carId in carsToRemove)
+            {
+                CarFields.Remove(carId);
+            }
         }
     }
 }
