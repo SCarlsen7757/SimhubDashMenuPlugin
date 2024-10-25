@@ -37,7 +37,7 @@ namespace DashMenu.Data
                 OnPropertyChanged();
             }
         }
-        private string accent = "#000000";
+        private string accent = "#ffffff";
         /// <summary>
         /// Accent color.
         /// </summary>
