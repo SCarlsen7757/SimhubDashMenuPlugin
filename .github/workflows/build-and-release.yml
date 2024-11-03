@@ -28,6 +28,8 @@ jobs:
             ./DashMenu/bin/Release/DashMenu.dll
             ./CommonExtensionFields/bin/Release/CommonExtensionFields.dll
             ./RrreExtensionFields/bin/Release/RrreExtensionFields.dll
+          retention-days: 1
+          if-no-files-found: warn
 
   release:
     runs-on: windows-latest
