@@ -25,9 +25,9 @@ jobs:
       with:
         name: dlls
         path: |
-            ./DashMenu/bin/*/DashMenu.dll
-            ./CommonExtensionFields/bin/*/CommonExtensionFields.dll
-            ./RrreExtensionFields/bin/*/RrreExtensionFields.dll
+            ./DashMenu/bin/Release/DashMenu.dll
+            ./CommonExtensionFields/bin/Release/CommonExtensionFields.dll
+            ./RrreExtensionFields/bin/Release/RrreExtensionFields.dll
         retention-days: 1
         if-no-files-found: warn
 
@@ -64,7 +64,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./dlls/DashMenu.dll
+        asset_path: ./dlls/DashMenu/bin/Release/DashMenu.dll
         asset_name: DashMenu.dll
         asset_content_type: application/x-msdownload
 
@@ -75,7 +75,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./dlls/CommonExtensionFields.dll
+        asset_path: ./dlls/CommonExtensionFields/bin/Release/CommonExtensionFields.dll
         asset_name: CommonExtensionFields.dll
         asset_content_type: application/x-msdownload
 
@@ -86,6 +86,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./dlls/RrreExtensionFields.dll
+        asset_path: ./dlls/RrreExtensionFields/bin/Release/RrreExtensionFields.dll
         asset_name: RrreExtensionFields.dll
         asset_content_type: application/x-msdownload
