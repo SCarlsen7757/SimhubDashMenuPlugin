@@ -38,7 +38,8 @@
                        Grid.ColumnSpan="2"
                        Margin="0,4,0,0"
                        ContentStringFormat="ID : {0}"
-                       Padding="0" />
+                       Padding="0"
+                       Foreground="{DynamicResource GrayBrush5}" />
             </StackPanel>
             <StackPanel>
                 <styles:SHLinkButton VerticalAlignment="Top"

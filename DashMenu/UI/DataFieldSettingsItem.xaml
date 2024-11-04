@@ -26,7 +26,8 @@
             <Label Content="{Binding Path=Namespace}"
                    Margin="0,4,0,0"
                    ContentStringFormat="Namespace : {0}"
-                   Padding="0" />
+                   Padding="0"
+                   Foreground="{DynamicResource GrayBrush5}" />
             <StackPanel Margin="0,0,20,0"
                         Width="300">
                 <!--General settings-->
