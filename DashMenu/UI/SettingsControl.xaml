@@ -20,32 +20,30 @@
                     <!--Default amount of fields-->
                     <ui:TitledSlider Title="Default amount data of fields"
                                      Maximum="20"
-                                     Minimum="1"
+                                     Minimum="0"
                                      HorizontalAlignment="Stretch"
                                      Margin="10,0"
                                      Value="{Binding Path=DefaultAmountOfDataFields, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <!--Field data settings-->
-                    <StackPanel>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition MinWidth="300"
-                                                  Width="auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="auto" />
-                                <RowDefinition Height="auto" />
-                                <RowDefinition Height="auto" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-                            <styles:SHSubSectionTitle Content="Field data"
-                                                      Grid.Column="0"
-                                                      Grid.Row="0"
-                                                      Grid.ColumnSpan="2" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition MinWidth="300"
+                                              Width="auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <styles:SHSubSectionTitle Content="Field data"
+                                                  Grid.Column="0"
+                                                  Grid.Row="0"
+                                                  Grid.ColumnSpan="2" />
+                        <ScrollViewer Grid.Column="0"
+                                      Grid.Row="1"
+                                      VerticalScrollBarVisibility="Auto"
+                                      Margin="0,0,4,0">
                             <styles:SHListBox Name="FieldDataSettings"
-                                              Margin="0,0,4,0"
-                                              Grid.Column="0"
-                                              Grid.Row="1"
                                               ItemsSource="{Binding Path=DataFields.Values}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
@@ -60,35 +58,33 @@
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </styles:SHListBox>
-                            <Border CornerRadius="6"
-                                    BorderBrush="#33000000"
-                                    Background="{DynamicResource GrayBrush10}"
-                                    Margin="4"
-                                    Grid.Column="1"
-                                    Grid.Row="1"
-                                    Grid.RowSpan="2"
-                                    Visibility="{Binding ElementName=FieldDataSettings, Path=SelectedValue, Converter={IsNotNullToCollapsedConverter}}">
-                                <StackPanel VerticalAlignment="Center">
-                                    <Label VerticalAlignment="Center"
-                                           HorizontalAlignment="Center"
-                                           Content="Select a field data to edit it" />
-                                </StackPanel>
-                            </Border>
-                            <Border Grid.Column="1"
-                                    Grid.Row="1"
-                                    Grid.RowSpan="2"
-                                    BorderThickness="0"
-                                    CornerRadius="6"
-                                    BorderBrush="#33000000"
-                                    Background="{DynamicResource GrayBrush10}"
-                                    Visibility="{Binding ElementName=FieldDataSettings, Path=SelectedValue, Converter={IsNullToCollapsedConverter}}"
-                                    Margin="4">
-                                <AutoGrid Columns="auto,*">
-                                    <local:DataFieldSettingsItem DataContext="{Binding ElementName=FieldDataSettings, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Path=SelectedValue}" />
-                                </AutoGrid>
-                            </Border>
-                        </Grid>
-                    </StackPanel>
+                        </ScrollViewer>
+                        <Border CornerRadius="6"
+                                BorderBrush="#33000000"
+                                Background="{DynamicResource GrayBrush10}"
+                                Margin="4"
+                                Grid.Column="1"
+                                Grid.Row="1"
+                                Visibility="{Binding ElementName=FieldDataSettings, Path=SelectedValue, Converter={IsNotNullToCollapsedConverter}}">
+                            <StackPanel VerticalAlignment="Center">
+                                <Label VerticalAlignment="Center"
+                                       HorizontalAlignment="Center"
+                                       Content="Select a field data to edit it" />
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="1"
+                                Grid.Row="1"
+                                BorderThickness="0"
+                                CornerRadius="6"
+                                BorderBrush="#33000000"
+                                Background="{DynamicResource GrayBrush10}"
+                                Visibility="{Binding ElementName=FieldDataSettings, Path=SelectedValue, Converter={IsNullToCollapsedConverter}}"
+                                Margin="4">
+                            <AutoGrid Columns="auto,*">
+                                <local:DataFieldSettingsItem DataContext="{Binding ElementName=FieldDataSettings, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Path=SelectedValue}" />
+                            </AutoGrid>
+                        </Border>
+                    </Grid>
                 </AutoGrid>
             </styles:SHSection>
         </styles:SHTabItem>
@@ -102,39 +98,38 @@
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <styles:SHSubSectionTitle Content="Alerts"
                                               Grid.Column="0"
                                               Grid.Row="0"
                                               Grid.ColumnSpan="2" />
-                    <styles:SHListBox Name="AlertSettings"
-                                      Margin="0,0,4,0"
-                                      Grid.Column="0"
-                                      Grid.Row="1"
-                                      ItemsSource="{Binding Path=Alerts.Values}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <AutoGrid Margin="0,0"
-                                          Columns="1,*">
-                                    <Border Background="{DynamicResource AccentColorBrush}"
-                                            Margin="-4,-4,1,-4"
-                                            Visibility="{Binding Path=Enabled, Converter={SHBoolToVisibilityConverter Hide=true}}" />
-                                    <Label Padding="4,1,1,1"
-                                           Content="{Binding Path=FullName}" />
-                                </AutoGrid>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </styles:SHListBox>
+                    <ScrollViewer Grid.Column="0"
+                                  Grid.Row="1"
+                                  VerticalScrollBarVisibility="Auto"
+                                  Margin="0,0,4,0">
+                        <styles:SHListBox Name="AlertSettings"
+                                          ItemsSource="{Binding Path=Alerts.Values}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <AutoGrid Margin="0,0"
+                                              Columns="1,*">
+                                        <Border Background="{DynamicResource AccentColorBrush}"
+                                                Margin="-4,-4,1,-4"
+                                                Visibility="{Binding Path=Enabled, Converter={SHBoolToVisibilityConverter Hide=true}}" />
+                                        <Label Padding="4,1,1,1"
+                                               Content="{Binding Path=FullName}" />
+                                    </AutoGrid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </styles:SHListBox>
+                    </ScrollViewer>
                     <Border CornerRadius="6"
                             BorderBrush="#33000000"
                             Background="{DynamicResource GrayBrush10}"
                             Margin="4"
                             Grid.Column="1"
                             Grid.Row="1"
-                            Grid.RowSpan="2"
                             Visibility="{Binding ElementName=AlertSettings, Path=SelectedValue, Converter={IsNotNullToCollapsedConverter}}">
                         <StackPanel VerticalAlignment="Center">
                             <Label VerticalAlignment="Center"
@@ -144,7 +139,6 @@
                     </Border>
                     <Border Grid.Column="1"
                             Grid.Row="1"
-                            Grid.RowSpan="2"
                             BorderThickness="0"
                             CornerRadius="6"
                             BorderBrush="#33000000"
@@ -162,36 +156,32 @@
             <styles:SHSection Title="General settings">
                 <AutoGrid Rows="auto,*">
                     <!--Default amount of fields-->
-                    <StackPanel>
-                        <ui:TitledSlider Title="Default amount gauge of fields"
-                                         Maximum="20"
-                                         Minimum="1"
-                                         HorizontalAlignment="Stretch"
-                                         Margin="10,0"
-                                         Value="{Binding Path=DefaultAmountOfGaugeFields, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    </StackPanel>
+                    <ui:TitledSlider Title="Default amount gauge of fields"
+                                     Maximum="20"
+                                     Minimum="0"
+                                     HorizontalAlignment="Stretch"
+                                     Margin="10,0"
+                                     Value="{Binding Path=DefaultAmountOfGaugeFields, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <!--Field gauge settings-->
-                    <StackPanel>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition MinWidth="300"
-                                                  Width="auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="auto" />
-                                <RowDefinition Height="auto" />
-                                <RowDefinition Height="auto" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-                            <styles:SHSubSectionTitle Content="Field data"
-                                                      Grid.Column="0"
-                                                      Grid.Row="0"
-                                                      Grid.ColumnSpan="2" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition MinWidth="300"
+                                              Width="auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <styles:SHSubSectionTitle Content="Field data"
+                                                  Grid.Column="0"
+                                                  Grid.Row="0"
+                                                  Grid.ColumnSpan="2" />
+                        <ScrollViewer Grid.Column="0"
+                                      Grid.Row="1"
+                                      VerticalScrollBarVisibility="Auto"
+                                      Margin="0,0,4,0">
                             <styles:SHListBox Name="FieldGaugeSettings"
-                                              Margin="0,0,4,0"
-                                              Grid.Column="0"
-                                              Grid.Row="1"
                                               ItemsSource="{Binding Path=GaugeFields.Values}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
@@ -206,106 +196,111 @@
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </styles:SHListBox>
-                            <Border CornerRadius="6"
-                                    BorderBrush="#33000000"
-                                    Background="{DynamicResource GrayBrush10}"
-                                    Margin="4"
-                                    Grid.Column="1"
-                                    Grid.Row="1"
-                                    Grid.RowSpan="2"
-                                    Visibility="{Binding ElementName=FieldGaugeSettings, Path=SelectedValue, Converter={IsNotNullToCollapsedConverter}}">
-                                <StackPanel VerticalAlignment="Center">
-                                    <Label VerticalAlignment="Center"
-                                           HorizontalAlignment="Center"
-                                           Content="Select a field data to edit it" />
-                                </StackPanel>
-                            </Border>
-                            <Border CornerRadius="6"
-                                    BorderBrush="#33000000"
-                                    Background="{DynamicResource GrayBrush10}"
-                                    Margin="4"
-                                    Grid.Column="1"
-                                    Grid.Row="1"
-                                    Grid.RowSpan="2"
-                                    Visibility="{Binding ElementName=FieldGaugeSettings, Path=SelectedValue, Converter={IsNullToCollapsedConverter}}">
-                                <AutoGrid Columns="auto, auto, *">
-                                    <local:DataFieldSettingsItem DataContext="{Binding ElementName=FieldGaugeSettings, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Path=SelectedValue}" />
-                                    <local:GaugeFieldSettingsItem DataContext="{Binding ElementName=FieldGaugeSettings, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Path=SelectedValue}" />
-                                </AutoGrid>
-                            </Border>
-                        </Grid>
-                    </StackPanel>
+                        </ScrollViewer>
+                        <Border CornerRadius="6"
+                                BorderBrush="#33000000"
+                                Background="{DynamicResource GrayBrush10}"
+                                Margin="4"
+                                Grid.Column="1"
+                                Grid.Row="1"
+                                Visibility="{Binding ElementName=FieldGaugeSettings, Path=SelectedValue, Converter={IsNotNullToCollapsedConverter}}">
+                            <StackPanel VerticalAlignment="Center">
+                                <Label VerticalAlignment="Center"
+                                       HorizontalAlignment="Center"
+                                       Content="Select a field data to edit it" />
+                            </StackPanel>
+                        </Border>
+                        <Border CornerRadius="6"
+                                BorderBrush="#33000000"
+                                Background="{DynamicResource GrayBrush10}"
+                                Margin="4"
+                                Grid.Column="1"
+                                Grid.Row="1"
+                                Visibility="{Binding ElementName=FieldGaugeSettings, Path=SelectedValue, Converter={IsNullToCollapsedConverter}}">
+                            <AutoGrid Columns="auto, auto, *">
+                                <local:DataFieldSettingsItem DataContext="{Binding ElementName=FieldGaugeSettings, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Path=SelectedValue}" />
+                                <local:GaugeFieldSettingsItem DataContext="{Binding ElementName=FieldGaugeSettings, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Path=SelectedValue}" />
+                            </AutoGrid>
+                        </Border>
+                    </Grid>
                 </AutoGrid>
             </styles:SHSection>
         </styles:SHTabItem>
         <styles:SHTabItem Header="Car settings">
             <!--Car settings-->
             <styles:SHSection Title="Car settings">
-                <StackPanel>
+                <AutoGrid Columns="auto, *">
                     <!--Default data fields-->
-                    <styles:SHSubSectionTitle Content="Default data fields" />
-                    <styles:SHLinkButton Click="ButtonForgetDefaultDataFields_Click"
-                                         VerticalAlignment="Center"
-                                         HorizontalAlignment="Right"
-                                         Content="Forget default fields"
-                                         Margin="0,0,4,0" />
-                    <ItemsControl ItemsSource="{Binding DefaultDataFields}"
-                                  Grid.ColumnSpan="2"
-                                  Margin="12,0,0,0">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel Orientation="Horizontal" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Border BorderThickness="0"
-                                        CornerRadius="6"
-                                        Background="{DynamicResource GrayBrush8}"
-                                        Margin="4">
-                                    <Label Content="{Binding}"
-                                           Margin="5"
-                                           Padding="5" />
-                                </Border>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
+                    <StackPanel Grid.ColumnSpan="2">
+                        <styles:SHSubSectionTitle Content="Default data fields" />
+                        <styles:SHLinkButton Click="ButtonForgetDefaultDataFields_Click"
+                                             VerticalAlignment="Center"
+                                             HorizontalAlignment="Right"
+                                             Content="Forget default fields"
+                                             Margin="0,0,4,0" />
+                        <ItemsControl ItemsSource="{Binding DefaultDataFields}"
+                                      Grid.ColumnSpan="2"
+                                      Margin="12,0,0,0">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderThickness="0"
+                                            CornerRadius="6"
+                                            Background="{DynamicResource GrayBrush8}"
+                                            Margin="4">
+                                        <Label Content="{Binding}"
+                                               Margin="5"
+                                               Padding="5" />
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
                     <!--Default gauge fields-->
-                    <styles:SHSubSectionTitle Content="Default gauge fields" />
-                    <styles:SHLinkButton Click="ButtonForgetDefaultGaugeFields_Click"
-                                         VerticalAlignment="Center"
-                                         HorizontalAlignment="Right"
-                                         Content="Forget default fields"
-                                         Margin="0,0,4,0" />
-                    <ItemsControl ItemsSource="{Binding DefaultGaugeFields}"
-                                  Grid.ColumnSpan="2"
-                                  Margin="12,0,0,0">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel Orientation="Horizontal" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Border BorderThickness="0"
-                                        CornerRadius="6"
-                                        Background="{DynamicResource GrayBrush8}"
-                                        Margin="4">
-                                    <Label Content="{Binding}"
-                                           Margin="5"
-                                           Padding="5" />
-                                </Border>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
+                    <StackPanel Grid.ColumnSpan="2">
+
+                        <styles:SHSubSectionTitle Content="Default gauge fields" />
+                        <styles:SHLinkButton Click="ButtonForgetDefaultGaugeFields_Click"
+                                             VerticalAlignment="Center"
+                                             HorizontalAlignment="Right"
+                                             Content="Forget default fields"
+                                             Margin="0,0,4,0" />
+                        <ItemsControl ItemsSource="{Binding DefaultGaugeFields}"
+                                      Grid.ColumnSpan="2"
+                                      Margin="12,0,0,0">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderThickness="0"
+                                            CornerRadius="6"
+                                            Background="{DynamicResource GrayBrush8}"
+                                            Margin="4">
+                                        <Label Content="{Binding}"
+                                               Margin="5"
+                                               Padding="5" />
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
                     <!--Car fields-->
+                    <StackPanel Grid.ColumnSpan="2">
                     <styles:SHSubSectionTitle Content="Per car settings" />
                     <styles:SHLinkButton Click="ButtonForgetAllCars_Click"
                                          VerticalAlignment="Center"
                                          HorizontalAlignment="Right"
                                          Content="Forget all cars"
                                          Margin="0,0,4,8" />
-                    <Grid>
+                    </StackPanel>
+                    <Grid Grid.ColumnSpan="2">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="400" />
                             <ColumnDefinition Width="*" />
@@ -314,31 +309,36 @@
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
-                        <styles:SHListBox Name="FirstCarDataFieldSetting"
-                                          Margin="0,0,4,0"
-                                          Grid.Column="0"
-                                          Grid.Row="0"
-                                          ItemsSource="{Binding Path=CarFields}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <AutoGrid Margin="0,0"
-                                              Columns="1,*">
-                                        <Border Background="Green"
-                                                Margin="-4,-4,1,-4"
-                                                Visibility="{Binding Path=Value.IsActive, 
+                        <ScrollViewer Grid.Column="0"
+                                      Grid.Row="1"
+                                      VerticalScrollBarVisibility="Auto"
+                                      Margin="0,0,4,0">
+                            <styles:SHListBox Name="FirstCarDataFieldSetting"
+                                              Margin="0,0,4,0"
+                                              Grid.Column="0"
+                                              Grid.Row="0"
+                                              ItemsSource="{Binding Path=CarFields}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <AutoGrid Margin="0,0"
+                                                  Columns="1,*">
+                                            <Border Background="Green"
+                                                    Margin="-4,-4,1,-4"
+                                                    Visibility="{Binding Path=Value.IsActive, 
                                                 Converter={SHBoolToVisibilityConverter Hide=true}}" />
-                                        <StackPanel Margin="0,0,0,0">
-                                            <Label Padding="0"
-                                                   Content="{Binding Path=Value.CarModel}" />
-                                            <Label Padding="0"
-                                                   FontSize="10"
-                                                   Content="{Binding Path=Value.CarId}"
-                                                   Foreground="{DynamicResource GrayBrush5}" />
-                                        </StackPanel>
-                                    </AutoGrid>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </styles:SHListBox>
+                                            <StackPanel Margin="0,0,0,0">
+                                                <Label Padding="0"
+                                                       Content="{Binding Path=Value.CarModel}" />
+                                                <Label Padding="0"
+                                                       FontSize="10"
+                                                       Content="{Binding Path=Value.CarId}"
+                                                       Foreground="{DynamicResource GrayBrush5}" />
+                                            </StackPanel>
+                                        </AutoGrid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </styles:SHListBox>
+                        </ScrollViewer>
                         <Border CornerRadius="6"
                                 BorderBrush="#33000000"
                                 Background="{DynamicResource GrayBrush10}"
@@ -359,7 +359,7 @@
                                                    Grid.Row="0"
                                                    Grid.RowSpan="2" />
                     </Grid>
-                </StackPanel>
+                </AutoGrid>
             </styles:SHSection>
         </styles:SHTabItem>
     </styles:SHTabControl>
