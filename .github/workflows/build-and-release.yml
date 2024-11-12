@@ -31,6 +31,14 @@ jobs:
         retention-days: 1
         if-no-files-found: warn
 
+    - name: Publish Dashboard File Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: dashboard
+        path: "./Dash menu dash.simhubdash"
+        retention-days: 1
+        if-no-files-found: warn
+
   release:
     runs-on: windows-latest
     needs: build
@@ -40,6 +48,12 @@ jobs:
       with:
         name: dlls
         path: ./dlls
+    
+    - name: Download Dashboard File Artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: dashboard
+        path: ./dashboard
 
     - name: Create Release
       id: create_release
@@ -89,3 +103,14 @@ jobs:
         asset_path: ./dlls/RrreExtensionFields/bin/Release/RrreExtensionFields.dll
         asset_name: RrreExtensionFields.dll
         asset_content_type: application/x-msdownload
+
+    - name: Upload Release Asset DashMenuDash.simhubdash
+      id: upload-release-asset-dashmenudash
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: "./dashboard/Dash menu dash.simhubdash"
+        asset_name: DashMenuDash.simhubdash
+        asset_content_type: application/x-simhubdash
