@@ -146,9 +146,10 @@
                             Background="{DynamicResource GrayBrush10}"
                             Visibility="{Binding ElementName=AlertSettings, Path=SelectedValue, Converter={IsNullToCollapsedConverter}}"
                             Margin="4">
-                        <AutoGrid Columns="auto,*">
+                        <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                                      VerticalScrollBarVisibility="Auto">
                             <local:AlertSettingsItem DataContext="{Binding ElementName=AlertSettings, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Path=SelectedValue}" />
-                        </AutoGrid>
+                        </ScrollViewer>
                     </Border>
                 </Grid>
             </styles:SHSection>
