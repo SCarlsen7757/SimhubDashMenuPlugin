@@ -80,9 +80,10 @@
                                 Background="{DynamicResource GrayBrush10}"
                                 Visibility="{Binding ElementName=FieldDataSettings, Path=SelectedValue, Converter={IsNullToCollapsedConverter}}"
                                 Margin="4">
-                            <AutoGrid Columns="auto,*">
+                            <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                                          VerticalScrollBarVisibility="Auto">
                                 <local:DataFieldSettingsItem DataContext="{Binding ElementName=FieldDataSettings, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Path=SelectedValue}" />
-                            </AutoGrid>
+                            </ScrollViewer>
                         </Border>
                     </Grid>
                 </AutoGrid>
