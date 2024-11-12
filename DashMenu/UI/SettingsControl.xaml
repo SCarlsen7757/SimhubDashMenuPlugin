@@ -298,12 +298,12 @@
                     </StackPanel>
                     <!--Car fields-->
                     <StackPanel Grid.ColumnSpan="2">
-                    <styles:SHSubSectionTitle Content="Per car settings" />
-                    <styles:SHLinkButton Click="ButtonForgetAllCars_Click"
-                                         VerticalAlignment="Center"
-                                         HorizontalAlignment="Right"
-                                         Content="Forget all cars"
-                                         Margin="0,0,4,8" />
+                        <styles:SHSubSectionTitle Content="Per car settings" />
+                        <styles:SHLinkButton Click="ButtonForgetAllCars_Click"
+                                             VerticalAlignment="Center"
+                                             HorizontalAlignment="Right"
+                                             Content="Forget all cars"
+                                             Margin="0,0,4,8" />
                     </StackPanel>
                     <Grid Grid.ColumnSpan="2">
                         <Grid.ColumnDefinitions>
@@ -311,11 +311,10 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="auto" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <ScrollViewer Grid.Column="0"
-                                      Grid.Row="1"
+                                      Grid.Row="0"
                                       VerticalScrollBarVisibility="Auto"
                                       Margin="0,0,4,0">
                             <styles:SHListBox Name="FirstCarDataFieldSetting"
@@ -350,7 +349,6 @@
                                 Margin="4"
                                 Grid.Column="1"
                                 Grid.Row="0"
-                                Grid.RowSpan="2"
                                 Visibility="{Binding ElementName=FirstCarDataFieldSetting, Path=SelectedValue.Value, Converter={IsNotNullToCollapsedConverter}}">
                             <StackPanel VerticalAlignment="Center">
                                 <Label VerticalAlignment="Center"
@@ -358,11 +356,19 @@
                                        Content="Select a field data to edit it" />
                             </StackPanel>
                         </Border>
-                        <local:CarFieldSettingItem Visibility="{Binding ElementName=FirstCarDataFieldSetting, Path=SelectedValue, Converter={IsNullToCollapsedConverter}}"
-                                                   DataContext="{Binding ElementName=FirstCarDataFieldSetting, Path=SelectedValue.Value}"
-                                                   Grid.Column="1"
-                                                   Grid.Row="0"
-                                                   Grid.RowSpan="2" />
+                        <Border CornerRadius="6"
+                                BorderBrush="#33000000"
+                                Background="{DynamicResource GrayBrush10}"
+                                Margin="4"
+                                Grid.Column="1"
+                                Grid.Row="0"
+                                Visibility="{Binding ElementName=FirstCarDataFieldSetting, Path=SelectedValue, Converter={IsNullToCollapsedConverter}}">
+                            <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                                          VerticalScrollBarVisibility="Auto">
+                                <local:CarFieldSettingItem Visibility="{Binding ElementName=FirstCarDataFieldSetting, Path=SelectedValue, Converter={IsNullToCollapsedConverter}}"
+                                                           DataContext="{Binding ElementName=FirstCarDataFieldSetting, Path=SelectedValue.Value}" />
+                            </ScrollViewer>
+                        </Border>
                     </Grid>
                 </AutoGrid>
             </styles:SHSection>
