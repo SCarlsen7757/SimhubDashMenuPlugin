@@ -219,10 +219,13 @@
                                 Grid.Column="1"
                                 Grid.Row="1"
                                 Visibility="{Binding ElementName=FieldGaugeSettings, Path=SelectedValue, Converter={IsNullToCollapsedConverter}}">
-                            <AutoGrid Columns="auto, auto, *">
-                                <local:DataFieldSettingsItem DataContext="{Binding ElementName=FieldGaugeSettings, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Path=SelectedValue}" />
-                                <local:GaugeFieldSettingsItem DataContext="{Binding ElementName=FieldGaugeSettings, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Path=SelectedValue}" />
-                            </AutoGrid>
+                            <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                                          VerticalScrollBarVisibility="Auto">
+                                <StackPanel Orientation="Vertical">
+                                    <local:DataFieldSettingsItem DataContext="{Binding ElementName=FieldGaugeSettings, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Path=SelectedValue}" />
+                                    <local:GaugeFieldSettingsItem DataContext="{Binding ElementName=FieldGaugeSettings, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Path=SelectedValue}" />
+                                </StackPanel>
+                            </ScrollViewer>
                         </Border>
                     </Grid>
                 </AutoGrid>
