@@ -297,30 +297,30 @@
                         </ItemsControl>
                     </StackPanel>
                     <!--Car fields-->
-                    <StackPanel Grid.ColumnSpan="2">
-                        <styles:SHSubSectionTitle Content="Per car settings" />
-                        <styles:SHLinkButton Click="ButtonForgetAllCars_Click"
-                                             VerticalAlignment="Center"
-                                             HorizontalAlignment="Right"
-                                             Content="Forget all cars"
-                                             Margin="0,0,4,8" />
-                    </StackPanel>
                     <Grid Grid.ColumnSpan="2">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="400" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
-                        <ScrollViewer Grid.Column="0"
+                        <StackPanel Grid.Column="0"
                                       Grid.Row="0"
+                                    Grid.ColumnSpan="2">
+                            <styles:SHSubSectionTitle Content="Per car settings" />
+                            <styles:SHLinkButton Click="ButtonForgetAllCars_Click"
+                                                 VerticalAlignment="Center"
+                                                 HorizontalAlignment="Right"
+                                                 Content="Forget all cars"
+                                                 Margin="0,0,4,8" />
+                        </StackPanel>
+                        <ScrollViewer Grid.Column="0"
+                                      Grid.Row="1"
                                       VerticalScrollBarVisibility="Auto"
                                       Margin="0,0,4,0">
                             <styles:SHListBox Name="FirstCarDataFieldSetting"
-                                              Margin="0,0,4,0"
-                                              Grid.Column="0"
-                                              Grid.Row="0"
                                               ItemsSource="{Binding Path=CarFields}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
@@ -348,7 +348,7 @@
                                 Background="{DynamicResource GrayBrush10}"
                                 Margin="4"
                                 Grid.Column="1"
-                                Grid.Row="0"
+                                Grid.Row="1"
                                 Visibility="{Binding ElementName=FirstCarDataFieldSetting, Path=SelectedValue.Value, Converter={IsNotNullToCollapsedConverter}}">
                             <StackPanel VerticalAlignment="Center">
                                 <Label VerticalAlignment="Center"
@@ -361,7 +361,7 @@
                                 Background="{DynamicResource GrayBrush10}"
                                 Margin="4"
                                 Grid.Column="1"
-                                Grid.Row="0"
+                                Grid.Row="1"
                                 Visibility="{Binding ElementName=FirstCarDataFieldSetting, Path=SelectedValue, Converter={IsNullToCollapsedConverter}}">
                             <ScrollViewer HorizontalScrollBarVisibility="Auto"
                                           VerticalScrollBarVisibility="Auto">
