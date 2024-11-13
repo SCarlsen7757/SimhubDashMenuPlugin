@@ -113,13 +113,11 @@ namespace DashMenu.FieldManager
             if (!(settings.TryGetValue(type.FullName, out Settings.DataField fieldSetting)))
             {
 
-                fieldSetting = new Settings.DataField
-                {
-                    Enabled = true,
-                };
-                fieldSetting.Override.Name = new Settings.PropertyOverride<string>(fieldInstance.Data.Name);
-                fieldSetting.Override.Decimal = new Settings.PropertyOverride<int>(fieldInstance.Data.Decimal);
-                fieldSetting.Override.DayNightColorScheme = new Settings.DayNightColorScheme(fieldInstance.Data.Color);
+                fieldSetting = new Settings.DataField { Enabled = true, };
+                fieldSetting.Override.Name.OverrideValue = fieldInstance.Data.Name;
+                fieldSetting.Override.Decimal.OverrideValue = fieldInstance.Data.Decimal;
+                fieldSetting.Override.DayNightColorScheme.DayModeColor.OverrideValue = fieldInstance.Data.Color.Clone();
+                fieldSetting.Override.DayNightColorScheme.NightModeColor.OverrideValue = fieldInstance.Data.Color.Clone();
                 settings.Add(type.FullName, fieldSetting);
             }
 

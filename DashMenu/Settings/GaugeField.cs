@@ -62,9 +62,9 @@ namespace DashMenu.Settings
 
             [JsonIgnore]
             new internal readonly GaugeField parent;
-            public PropertyOverride<string> Maximum { get; set; } = new PropertyOverride<string>();
-            public PropertyOverride<string> Minimum { get; set; } = new PropertyOverride<string>();
-            public PropertyOverride<string> Step { get; set; } = new PropertyOverride<string>();
+            public PropertyOverride<string> Maximum { get; } = new PropertyOverride<string>();
+            public PropertyOverride<string> Minimum { get; } = new PropertyOverride<string>();
+            public PropertyOverride<string> Step { get; } = new PropertyOverride<string>();
             //Event handlers
             public event PropertyChangedEventHandler MaximumPropertyChanged;
             public event PropertyChangedEventHandler MinimumPropertyChanged;

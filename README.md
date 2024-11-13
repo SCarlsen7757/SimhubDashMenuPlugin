@@ -7,11 +7,6 @@ This plugin allows you to create and display customizable data fields on the das
 
 **This plugin is still a work in progress** and a changes to the implementation of field and UI can happen.
 
-> [!CAUTION]
-> Known issue :bug:
->
-> After using new fields for the first time for a game. Simhub needs to be restarted for the settings to work properly.
-
 ## Using
 
 When using a car for the first time, a default number of empty fields will be created. These fields can then be adjusted to display the relevant data for the car. It is also possible to set a default set of field that will be used instead of the empty fields. The number of fields can also be changed as needed.

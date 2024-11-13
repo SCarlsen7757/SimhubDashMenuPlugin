@@ -128,13 +128,14 @@ namespace DashMenu.FieldManager
             if (!(settings.TryGetValue(type.FullName, out Settings.GaugeField fieldSetting)))
             {
 
-                fieldSetting = new Settings.GaugeField
-                {
-                    Enabled = true,
-                };
-                fieldSetting.Override.Name = new Settings.PropertyOverride<string>(fieldInstance.Data.Name);
-                fieldSetting.Override.Decimal = new Settings.PropertyOverride<int>(fieldInstance.Data.Decimal);
-                fieldSetting.Override.DayNightColorScheme = new Settings.DayNightColorScheme(fieldInstance.Data.Color);
+                fieldSetting = new Settings.GaugeField { Enabled = true };
+                fieldSetting.Override.Name.OverrideValue = fieldInstance.Data.Name;
+                fieldSetting.Override.Decimal.OverrideValue = fieldInstance.Data.Decimal;
+                fieldSetting.Override.DayNightColorScheme.DayModeColor.OverrideValue = fieldInstance.Data.Color.Clone();
+                fieldSetting.Override.DayNightColorScheme.NightModeColor.OverrideValue = fieldInstance.Data.Color.Clone();
+                fieldSetting.Override.Maximum.OverrideValue = fieldInstance.Data.Maximum;
+                fieldSetting.Override.Minimum.OverrideValue = fieldInstance.Data.Minimum;
+                fieldSetting.Override.Step.OverrideValue = fieldInstance.Data.Step;
                 settings.Add(type.FullName, fieldSetting);
             }
 

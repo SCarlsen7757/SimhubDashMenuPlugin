@@ -78,11 +78,11 @@ namespace DashMenu.Settings
             [JsonIgnore]
             internal readonly DataField parent;
 
-            public PropertyOverride<string> Name { get; set; } = new PropertyOverride<string>();
+            public PropertyOverride<string> Name { get; } = new PropertyOverride<string>();
 
-            public PropertyOverride<int> Decimal { get; set; } = new PropertyOverride<int>();
+            public PropertyOverride<int> Decimal { get; } = new PropertyOverride<int>();
 
-            public DayNightColorScheme DayNightColorScheme { get; set; } = new DayNightColorScheme();
+            public DayNightColorScheme DayNightColorScheme { get; } = new DayNightColorScheme();
 
             public event PropertyChangedEventHandler NamePropertyChanged;
             public event PropertyChangedEventHandler DecimalPropertyChanged;

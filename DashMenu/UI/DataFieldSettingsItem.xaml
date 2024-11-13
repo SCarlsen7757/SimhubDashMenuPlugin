@@ -67,12 +67,12 @@
                 <Label Content="Override default/day mode color"
                        Grid.ColumnSpan="2" />
                 <styles:SHToggleCheckbox IsChecked="{Binding Path=Override.DayNightColorScheme.DayModeColor.Override, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <local:ColorSchemeItem DataContext="{Binding Path=Override.DayNightColorScheme.DayModeColor}" />
+                <local:ColorSchemeItem DataContext="{Binding Path=Override.DayNightColorScheme.DayModeColor, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
                 <Label Content="Override night mode color"
                        Grid.ColumnSpan="2" />
                 <styles:SHToggleCheckbox IsChecked="{Binding Path=Override.DayNightColorScheme.NightModeColor.Override}"
                                          IsEnabled="{Binding Path=Override.DayNightColorScheme.DayModeColor.Override}" />
-                <local:ColorSchemeItem DataContext="{Binding Path=Override.DayNightColorScheme.NightModeColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <local:ColorSchemeItem DataContext="{Binding Path=Override.DayNightColorScheme.NightModeColor, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
                 <!--Decimal override-->
                 <styles:SHSectionSeparator Grid.ColumnSpan="2"
                                            Margin="-24,0"
