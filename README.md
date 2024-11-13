@@ -33,26 +33,20 @@ To get started you can use this [CommonExtensionFields.dll](https://github.com/S
 
 ## Configure Control Mapping
 
-After installing the plugin and additional fields, you need to configure the control mapping to manage actions. This is done in the "Controls and Events" menu.
+After installing the plugin and additional fields, you need to configure the control mapping to manage actions. This is done in the **Dash menu** window, under **Controls** tab. Not all controls are required for this plugin to work. See the list below for available and recommended required controls.
 
-1. Select the "Controls and Events" menu.
-2. Navigate to the "Controls" tab.
-3. Select 'New mapping', search for the action, and assign a button.
-
-Repeat step 3 for all required actions.
-
-Available Actions:
+Available controls:
 
 |Name| Required | Description|
 | --- | :---: | --- |
-| `ToggleConfigMode` | :heavy_check_mark: | Toggle configuration mode |
-| `ChangeFieldType` | :x: | Change field type for configuration mode ( Change between Data field and Gauge fields) |
-| `ConfigNextField` | :heavy_check_mark: | Select next field when in configuration mode |
-| `ConfigPrevField` | :x: | Select previous field when in configuration mode |
-| `ChangeFieldTypeNext` | :heavy_check_mark: | Change field type of the selected field when in configuration mode |
-| `ChangeFieldTypePrev` | :x: | Change field type of the selected field when in configuration mode |
-| `IncreaseNumberOfField` | :x: | Increase number of fields for the current car (maximum 20) |
-| `DecreaseNumberOfField` | :x: | Decrease number of fields for the current car (minimum 1) |
+| `Toggle configuration mode` | :heavy_check_mark: | Toggle configuration mode |
+| `Change field type` | :x: | Change field type for configuration mode ( Change between Data field and Gauge fields) |
+| `Select next field` | :heavy_check_mark: | Select next field when in configuration mode |
+| `Select previous field` | :x: | Select previous field when in configuration mode |
+| `Change field (next)` | :heavy_check_mark: | Change field type of the selected field when in configuration mode |
+| `Change field (prev)` | :x: | Change field type of the selected field when in configuration mode |
+| `Increase number of field` | :x: | Increase number of fields for the current car (maximum 20) |
+| `Decrease number of field` | :x: | Decrease number of fields for the current car (minimum 1) |
 
 ![Select "Controls and events" menu then "Controls" tab and click the "New mapping" button.](./Image/ControlsAndEvents.png)
 
