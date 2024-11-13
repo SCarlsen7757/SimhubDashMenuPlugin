@@ -64,10 +64,14 @@ jobs:
         tag_name: latest # specify your tag version
         release_name: New release RENAME! # specify your release name
         body: |
-          **Feature**
+          # HEADER RENAME!
 
-          **Bugfix**
-          
+          ## Feature
+          New features here ;)
+
+          ## Bugfix
+          Bugs that have been fixed :)
+
         draft: true
         prerelease: false
 
