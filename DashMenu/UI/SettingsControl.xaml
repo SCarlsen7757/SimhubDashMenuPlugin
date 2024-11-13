@@ -307,7 +307,7 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <StackPanel Grid.Column="0"
-                                      Grid.Row="0"
+                                    Grid.Row="0"
                                     Grid.ColumnSpan="2">
                             <styles:SHSubSectionTitle Content="Per car settings" />
                             <styles:SHLinkButton Click="ButtonForgetAllCars_Click"
