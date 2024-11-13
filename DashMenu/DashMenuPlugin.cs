@@ -61,6 +61,7 @@ namespace DashMenu
 
         internal static class ActionNames
         {
+            //If changing the name of actions remember to change the names in Settings Control.xaml under control section!
             public const string ToggleConfigMode = "ToggleConfigMode";
             public const string ChangeFieldType = "ChangeFieldType";
             public const string ConfigNextField = "ConfigNextField";

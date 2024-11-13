@@ -373,5 +373,29 @@
                 </AutoGrid>
             </styles:SHSection>
         </styles:SHTabItem>
+        <styles:SHTabItem Header="Controls">
+            <styles:SHSection Title="Control mapping">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <ui:ControlsEditor ActionName="DashMenuPlugin.ToggleConfigMode"
+                                           FriendlyName="Toggle configuration mode" />
+                        <ui:ControlsEditor ActionName="DashMenuPlugin.ChangeFieldType"
+                                           FriendlyName="Change field type" />
+                        <ui:ControlsEditor ActionName="DashMenuPlugin.ConfigNextField"
+                                           FriendlyName="Select next field" />
+                        <ui:ControlsEditor ActionName="DashMenuPlugin.ConfigPrevField"
+                                           FriendlyName="Select previous field" />
+                        <ui:ControlsEditor ActionName="DashMenuPlugin.ChangeFieldTypeNext"
+                                           FriendlyName="Change field (next)" />
+                        <ui:ControlsEditor ActionName="DashMenuPlugin.ChangeFieldTypePrev"
+                                           FriendlyName="Change field (prev)" />
+                        <ui:ControlsEditor ActionName="DashMenuPlugin.IncreaseNumberOfFields"
+                                           FriendlyName="Increase number of fields" />
+                        <ui:ControlsEditor ActionName="DashMenuPlugin.DecreasenumberOfFields"
+                                           FriendlyName="Decrease number of fields" />
+                    </StackPanel>
+                </ScrollViewer>
+            </styles:SHSection>
+        </styles:SHTabItem>
     </styles:SHTabControl>
 </UserControl>
