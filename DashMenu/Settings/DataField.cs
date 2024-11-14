@@ -31,6 +31,19 @@ namespace DashMenu.Settings
 
         private bool enabled = true;
 
+        private bool hide = false;
+
+        public bool Hide
+        {
+            get => hide;
+            set
+            {
+                if (value == hide) return;
+                hide = value;
+                OnPropertyChanged();
+            }
+        }
+
         public bool Enabled
         {
             get => enabled;

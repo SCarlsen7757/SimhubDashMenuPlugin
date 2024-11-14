@@ -14,9 +14,12 @@
     <UserControl.DataContext>
         <settings:Alert />
     </UserControl.DataContext>
+    
     <UserControl.Resources>
         <local:MillisecondsToTimeSpanConverter x:Key="MillisecondsToTimeSpanConverter" />
+        <local:InvertedBooleanConverter x:Key="InvertedBooleanConverter" />
     </UserControl.Resources>
+    
     <Border BorderThickness="0"
             CornerRadius="6"
             BorderBrush="#33000000"
@@ -38,8 +41,13 @@
             <AutoGrid Columns="auto,*"
                       Margin="12,0,0,0">
                 <styles:SHToggleCheckbox x:Name="EnabledCheckBox"
-                                         IsChecked="{Binding Path=Enabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                         IsChecked="{Binding Path=Enabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         IsEnabled="{Binding Path=Hide, Converter={StaticResource InvertedBooleanConverter}}"/>
                 <Label Content="Enable alert." />
+                <styles:SHToggleCheckbox x:Name="HiddenCheckBox"
+                                         IsChecked="{Binding Path=Hide, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         IsEnabled="{Binding Path=Enabled, Converter={StaticResource InvertedBooleanConverter}}" />
+                <Label Content="Hide alert from list." />
             </AutoGrid>
             <styles:SHSubSectionTitle Content="Time settings" />
             <AutoGrid Columns="auto,*"

@@ -28,6 +28,19 @@ namespace DashMenu.Settings
             }
         }
 
+        private bool hide = false;
+
+        public bool Hide
+        {
+            get => hide;
+            set
+            {
+                if (hide == value) return;
+                hide = value;
+                OnPropertyChanged();
+            }
+        }
+
         private TimeSpan time = TimeSpan.FromMilliseconds(700);
 
         public TimeSpan ShowTimeDuration

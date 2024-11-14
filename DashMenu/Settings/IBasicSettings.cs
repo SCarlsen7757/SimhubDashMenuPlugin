@@ -6,5 +6,7 @@
         string FullName { get; }
         string Name { get; }
         string Namespace { get; }
+
+        bool Hide { get; }
     }
 }

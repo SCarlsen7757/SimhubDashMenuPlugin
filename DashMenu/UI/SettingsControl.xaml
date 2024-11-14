@@ -13,8 +13,14 @@
     <UserControl.DataContext>
         <settings:GameSettings />
     </UserControl.DataContext>
+
+    <UserControl.Resources>
+        <local:InvertedBooleanConverter x:Key="InvertedBooleanConverter" />
+    </UserControl.Resources>
+
     <styles:SHTabControl>
-        <styles:SHTabItem Header="Data fields">
+        <styles:SHTabItem Name="DataFields"
+                          Header="Data fields">
             <styles:SHSection Title="General settings">
                 <AutoGrid Rows="auto,*">
                     <!--Default amount of fields-->
@@ -33,31 +39,68 @@
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <styles:SHSubSectionTitle Content="Field data"
                                                   Grid.Column="0"
                                                   Grid.Row="0"
                                                   Grid.ColumnSpan="2" />
+                        <StackPanel Orientation="Horizontal"
+                                    Margin="0,0,0,4"
+                                    Grid.Column="0"
+                                    Grid.Row="1">
+                            <styles:SHToggleCheckbox x:Name="DataFieldHide"
+                                                     Checked="DataFieldHide_CheckedChanged"
+                                                     Unchecked="DataFieldHide_CheckedChanged" />
+                            <Label Content="Show hidden fields" />
+                        </StackPanel>
                         <ScrollViewer Grid.Column="0"
-                                      Grid.Row="1"
+                                      Grid.Row="2"
                                       VerticalScrollBarVisibility="Auto"
                                       Margin="0,0,4,0">
-                            <styles:SHListBox Name="FieldDataSettings"
-                                              ItemsSource="{Binding Path=DataFields.Values}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <AutoGrid Margin="0,0"
-                                                  Columns="1,*">
-                                            <Border Background="{DynamicResource AccentColorBrush}"
-                                                    Margin="-4,-4,1,-4"
-                                                    Visibility="{Binding Path=Enabled, Converter={SHBoolToVisibilityConverter Hide=true}}" />
-                                            <Label Padding="4,1,1,1"
-                                                   Content="{Binding Path=FullName}" />
-                                        </AutoGrid>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </styles:SHListBox>
+                            <StackPanel>
+                                <styles:SHListBox Name="FieldDataSettings">
+                                    <ItemsControl.GroupStyle>
+                                        <GroupStyle>
+                                            <GroupStyle.HeaderTemplate>
+                                                <DataTemplate>
+                                                    <Border Background="{DynamicResource WhiteBrush}"
+                                                            BorderBrush="{DynamicResource BlackBrush}"
+                                                            BorderThickness="0"
+                                                            CornerRadius="6"
+                                                            Margin="0"
+                                                            HorizontalAlignment="Stretch"
+                                                            VerticalAlignment="Stretch">
+                                                        <Label Content="{Binding Path=Name}"
+                                                               Height="30"
+                                                               FontWeight="Bold"
+                                                               FontSize="14"
+                                                               Foreground="{DynamicResource BlackBrush}"
+                                                               Margin="0,0,0,0"
+                                                               Padding="5" />
+                                                    </Border>
+                                                </DataTemplate>
+                                            </GroupStyle.HeaderTemplate>
+                                        </GroupStyle>
+                                    </ItemsControl.GroupStyle>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <AutoGrid Margin="0,0"
+                                                      Columns="1,*,1">
+                                                <Border Background="{DynamicResource AccentColorBrush}"
+                                                        Margin="-4,-4,1,-4"
+                                                        Visibility="{Binding Path=Enabled, Converter={SHBoolToVisibilityConverter Hide=true}}" />
+                                                <Label Padding="4,1,1,1"
+                                                       Content="{Binding Path=Name}" />
+                                                <Border Background="{DynamicResource GrayBrush5}"
+                                                        Margin="-4,-4,1,-4"
+                                                        Visibility="{Binding Path=Hide, Converter={SHBoolToVisibilityConverter Hide=False}}" />
+                                            </AutoGrid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </styles:SHListBox>
+                            </StackPanel>
                         </ScrollViewer>
                         <Border CornerRadius="6"
                                 BorderBrush="#33000000"
@@ -65,6 +108,7 @@
                                 Margin="4"
                                 Grid.Column="1"
                                 Grid.Row="1"
+                                Grid.RowSpan="2"
                                 Visibility="{Binding ElementName=FieldDataSettings, Path=SelectedValue, Converter={IsNotNullToCollapsedConverter}}">
                             <StackPanel VerticalAlignment="Center">
                                 <Label VerticalAlignment="Center"
@@ -74,6 +118,7 @@
                         </Border>
                         <Border Grid.Column="1"
                                 Grid.Row="1"
+                                Grid.RowSpan="2"
                                 BorderThickness="0"
                                 CornerRadius="6"
                                 BorderBrush="#33000000"
@@ -89,7 +134,8 @@
                 </AutoGrid>
             </styles:SHSection>
         </styles:SHTabItem>
-        <styles:SHTabItem Header="Alerts">
+        <styles:SHTabItem Name="Alerts"
+                          Header="Alerts">
             <styles:SHSection Title="Alerts settings">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -99,27 +145,62 @@
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <styles:SHSubSectionTitle Content="Alerts"
                                               Grid.Column="0"
                                               Grid.Row="0"
                                               Grid.ColumnSpan="2" />
+                    <StackPanel Orientation="Horizontal"
+                                Margin="0,0,0,4"
+                                Grid.Column="0"
+                                Grid.Row="1">
+                        <styles:SHToggleCheckbox x:Name="AlertHide"
+                                                 Checked="AlertHide_CheckedChanged"
+                                                 Unchecked="AlertHide_CheckedChanged" />
+                        <Label Content="Show hidden fields" />
+                    </StackPanel>
                     <ScrollViewer Grid.Column="0"
-                                  Grid.Row="1"
+                                  Grid.Row="2"
                                   VerticalScrollBarVisibility="Auto"
                                   Margin="0,0,4,0">
-                        <styles:SHListBox Name="AlertSettings"
-                                          ItemsSource="{Binding Path=Alerts.Values}">
+                        <styles:SHListBox Name="AlertSettings">
+                            <ItemsControl.GroupStyle>
+                                <GroupStyle>
+                                    <GroupStyle.HeaderTemplate>
+                                        <DataTemplate>
+                                            <Border Background="{DynamicResource WhiteBrush}"
+                                                    BorderBrush="{DynamicResource BlackBrush}"
+                                                    BorderThickness="0"
+                                                    CornerRadius="6"
+                                                    Margin="0"
+                                                    HorizontalAlignment="Stretch"
+                                                    VerticalAlignment="Stretch">
+                                                <Label Content="{Binding Path=Name}"
+                                                       Height="30"
+                                                       FontWeight="Bold"
+                                                       FontSize="14"
+                                                       Foreground="{DynamicResource BlackBrush}"
+                                                       Margin="0,0,0,0"
+                                                       Padding="5" />
+                                            </Border>
+                                        </DataTemplate>
+                                    </GroupStyle.HeaderTemplate>
+                                </GroupStyle>
+                            </ItemsControl.GroupStyle>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <AutoGrid Margin="0,0"
-                                              Columns="1,*">
+                                              Columns="1,*,1">
                                         <Border Background="{DynamicResource AccentColorBrush}"
                                                 Margin="-4,-4,1,-4"
                                                 Visibility="{Binding Path=Enabled, Converter={SHBoolToVisibilityConverter Hide=true}}" />
                                         <Label Padding="4,1,1,1"
                                                Content="{Binding Path=FullName}" />
+                                        <Border Background="{DynamicResource GrayBrush5}"
+                                                Margin="-4,-4,1,-4"
+                                                Visibility="{Binding Path=Hide, Converter={SHBoolToVisibilityConverter Hide=False}}" />
                                     </AutoGrid>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
@@ -130,6 +211,7 @@
                             Background="{DynamicResource GrayBrush10}"
                             Margin="4"
                             Grid.Column="1"
+                            Grid.RowSpan="2"
                             Grid.Row="1"
                             Visibility="{Binding ElementName=AlertSettings, Path=SelectedValue, Converter={IsNotNullToCollapsedConverter}}">
                         <StackPanel VerticalAlignment="Center">
@@ -140,6 +222,7 @@
                     </Border>
                     <Border Grid.Column="1"
                             Grid.Row="1"
+                            Grid.RowSpan="2"
                             BorderThickness="0"
                             CornerRadius="6"
                             BorderBrush="#33000000"
@@ -154,7 +237,8 @@
                 </Grid>
             </styles:SHSection>
         </styles:SHTabItem>
-        <styles:SHTabItem Header="Gauge fields">
+        <styles:SHTabItem Name="GaugeFields"
+                          Header="Gauge fields">
             <styles:SHSection Title="General settings">
                 <AutoGrid Rows="auto,*">
                     <!--Default amount of fields-->
@@ -173,27 +257,62 @@
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <styles:SHSubSectionTitle Content="Field data"
                                                   Grid.Column="0"
                                                   Grid.Row="0"
                                                   Grid.ColumnSpan="2" />
+                        <StackPanel Orientation="Horizontal"
+                                    Margin="0,0,0,4"
+                                    Grid.Column="0"
+                                    Grid.Row="1">
+                            <styles:SHToggleCheckbox x:Name="GaugeFieldHide"
+                                                     Checked="GaugeFieldHide_CheckedChanged"
+                                                     Unchecked="GaugeFieldHide_CheckedChanged" />
+                            <Label Content="Show hidden fields" />
+                        </StackPanel>
                         <ScrollViewer Grid.Column="0"
-                                      Grid.Row="1"
+                                      Grid.Row="2"
                                       VerticalScrollBarVisibility="Auto"
                                       Margin="0,0,4,0">
-                            <styles:SHListBox Name="FieldGaugeSettings"
-                                              ItemsSource="{Binding Path=GaugeFields.Values}">
+                            <styles:SHListBox Name="FieldGaugeSettings">
+                                <ItemsControl.GroupStyle>
+                                    <GroupStyle>
+                                        <GroupStyle.HeaderTemplate>
+                                            <DataTemplate>
+                                                <Border Background="{DynamicResource WhiteBrush}"
+                                                        BorderBrush="{DynamicResource BlackBrush}"
+                                                        BorderThickness="0"
+                                                        CornerRadius="6"
+                                                        Margin="0"
+                                                        HorizontalAlignment="Stretch"
+                                                        VerticalAlignment="Stretch">
+                                                    <Label Content="{Binding Path=Name}"
+                                                           Height="30"
+                                                           FontWeight="Bold"
+                                                           FontSize="14"
+                                                           Foreground="{DynamicResource BlackBrush}"
+                                                           Margin="0,0,0,0"
+                                                           Padding="5" />
+                                                </Border>
+                                            </DataTemplate>
+                                        </GroupStyle.HeaderTemplate>
+                                    </GroupStyle>
+                                </ItemsControl.GroupStyle>
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <AutoGrid Margin="0,0"
-                                                  Columns="1,*">
+                                                  Columns="1,*,1">
                                             <Border Background="{DynamicResource AccentColorBrush}"
                                                     Margin="-4,-4,1,-4"
                                                     Visibility="{Binding Path=Enabled, Converter={SHBoolToVisibilityConverter Hide=true}}" />
                                             <Label Padding="4,1,1,1"
                                                    Content="{Binding Path=FullName}" />
+                                            <Border Background="{DynamicResource GrayBrush5}"
+                                                    Margin="-4,-4,1,-4"
+                                                    Visibility="{Binding Path=Hide, Converter={SHBoolToVisibilityConverter Hide=False}}" />
                                         </AutoGrid>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
@@ -205,6 +324,7 @@
                                 Margin="4"
                                 Grid.Column="1"
                                 Grid.Row="1"
+                                Grid.RowSpan="2"
                                 Visibility="{Binding ElementName=FieldGaugeSettings, Path=SelectedValue, Converter={IsNotNullToCollapsedConverter}}">
                             <StackPanel VerticalAlignment="Center">
                                 <Label VerticalAlignment="Center"
@@ -218,6 +338,7 @@
                                 Margin="4"
                                 Grid.Column="1"
                                 Grid.Row="1"
+                                Grid.RowSpan="2"
                                 Visibility="{Binding ElementName=FieldGaugeSettings, Path=SelectedValue, Converter={IsNullToCollapsedConverter}}">
                             <ScrollViewer HorizontalScrollBarVisibility="Auto"
                                           VerticalScrollBarVisibility="Auto">
@@ -231,7 +352,8 @@
                 </AutoGrid>
             </styles:SHSection>
         </styles:SHTabItem>
-        <styles:SHTabItem Header="Car settings">
+        <styles:SHTabItem Name="CarSettings"
+                          Header="Car settings">
             <!--Car settings-->
             <styles:SHSection Title="Car settings">
                 <AutoGrid Columns="auto, *">
@@ -373,7 +495,8 @@
                 </AutoGrid>
             </styles:SHSection>
         </styles:SHTabItem>
-        <styles:SHTabItem Header="Controls">
+        <styles:SHTabItem Name="Controls"
+                          Header="Controls">
             <styles:SHSection Title="Control mapping">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel>

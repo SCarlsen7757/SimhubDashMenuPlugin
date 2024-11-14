@@ -15,6 +15,11 @@
     <UserControl.DataContext>
         <settings:DataField />
     </UserControl.DataContext>
+
+    <UserControl.Resources>
+        <local:InvertedBooleanConverter x:Key="InvertedBooleanConverter" />
+    </UserControl.Resources>
+    
     <AutoGrid Columns="auto,*"
               Margin="10">
         <StackPanel>
@@ -35,8 +40,13 @@
                 <AutoGrid Columns="auto,*"
                           Margin="12,0,0,0">
                     <styles:SHToggleCheckbox x:Name="EnabledCheckBox"
-                                             IsChecked="{Binding Path=Enabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                             IsChecked="{Binding Path=Enabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                             IsEnabled="{Binding Path=Hide, Converter={StaticResource InvertedBooleanConverter}}"/>
                     <Label Content="Enable field extension, to be selectable." />
+                    <styles:SHToggleCheckbox x:Name="HiddenCheckBox" 
+                                             IsChecked="{Binding Path=Hide, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                             IsEnabled="{Binding Path=Enabled, Converter={StaticResource InvertedBooleanConverter}}"/>
+                    <Label Content="Hide field from list." />
                 </AutoGrid>
                 <styles:SHSubSectionTitle Content="Supported Games" />
                 <TextBlock Text="{Binding Path=SupportedGames}"
