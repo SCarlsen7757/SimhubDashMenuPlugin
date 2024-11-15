@@ -6,7 +6,7 @@ namespace RrreExtensionFields
 {
     internal class PushToPassTime : FieldExtensionBase<IGaugeField>, IGaugeFieldExtension
     {
-        PushToPassTime(string gameName) : base(gameName, "RRRE")
+        public PushToPassTime(string gameName) : base(gameName, "RRRE")
         {
             Data = new GaugeField()
             {
