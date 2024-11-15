@@ -91,7 +91,7 @@ namespace DashMenu
             GaugeFieldManager.AddExtensionField(typeof(EmptyField), Settings.GetCurrentGameSettings().GaugeFields);
 
             GetCustomFields();
-            SettingsExtensionFieldsCleanUp();
+            ExtensionSettingsCleanUp();
 
             AlertManager.AddAlerts(DataFieldManager.AllFields, Settings.GetCurrentGameSettings().Alerts);
             AlertManager.UpdateSelectedAlerts(Settings.GetCurrentGameSettings().DataFields, Settings.GetCurrentGameSettings().Alerts);
@@ -172,22 +172,21 @@ namespace DashMenu
             this.SaveCommonSettings("DashMenuSettings", Settings);
         }
 
-        public void SettingsExtensionFieldsCleanUp()
+        public void ExtensionSettingsCleanUp()
         {
             var gameSettings = Settings.GetCurrentGameSettings();
-
-            CleanUpFields(gameSettings.DataFields, DataFieldManager.AllFields.Select(x => x.FullName));
-            CleanUpFields(gameSettings.GaugeFields, GaugeFieldManager.AllFields.Select(x => x.FullName));
+            CleanUpSettings(gameSettings.DataFields, DataFieldManager.AllFields.Select(x => x.FullName));
+            CleanUpSettings(gameSettings.GaugeFields, GaugeFieldManager.AllFields.Select(x => x.FullName));
+            CleanUpSettings(gameSettings.Alerts, AlertManager.AllAlerts.Select(x => x.FullName));
         }
 
-        private void CleanUpFields<TSettingsField>(IDictionary<string, TSettingsField> fields, IEnumerable<string> allFieldNames)
+        private void CleanUpSettings<TSettingsType>(IDictionary<string, TSettingsType> settings, IEnumerable<string> fullNames)
         {
-            var validFieldNames = new HashSet<string>(allFieldNames);
-
-            foreach (var field in fields.Keys.ToList())
+            var validNames = new HashSet<string>(fullNames);
+            foreach (var field in settings.Keys.ToList())
             {
-                if (validFieldNames.Contains(field)) continue;
-                fields.Remove(field);
+                if (validNames.Contains(field)) continue;
+                settings.Remove(field);
             }
         }
 
