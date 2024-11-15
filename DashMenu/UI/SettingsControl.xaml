@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:DashMenu.UI"
              xmlns:settings="clr-namespace:DashMenu.Settings"
+             xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:ui="clr-namespace:SimHub.Plugins.UI;assembly=SimHub.Plugins"
              xmlns:styles="clr-namespace:SimHub.Plugins.Styles;assembly=SimHub.Plugins"
              mc:Ignorable="d"
@@ -46,15 +47,24 @@
                                                   Grid.Column="0"
                                                   Grid.Row="0"
                                                   Grid.ColumnSpan="2" />
-                        <StackPanel Orientation="Horizontal"
-                                    Margin="0,0,0,4"
-                                    Grid.Column="0"
-                                    Grid.Row="1">
+                        <AutoGrid Columns="auto, *"
+                                  Margin="0,0,0,4"
+                                  Grid.Column="0"
+                                  Grid.Row="1">
+                            <TextBox x:Name="DataFieldFilter"
+                                     Grid.ColumnSpan="2"
+                                     Margin="0,4,6,4"
+                                     Grid.Column="0"
+                                     Controls:TextBoxHelper.ClearTextButton="true"
+                                     TextWrapping="Wrap"
+                                     Controls:TextBoxHelper.Watermark="Field filter ..."
+                                     TextChanged="DataFieldFilter_TextChanged" />
                             <styles:SHToggleCheckbox x:Name="DataFieldHide"
                                                      Checked="DataFieldHide_CheckedChanged"
-                                                     Unchecked="DataFieldHide_CheckedChanged" />
+                                                     Unchecked="DataFieldHide_CheckedChanged"
+                                                     Margin="4,0,0,0" />
                             <Label Content="Show hidden fields" />
-                        </StackPanel>
+                        </AutoGrid>
                         <ScrollViewer Grid.Column="0"
                                       Grid.Row="2"
                                       VerticalScrollBarVisibility="Auto"
@@ -152,15 +162,23 @@
                                               Grid.Column="0"
                                               Grid.Row="0"
                                               Grid.ColumnSpan="2" />
-                    <StackPanel Orientation="Horizontal"
-                                Margin="0,0,0,4"
-                                Grid.Column="0"
-                                Grid.Row="1">
+                    <AutoGrid Columns="auto,*"
+                              Margin="0,0,0,4"
+                              Grid.Column="0"
+                              Grid.Row="1">
+                        <TextBox x:Name="AlertFilter"
+                                 Grid.ColumnSpan="2"
+                                 Margin="0,4,6,4"
+                                 Grid.Column="0"
+                                 Controls:TextBoxHelper.ClearTextButton="true"
+                                 TextWrapping="Wrap"
+                                 Controls:TextBoxHelper.Watermark="Field filter ..."
+                                 TextChanged="AlertFilter_TextChanged" />
                         <styles:SHToggleCheckbox x:Name="AlertHide"
                                                  Checked="AlertHide_CheckedChanged"
                                                  Unchecked="AlertHide_CheckedChanged" />
                         <Label Content="Show hidden fields" />
-                    </StackPanel>
+                    </AutoGrid>
                     <ScrollViewer Grid.Column="0"
                                   Grid.Row="2"
                                   VerticalScrollBarVisibility="Auto"
@@ -197,7 +215,7 @@
                                                 Margin="-4,-4,1,-4"
                                                 Visibility="{Binding Path=Enabled, Converter={SHBoolToVisibilityConverter Hide=true}}" />
                                         <Label Padding="4,1,1,1"
-                                               Content="{Binding Path=FullName}" />
+                                               Content="{Binding Path=Name}" />
                                         <Border Background="{DynamicResource GrayBrush5}"
                                                 Margin="-4,-4,1,-4"
                                                 Visibility="{Binding Path=Hide, Converter={SHBoolToVisibilityConverter Hide=False}}" />
@@ -264,15 +282,23 @@
                                                   Grid.Column="0"
                                                   Grid.Row="0"
                                                   Grid.ColumnSpan="2" />
-                        <StackPanel Orientation="Horizontal"
-                                    Margin="0,0,0,4"
-                                    Grid.Column="0"
-                                    Grid.Row="1">
+                        <AutoGrid Columns="auto,*"
+                                  Margin="0,0,0,4"
+                                  Grid.Column="0"
+                                  Grid.Row="1">
+                            <TextBox x:Name="GaugeFieldFilter"
+                                     Grid.ColumnSpan="2"
+                                     Margin="0,4,6,4"
+                                     Grid.Column="0"
+                                     Controls:TextBoxHelper.ClearTextButton="true"
+                                     TextWrapping="Wrap"
+                                     Controls:TextBoxHelper.Watermark="Field filter ..."
+                                     TextChanged="GaugeFieldFilter_TextChanged" />
                             <styles:SHToggleCheckbox x:Name="GaugeFieldHide"
                                                      Checked="GaugeFieldHide_CheckedChanged"
                                                      Unchecked="GaugeFieldHide_CheckedChanged" />
                             <Label Content="Show hidden fields" />
-                        </StackPanel>
+                        </AutoGrid>
                         <ScrollViewer Grid.Column="0"
                                       Grid.Row="2"
                                       VerticalScrollBarVisibility="Auto"
@@ -309,7 +335,7 @@
                                                     Margin="-4,-4,1,-4"
                                                     Visibility="{Binding Path=Enabled, Converter={SHBoolToVisibilityConverter Hide=true}}" />
                                             <Label Padding="4,1,1,1"
-                                                   Content="{Binding Path=FullName}" />
+                                                   Content="{Binding Path=Name}" />
                                             <Border Background="{DynamicResource GrayBrush5}"
                                                     Margin="-4,-4,1,-4"
                                                     Visibility="{Binding Path=Hide, Converter={SHBoolToVisibilityConverter Hide=False}}" />

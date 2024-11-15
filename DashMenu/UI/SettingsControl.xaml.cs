@@ -1,4 +1,7 @@
-﻿using System.ComponentModel;
+﻿using DashMenu.Settings;
+using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -93,16 +96,28 @@ namespace DashMenu.UI
             settings.DefaultGaugeFields.Clear();
         }
 
+        private static bool ContainsFilter(string text, bool showHiddenItems, IBasicSettings settings)
+        {
+            if (!showHiddenItems && settings.Hide) return false;
+            if (string.IsNullOrEmpty(text)) return true;
+            string str1 = text;
+            char[] chArray = new char[1] { ';' };
+            foreach (string str2 in str1.Split(chArray))
+            {
+                if (LikeOperator.LikeString(settings.FullName.ToLower(), "*" + str2.Trim().ToLower() + "*", CompareMethod.Binary))
+                    return true;
+            }
+            return false;
+        }
+
         private void RefreshDataFieldList()
         {
             if (DesignerProperties.GetIsInDesignMode(this)) return;
 
             var settings = (Settings.GameSettings)DataContext;
-            var fields = (DataFieldHide.IsChecked ?? false)
-                ? settings.DataFields.Values.ToList()
-                : settings.DataFields.Values.Where(x => !x.Hide).ToList();
 
-            dataFieldView = CollectionViewSource.GetDefaultView(fields);
+            dataFieldView = CollectionViewSource.GetDefaultView(settings.DataFields.Values.ToList());
+            dataFieldView.Filter = item => ContainsFilter(DataFieldFilter.Text, DataFieldHide.IsChecked ?? false, item as IBasicSettings);
             dataFieldView.GroupDescriptions.Add(new PropertyGroupDescription("Namespace"));
             dataFieldView.SortDescriptions.Add(new SortDescription("Namespace", ListSortDirection.Ascending));
             dataFieldView.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
@@ -115,12 +130,10 @@ namespace DashMenu.UI
             if (DesignerProperties.GetIsInDesignMode(this)) return;
 
             var settings = (Settings.GameSettings)DataContext;
-            var alerts = (AlertHide.IsChecked ?? false)
-                ? settings.Alerts.Values.ToList()
-                : settings.Alerts.Values.Where(x => !x.Hide).ToList();
 
-            alertView = CollectionViewSource.GetDefaultView(alerts);
+            alertView = CollectionViewSource.GetDefaultView(settings.Alerts.Values.ToList());
             alertView.GroupDescriptions.Add(new PropertyGroupDescription("Namespace"));
+            alertView.Filter = item => ContainsFilter(AlertFilter.Text, AlertHide.IsChecked ?? false, item as IBasicSettings);
             alertView.SortDescriptions.Add(new SortDescription("Namespace", ListSortDirection.Ascending));
             alertView.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
 
@@ -132,11 +145,9 @@ namespace DashMenu.UI
             if (DesignerProperties.GetIsInDesignMode(this)) return;
 
             var settings = (Settings.GameSettings)DataContext;
-            var fields = (GaugeFieldHide.IsChecked ?? false)
-                ? settings.GaugeFields.Values.ToList()
-                : settings.GaugeFields.Values.Where(x => !x.Hide).ToList();
 
-            gaugeFieldView = CollectionViewSource.GetDefaultView(fields);
+            gaugeFieldView = CollectionViewSource.GetDefaultView(settings.GaugeFields.Values.ToList());
+            gaugeFieldView.Filter = item => ContainsFilter(GaugeFieldFilter.Text, GaugeFieldHide.IsChecked ?? false, item as IBasicSettings);
             gaugeFieldView.GroupDescriptions.Add(new PropertyGroupDescription("Namespace"));
             gaugeFieldView.SortDescriptions.Add(new SortDescription("Namespace", ListSortDirection.Ascending));
             gaugeFieldView.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
@@ -149,12 +160,26 @@ namespace DashMenu.UI
             RefreshDataFieldList();
         }
 
+        private void DataFieldFilter_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            RefreshDataFieldList();
+        }
+
         private void AlertHide_CheckedChanged(object sender, RoutedEventArgs e)
         {
             RefreshAlertList();
         }
 
+        private void AlertFilter_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            RefreshAlertList();
+        }
+
         private void GaugeFieldHide_CheckedChanged(object sender, RoutedEventArgs e)
+        {
+            RefreshGaugeFieldList();
+        }
+        private void GaugeFieldFilter_TextChanged(object sender, TextChangedEventArgs e)
         {
             RefreshGaugeFieldList();
         }
