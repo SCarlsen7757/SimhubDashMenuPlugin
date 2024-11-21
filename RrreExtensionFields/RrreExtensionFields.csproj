@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Battery.cs" />
+    <Compile Include="BrakeWaterTank.cs" />
     <Compile Include="IncidentPoints.cs" />
     <Compile Include="Push2Pass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
