@@ -19,7 +19,7 @@ namespace RrreExtensionFields
             };
         }
 
-        public string Description => "Incident points.";
+        public string Description => "Battery level.";
 
         protected override bool GameSupported(string gameName)
         {
