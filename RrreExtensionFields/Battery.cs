@@ -39,7 +39,7 @@ namespace RrreExtensionFields
             }
             else
             {
-                Data.Value = r3eGameData.BatterySoC.ToString();
+                Data.Value = soc.ToString();
             }
         }
     }

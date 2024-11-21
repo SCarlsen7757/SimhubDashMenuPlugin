@@ -33,7 +33,7 @@ namespace RrreExtensionFields
             }
             else
             {
-                Data.Value = r3eGameData.IncidentPoints.ToString();
+                Data.Value = incidentPoints.ToString();
             }
         }
     }
