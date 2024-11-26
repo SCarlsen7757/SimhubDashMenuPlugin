@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonExtensionFields", "Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RrreExtensionFields", "RrreExtensionFields\RrreExtensionFields.csproj", "{AC5AD7D0-DCF4-43D2-ACB6-C82CF2B2C0B1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccExtensionFields", "AccExtensionFields\AccExtensionFields.csproj", "{CDE8FCFA-7FC0-4678-B1C1-555C3A5450E8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{AC5AD7D0-DCF4-43D2-ACB6-C82CF2B2C0B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC5AD7D0-DCF4-43D2-ACB6-C82CF2B2C0B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AC5AD7D0-DCF4-43D2-ACB6-C82CF2B2C0B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDE8FCFA-7FC0-4678-B1C1-555C3A5450E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDE8FCFA-7FC0-4678-B1C1-555C3A5450E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDE8FCFA-7FC0-4678-B1C1-555C3A5450E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDE8FCFA-7FC0-4678-B1C1-555C3A5450E8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

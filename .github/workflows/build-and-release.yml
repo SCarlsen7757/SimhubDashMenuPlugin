@@ -28,6 +28,7 @@ jobs:
             ./DashMenu/bin/Release/DashMenu.dll
             ./CommonExtensionFields/bin/Release/CommonExtensionFields.dll
             ./RrreExtensionFields/bin/Release/RrreExtensionFields.dll
+            ./AccExtensionFields/bin/Release/AccExtensionFields.dll
         retention-days: 1
         if-no-files-found: warn
 
@@ -75,8 +76,8 @@ jobs:
         draft: true
         prerelease: false
 
-    - name: Upload Release Asset DashMenu
-      id: upload-release-asset-dashmenu
+    - name: Upload Release Asset Dash Menu
+      id: upload-release-asset-dash-menu
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -86,8 +87,8 @@ jobs:
         asset_name: DashMenu.dll
         asset_content_type: application/x-msdownload
 
-    - name: Upload Release Asset CommonExtensionFields
-      id: upload-release-asset-commonextensionfields
+    - name: Upload Release Asset common extension fields
+      id: upload-release-asset-common-extension-fields
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -97,8 +98,8 @@ jobs:
         asset_name: CommonExtensionFields.dll
         asset_content_type: application/x-msdownload
 
-    - name: Upload Release Asset RrreExtensionFields
-      id: upload-release-asset-rrreextensionfields
+    - name: Upload Release Asset RRRE extension fields
+      id: upload-release-asset-rrre-extension-fields
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -108,8 +109,19 @@ jobs:
         asset_name: RrreExtensionFields.dll
         asset_content_type: application/x-msdownload
 
+    - name: Upload Release Asset ACC extension fields
+      id: upload-release-asset-acc-extension-fields
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./dlls/AccExtensionFields/bin/Release/AccExtensionFields.dll
+        asset_name: AccExtensionFields.dll
+        asset_content_type: application/x-msdownload
+
     - name: Upload Release Asset DashMenuDash.simhubdash
-      id: upload-release-asset-dashmenudash
+      id: upload-release-asset-dash-menu-dash
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
