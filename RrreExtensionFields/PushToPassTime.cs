@@ -12,6 +12,8 @@ namespace RrreExtensionFields
             {
                 Name = "P2P",
                 Color = new ColorScheme("#ba42ff"),
+                IsDecimalNumber = true,
+                Decimal = 1,
                 IsRangeLocked = true,
                 Minimum = 0.ToString(),
                 Unit = "s"
@@ -38,15 +40,13 @@ namespace RrreExtensionFields
             else if (push2pass.Engaged == 1)
             {
                 Data.Maximum = 10.ToString();
-                Data.Value = push2pass.EngagedTimeLeft.ToString();
+                Data.Value = DecimalValue(push2pass.EngagedTimeLeft);
             }
             else
             {
                 Data.Maximum = 20.ToString();
-                Data.Value = push2pass.WaitTimeLeft.ToString();
+                Data.Value = DecimalValue(push2pass.WaitTimeLeft);
             }
-
-            Data.Value = r3eGameData.PushToPass.AmountLeft.ToString();
         }
     }
 }

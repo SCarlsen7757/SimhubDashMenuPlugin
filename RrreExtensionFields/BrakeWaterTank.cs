@@ -13,6 +13,7 @@ namespace RrreExtensionFields
                 Name = "BWT",
                 Color = new ColorScheme("#1e74c9"),
                 IsDecimalNumber = true,
+                Decimal = 1,
                 IsRangeLocked = true,
                 Maximum = 200.ToString(),
                 Minimum = 0.ToString(),
@@ -40,7 +41,7 @@ namespace RrreExtensionFields
             }
             else
             {
-                Data.Value = waterLeft.ToString();
+                Data.Value = DecimalValue(waterLeft);
             }
         }
     }

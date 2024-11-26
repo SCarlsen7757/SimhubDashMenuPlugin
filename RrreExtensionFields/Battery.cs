@@ -13,6 +13,7 @@ namespace RrreExtensionFields
                 Name = "SOC",
                 Color = new ColorScheme("#67ff3d"),
                 IsDecimalNumber = true,
+                Decimal = 1,
                 IsRangeLocked = true,
                 Maximum = 100.ToString(),
                 Minimum = 0.ToString()
@@ -39,7 +40,7 @@ namespace RrreExtensionFields
             }
             else
             {
-                Data.Value = soc.ToString();
+                Data.Value = DecimalValue(soc);
             }
         }
     }
