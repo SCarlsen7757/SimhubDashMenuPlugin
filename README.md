@@ -1,38 +1,40 @@
-﻿# Dash menu
+﻿# Dash Menu
 
 This plugin allows you to create and display customizable data fields on the dashboard. These fields are easy to change, even during a race, eliminating the need for multiple dashboards for different car types.
 
-![Dashboard that implement this plugin](./Image/Dashboard.png)
+![Dashboard that implements this plugin](./Image/Dashboard.png)
 *This is the layout of a dashboard that uses this plugin. The five fields at the bottom (ABS, TC, BB, MAP, FUEL) are data fields, which can be swapped out with other data fields as needed. The two gauges in the center are gauge fields and can also be replaced with other gauge options. You can find this dashboard setup in the [repository](./Dash%20menu%20dash.simhubdash).*
 
-![Demo that shows fields can be changed and amount of fields can be changes as well](./Image/Demo.gif)
+![Demo that shows fields can be changed and the amount of fields can be changed as well](./Image/Demo.gif)
 *Demo of the testing dashboard found in the [repository](./Dash%20menu%20test.simhubdash).*
 
-**This plugin is still a work in progress** and a changes to the implementation of field and UI can happen.
+**This plugin is still a work in progress** and changes to the implementation of fields and UI can happen.
 
 ## Using
 
-When using a car for the first time, a default number of empty fields will be created. These fields can then be adjusted to display the relevant data for the car. It is also possible to set a default set of field that will be used instead of the empty fields. The number of fields can also be changed as needed.
+When using a car for the first time, a default set of empty fields will be created. These fields can then be adjusted to display the relevant data for the car. It is also possible to define a custom set of fields that will be used instead of the default set of empty fields. The number of fields can also be changed as needed.
 
 When using a car that has already been set up, it will use the latest settings for that car.
 
-## Install plugin
+## Install Plugin
 
 To install the plugin:
 
 1. Download the newest [DashMenu.dll file](https://github.com/SCarlsen7757/SimhubDashMenuPlugin/releases).
 2. Paste the DLL file into the root directory of Simhub: `C:\Program Files (x86)\SimHub`.
+3. Restart Simhub.
 
-## Install Extension fields
+## Install Extension Fields
 
 This plugin supports an expandable approach, similar to Simhub plugins, for adding more extension fields:
 
 1. Create a folder named `DashMenuExtensionFields` in the root directory of Simhub.
 2. Place any additional dash menu extension field DLL files into this folder.
+3. Restart Simhub.
 
 The DLL files placed in this folder will be loaded when starting Simhub.
 
-To get started you can use this [CommonExtensionFields.dll](https://github.com/SCarlsen7757/SimhubDashMenuPlugin/releases) file.
+To get started, you can use this [CommonExtensionFields.dll](https://github.com/SCarlsen7757/SimhubDashMenuPlugin/releases) file.
 
 ## Configure Control Mapping
 
@@ -49,7 +51,7 @@ Available controls:
 | `Change field (next)` | :heavy_check_mark: | Change field type of the selected field when in configuration mode |
 | `Change field (prev)` | :x: | Change field type of the selected field when in configuration mode |
 | `Increase number of field` | :x: | Increase number of fields for the current car (maximum 20) |
-| `Decrease number of field` | :x: | Decrease number of fields for the current car (minimum 1) |
+| `Decrease number of field` | :x: | Decrease number of fields for the current car (minimum 0) |
 
 ![Select "Controls and events" menu then "Controls" tab and click the "New mapping" button.](./Image/ControlsAndEvents.png)
 
@@ -57,7 +59,7 @@ After installing the plugin and extension fields and mapping of required control
 
 ## Using in Dashboard
 
-### Data field
+### Data Field
 
 You can access the fields in Dash Studio using the NCalc or JavaScript function that are listed below. They can also be found in the function NCalc Functions list :sunglasses:
 You can access all the fields properties within Dash Studio using the NCalc functions. See the table below.
@@ -90,7 +92,7 @@ Alerts are when a data field have changed and will be displayed on the dashboard
 |`dashalertcolorprimary`||Returns the primary color of latest alert.|
 |`dashalertcoloraccent`||Returns the accent color of latest alert.|
 
-### Gauge field
+### Gauge Field
 
 The gauge field have some of the same properties as the [Data field](#data-field) and more, the gauge field is intended to be used with linear or circular gauges.
 You can access all the fields properties within Dash Studio using NCalc functions. See the table below.
@@ -113,7 +115,7 @@ Example how to get the value and unit of the first gauge field.
 
 To get the number of data fields for the current car, use the property `AmountOfGaugeFields`.
 
-### Config screen
+### Config Screen
 
 It's possible to make a configuration screen by using the the following properties:
 
@@ -123,7 +125,7 @@ It's possible to make a configuration screen by using the the following properti
 
 Changes are automatically saved, and it is not possible to undo changes to the configuration except by manually reverting the changes yourself.
 
-## Change amount of fields
+## Change amount of Fields
 
 In the Dash field and Gauge field tab, you can adjust the default amount of fields to use when setting up a new car. You can choose any number between 1 and 20.
 
