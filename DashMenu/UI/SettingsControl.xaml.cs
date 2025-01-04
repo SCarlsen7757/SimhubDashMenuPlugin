@@ -1,11 +1,14 @@
 ﻿using DashMenu.Settings;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
 
 namespace DashMenu.UI
 {
@@ -24,7 +27,7 @@ namespace DashMenu.UI
             InitializeComponent();
             DataContext = settings;
 
-            foreach (var dataField in settings.DataFields.Values)
+            foreach (var dataField in settings.DataFields.Settings.Values)
             {
                 dataField.PropertyChanged += DataFieldPropertyChanged;
             }
@@ -36,7 +39,7 @@ namespace DashMenu.UI
             }
             RefreshAlertList();
 
-            foreach (var gaugeField in settings.GaugeFields.Values)
+            foreach (var gaugeField in settings.GaugeFields.Settings.Values)
             {
                 gaugeField.PropertyChanged += GaugeFieldPropertyChanged;
             }
@@ -116,7 +119,7 @@ namespace DashMenu.UI
 
             var settings = (Settings.GameSettings)DataContext;
 
-            dataFieldView = CollectionViewSource.GetDefaultView(settings.DataFields.Values.ToList());
+            dataFieldView = CollectionViewSource.GetDefaultView(settings.DataFields.Settings.Values.ToList());
             dataFieldView.Filter = item => ContainsFilter(DataFieldFilter.Text, DataFieldHide.IsChecked ?? false, item as IBasicSettings);
             dataFieldView.GroupDescriptions.Add(new PropertyGroupDescription("Namespace"));
             dataFieldView.SortDescriptions.Add(new SortDescription("Namespace", ListSortDirection.Ascending));
@@ -146,7 +149,7 @@ namespace DashMenu.UI
 
             var settings = (Settings.GameSettings)DataContext;
 
-            gaugeFieldView = CollectionViewSource.GetDefaultView(settings.GaugeFields.Values.ToList());
+            gaugeFieldView = CollectionViewSource.GetDefaultView(settings.GaugeFields.Settings.Values.ToList());
             gaugeFieldView.Filter = item => ContainsFilter(GaugeFieldFilter.Text, GaugeFieldHide.IsChecked ?? false, item as IBasicSettings);
             gaugeFieldView.GroupDescriptions.Add(new PropertyGroupDescription("Namespace"));
             gaugeFieldView.SortDescriptions.Add(new SortDescription("Namespace", ListSortDirection.Ascending));
@@ -182,6 +185,70 @@ namespace DashMenu.UI
         private void GaugeFieldFilter_TextChanged(object sender, TextChangedEventArgs e)
         {
             RefreshGaugeFieldList();
+        }
+
+        private Point dataFieldDragStartPoint;
+
+        private void DataFieldOrderListBox_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (!(sender is ListBox)) return;
+            dataFieldDragStartPoint = e.GetPosition(null);
+        }
+
+        private void DataFieldOrderListBox_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.LeftButton != MouseButtonState.Pressed) return;
+
+            Point mousePos = e.GetPosition(null);
+            Vector diff = dataFieldDragStartPoint - mousePos;
+
+            if (Math.Abs(diff.X) <= SystemParameters.MinimumHorizontalDragDistance &&
+                 Math.Abs(diff.Y) <= SystemParameters.MinimumVerticalDragDistance) return;
+
+            if (!(sender is ListBox listBox) || listBox.SelectedItem == null) return;
+
+            DragDrop.DoDragDrop(listBox, listBox.SelectedItem, DragDropEffects.Move);
+        }
+
+        private void FieldOrderListBox_Drop(object sender, DragEventArgs e)
+        {
+            e.Effects = DragDropEffects.Move;
+        }
+
+        private void FieldOrderListBox_DragOver(object sender, DragEventArgs e)
+        {
+            if (!e.Data.GetDataPresent(typeof(string)) || !(sender is ListBox listBox)) return;
+            if (!(e.Data.GetData(typeof(string)) is string droppedData) || !(((FrameworkElement)e.OriginalSource).DataContext is string target) || ReferenceEquals(droppedData, target)) return;
+
+            ObservableCollection<string> items = listBox.ItemsSource as ObservableCollection<string>;
+            int removedIdx = items.IndexOf(droppedData);
+            int targetIdx = items.IndexOf(target);
+
+            if (removedIdx == -1 || targetIdx == -1) return;
+            items.Move(removedIdx, targetIdx);
+        }
+
+        private Point gaugeFieldDragStartPoint;
+
+        private void GaugeFieldOrderListBox_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (!(sender is ListBox)) return;
+            gaugeFieldDragStartPoint = e.GetPosition(null);
+        }
+
+        private void GaugeFieldOrderListBox_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.LeftButton != MouseButtonState.Pressed) return;
+
+            Point mousePos = e.GetPosition(null);
+            Vector diff = gaugeFieldDragStartPoint - mousePos;
+
+            if (Math.Abs(diff.X) <= SystemParameters.MinimumHorizontalDragDistance &&
+                 Math.Abs(diff.Y) <= SystemParameters.MinimumVerticalDragDistance) return;
+
+            if (!(sender is ListBox listBox) || listBox.SelectedItem == null) return;
+
+            DragDrop.DoDragDrop(listBox, listBox.SelectedItem, DragDropEffects.Move);
         }
     }
 }

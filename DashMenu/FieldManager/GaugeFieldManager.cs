@@ -13,7 +13,7 @@ namespace DashMenu.FieldManager
     internal class GaugeFieldManager : FieldManagerBase, IFieldManager<Settings.GaugeField>
     {
         private const string FIELD_TYPE_NAME = "Gauge";
-        internal GaugeFieldManager(PluginManager pluginManager, Type pluginType) : base(pluginManager, pluginType, FIELD_TYPE_NAME)
+        internal GaugeFieldManager(PluginManager pluginManager, Type pluginType, IList<string> gaugeFieldOrder) : base(pluginManager, pluginType, gaugeFieldOrder, FIELD_TYPE_NAME)
         {
             this.pluginManager.AddProperty(AmountOfFieldName, this.pluginType, SelectedFields.Count);
             SelectedFields.CollectionChanged += SelectedFields_CollectionChanged;
@@ -109,7 +109,7 @@ namespace DashMenu.FieldManager
                 SelectedFields.Add(AllFields.First(x => x.FullName == selectedFields[i]).FieldExtension);
             }
         }
-        public void AddExtensionField(Type type, IDictionary<string, Settings.GaugeField> settings)
+        public void AddExtensionField(Type type, Settings.FieldSettings<Settings.GaugeField> settings)
         {
             IGaugeFieldExtension fieldInstance;
             try
@@ -125,7 +125,7 @@ namespace DashMenu.FieldManager
             if (!fieldInstance.IsGameSupported) return;
 
             //Get field settings else create field settings
-            if (!(settings.TryGetValue(type.FullName, out Settings.GaugeField fieldSetting)))
+            if (!(settings.Settings.TryGetValue(type.FullName, out Settings.GaugeField fieldSetting)))
             {
 
                 fieldSetting = new Settings.GaugeField { Enabled = true };
@@ -136,8 +136,10 @@ namespace DashMenu.FieldManager
                 fieldSetting.Override.Maximum.OverrideValue = fieldInstance.Data.Maximum;
                 fieldSetting.Override.Minimum.OverrideValue = fieldInstance.Data.Minimum;
                 fieldSetting.Override.Step.OverrideValue = fieldInstance.Data.Step;
-                settings.Add(type.FullName, fieldSetting);
+                settings.Settings.Add(type.FullName, fieldSetting);
             }
+
+            if (!settings.Order.Contains(type.FullName) && !fieldSetting.Hide) settings.Order.Add(type.FullName);
 
             //Make sure that empty field can't be disabled.
             if (fieldInstance.GetType().FullName == EmptyField.FullName) fieldSetting.Enabled = true;
@@ -163,14 +165,15 @@ namespace DashMenu.FieldManager
             fieldSetting.SupportedGames = fieldInstance.SupportedGames;
             fieldSetting.Description = fieldInstance.Description;
 
-            AllFields.Add(new FieldComponent<IGaugeFieldExtension, IGaugeField>(fieldInstance) { Enabled = fieldSetting.Enabled });
+            var field = new FieldComponent<IGaugeFieldExtension, IGaugeField>(fieldInstance) { Enabled = fieldSetting.Enabled };
+            AllFields.Add(field);
 
-            UpdateNameOverride(fieldSetting);
-            UpdateColorOveride(fieldSetting);
-            UpdateDecimalOverride(fieldSetting);
-            UpdateMaximumOverride(fieldSetting);
-            UpdateMinimumOverride(fieldSetting);
-            UpdateStepOverride(fieldSetting);
+            UpdateNameOverride(fieldSetting, field);
+            UpdateColorOveride(fieldSetting, field);
+            UpdateDecimalOverride(fieldSetting, field);
+            UpdateMaximumOverride(fieldSetting, field);
+            UpdateMinimumOverride(fieldSetting, field);
+            UpdateStepOverride(fieldSetting, field);
         }
 
         public void AddField()
@@ -192,59 +195,77 @@ namespace DashMenu.FieldManager
             foreach (var field in AllFields)
             {
                 if (!(settings.TryGetValue(field.GetType().FullName, out var fieldSettings))) continue;
-                UpdateColorOveride(fieldSettings);
+                UpdateColorOveride(fieldSettings, field);
             }
         }
 
         internal void UpdateProperties(Settings.IGaugeField settings, PropertyChangedEventArgs e)
         {
+            var field = AllFields.First(x => x.FullName == settings.FullName) ?? throw new ArgumentException($"Field not found! {settings.FullName}");
+
             switch (e.PropertyName)
             {
                 case nameof(settings.Override.Name):
-                    UpdateNameOverride(settings);
+                    UpdateNameOverride(settings, field);
                     return;
                 case nameof(settings.Override.Decimal):
-                    UpdateDecimalOverride(settings);
+                    UpdateDecimalOverride(settings, field);
                     return;
                 case nameof(settings.Override.DayNightColorScheme):
-                    UpdateColorOveride(settings);
+                    UpdateColorOveride(settings, field);
                     return;
                 case nameof(settings.Override.Maximum):
-                    UpdateMaximumOverride(settings);
+                    UpdateMaximumOverride(settings, field);
                     return;
                 case nameof(settings.Override.Minimum):
-                    UpdateMinimumOverride(settings);
+                    UpdateMinimumOverride(settings, field);
                     return;
                 case nameof(settings.Override.Step):
-                    UpdateStepOverride(settings);
+                    UpdateStepOverride(settings, field);
+                    return;
+                case nameof(settings.Enabled):
+                    UpdateProperties(settings, field);
+                    return;
+                case nameof(settings.Hide):
+                    UpdateOrder(settings, fieldOrder);
                     return;
                 default:
-                    UpdateProperties(settings);
                     return;
             }
         }
 
-        private void UpdateProperties(Settings.IGaugeField settings)
+        private void UpdateOrder(Settings.IDataField dataField, in IList<string> order)
         {
-            var field = AllFields.First(x => x.FullName == settings.FullName) ?? throw new ArgumentException($"Field not found! {settings.FullName}");
-
-            field.Enabled = settings.Enabled;
-            if (SelectedFields.Any(x => x.GetType().FullName == field.FullName))
+            if (dataField.Hide)
             {
-                for (int i = 0; i < SelectedFields.Count; i++)
+                order.Remove(dataField.FullName);
+            }
+            else
+            {
+                order.Add(dataField.FullName);
+            }
+        }
+
+        private void UpdateProperties(Settings.IGaugeField settings, IFieldComponent<IGaugeFieldExtension, IGaugeField> field)
+        {
+            if (!settings.Enabled && field.Enabled)
+            {
+                if (SelectedFields.Any(x => x.GetType().FullName == field.FullName))
                 {
-                    if (!field.Enabled && SelectedFields[i].GetType().FullName == field.FullName)
+                    for (int i = 0; i < SelectedFields.Count; i++)
                     {
-                        SelectedFields[i] = AllFields.First(x => x.FullName == EmptyField.FullName).FieldExtension;
+                        if (!field.Enabled && SelectedFields[i].GetType().FullName == field.FullName)
+                        {
+                            SelectedFields[i] = AllFields.First(x => x.FullName == EmptyField.FullName).FieldExtension;
+                        }
                     }
                 }
             }
+            field.Enabled = settings.Enabled;
         }
 
-        private void UpdateColorOveride(Settings.IGaugeField settings)
+        private void UpdateColorOveride(Settings.IGaugeField settings, IFieldComponent<IGaugeFieldExtension, IGaugeField> field)
         {
-            var field = AllFields.First(x => x.FullName == settings.FullName) ?? throw new ArgumentException($"Field not found! {settings.FullName}");
-
             if (!settings.Override.DayNightColorScheme.DayModeColor.Override)
             {
                 settings.Override.DayNightColorScheme.NightModeColor.Override = false;
@@ -264,46 +285,36 @@ namespace DashMenu.FieldManager
             field.FieldExtension.Data.Color = settings.Override.DayNightColorScheme.DayModeColor.OverrideValue;
         }
 
-        private void UpdateDecimalOverride(Settings.IGaugeField settings)
+        private void UpdateDecimalOverride(Settings.IGaugeField settings, IFieldComponent<IGaugeFieldExtension, IGaugeField> field)
         {
-            var field = AllFields.First(x => x.FullName == settings.FullName) ?? throw new ArgumentException($"Field not found! {settings.FullName}");
-
             field.FieldExtension.Data.Decimal = settings.Override.Decimal.Override
                 ? settings.Override.Decimal.OverrideValue
                 : settings.Override.Decimal.DefaultValue;
         }
 
-        private void UpdateNameOverride(Settings.IGaugeField settings)
+        private void UpdateNameOverride(Settings.IGaugeField settings, IFieldComponent<IGaugeFieldExtension, IGaugeField> field)
         {
-            var field = AllFields.First(x => x.FullName == settings.FullName) ?? throw new ArgumentException($"Field not found! {settings.FullName}");
-
             field.FieldExtension.Data.Name = settings.Override.Name.Override
                 ? settings.Override.Name.OverrideValue
                 : settings.Override.Name.DefaultValue;
         }
 
-        private void UpdateMaximumOverride(Settings.IGaugeField settings)
+        private void UpdateMaximumOverride(Settings.IGaugeField settings, IFieldComponent<IGaugeFieldExtension, IGaugeField> field)
         {
-            var field = AllFields.First(x => x.FullName == settings.FullName) ?? throw new ArgumentException($"Field not found! {settings.FullName}");
-
             field.FieldExtension.Data.Maximum = settings.Override.Maximum.Override
                 ? settings.Override.Maximum.OverrideValue
                 : settings.Override.Maximum.DefaultValue;
         }
 
-        private void UpdateMinimumOverride(Settings.IGaugeField settings)
+        private void UpdateMinimumOverride(Settings.IGaugeField settings, IFieldComponent<IGaugeFieldExtension, IGaugeField> field)
         {
-            var field = AllFields.First(x => x.FullName == settings.FullName) ?? throw new ArgumentException($"Field not found! {settings.FullName}");
-
             field.FieldExtension.Data.Minimum = settings.Override.Minimum.Override
                 ? settings.Override.Minimum.OverrideValue
                 : settings.Override.Minimum.DefaultValue;
         }
 
-        private void UpdateStepOverride(Settings.IGaugeField settings)
+        private void UpdateStepOverride(Settings.IGaugeField settings, IFieldComponent<IGaugeFieldExtension, IGaugeField> field)
         {
-            var field = AllFields.First(x => x.FullName == settings.FullName) ?? throw new ArgumentException($"Field not found! {settings.FullName}");
-
             field.FieldExtension.Data.Step = settings.Override.Step.Override
                 ? settings.Override.Step.OverrideValue
                 : settings.Override.Step.DefaultValue;
@@ -313,20 +324,22 @@ namespace DashMenu.FieldManager
             if (index < 0 || index > SelectedFields.Count - 1) throw new ArgumentOutOfRangeException($"{nameof(index)}");
 
             string fieldName = SelectedFields[index].GetType().FullName;
-            int allFieldIndex = AllFields.IndexOf(AllFields.First(x => x.FullName == fieldName));
+            int fieldIndex = fieldOrder.IndexOf(fieldName);
+            IFieldComponent<IGaugeFieldExtension, IGaugeField> field;
 
             do
             {
-                allFieldIndex++;
-                if (allFieldIndex >= AllFields.Count)
+                fieldIndex++;
+                if (fieldIndex >= fieldOrder.Count)
                 {
-                    allFieldIndex = 0;
+                    fieldIndex = 0;
                 }
-            } while (!AllFields[allFieldIndex].Enabled);
+                field = AllFields.First(x => x.FullName == fieldOrder[fieldIndex]);
+            } while (!field.Enabled);
 
-            SelectedFields[index] = AllFields[allFieldIndex].FieldExtension;
+            SelectedFields[index] = field.FieldExtension;
 
-            SelectedFieldsChanged?.Invoke(SelectedFields.Select(field => field.GetType().FullName).ToList());
+            SelectedFieldsChanged?.Invoke(SelectedFields.Select(x => x.GetType().FullName).ToList());
         }
 
         public void PrevSelectedField(int index)
@@ -334,19 +347,21 @@ namespace DashMenu.FieldManager
             if (index < 0 || index > SelectedFields.Count - 1) throw new ArgumentOutOfRangeException($"{nameof(index)}");
 
             string fieldName = SelectedFields[index].GetType().FullName;
-            int allFieldIndex = AllFields.IndexOf(AllFields.First(x => x.FullName == fieldName));
+            int fieldIndex = fieldOrder.IndexOf(fieldName);
+            IFieldComponent<IGaugeFieldExtension, IGaugeField> field;
 
             do
             {
-                allFieldIndex--;
-                if (allFieldIndex < 0)
+                fieldIndex--;
+                if (fieldIndex < 0)
                 {
-                    allFieldIndex = AllFields.Count - 1;
+                    fieldIndex = fieldOrder.Count - 1;
                 }
-            } while (!AllFields[allFieldIndex].Enabled);
-            SelectedFields[index] = AllFields[allFieldIndex].FieldExtension;
+                field = AllFields.First(x => x.FullName == fieldOrder[fieldIndex]);
+            } while (!field.Enabled);
+            SelectedFields[index] = field.FieldExtension;
 
-            SelectedFieldsChanged?.Invoke(SelectedFields.Select(field => field.GetType().FullName).ToList());
+            SelectedFieldsChanged?.Invoke(SelectedFields.Select(x => x.GetType().FullName).ToList());
         }
     }
 }

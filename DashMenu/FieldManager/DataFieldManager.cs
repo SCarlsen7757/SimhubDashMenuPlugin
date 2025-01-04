@@ -13,7 +13,7 @@ namespace DashMenu.FieldManager
     internal class DataFieldManager : FieldManagerBase, IFieldManager<Settings.DataField>
     {
         private const string FIELD_TYPE_NAME = "Data";
-        internal DataFieldManager(PluginManager pluginManager, Type pluginType) : base(pluginManager, pluginType, FIELD_TYPE_NAME)
+        internal DataFieldManager(PluginManager pluginManager, Type pluginType, IList<string> dataFieldOrder) : base(pluginManager, pluginType, dataFieldOrder, FIELD_TYPE_NAME)
         {
             this.pluginManager.AddProperty(AmountOfFieldName, this.pluginType, SelectedFields.Count);
             SelectedFields.CollectionChanged += SelectedFields_CollectionChanged;
@@ -94,7 +94,7 @@ namespace DashMenu.FieldManager
             }
         }
 
-        public void AddExtensionField(Type type, IDictionary<string, Settings.DataField> settings)
+        public void AddExtensionField(Type type, Settings.FieldSettings<Settings.DataField> fieldSettings)
         {
             IDataFieldExtension fieldInstance;
             try
@@ -110,7 +110,7 @@ namespace DashMenu.FieldManager
             if (!fieldInstance.IsGameSupported) return;
 
             //Get field settings else create field settings
-            if (!(settings.TryGetValue(type.FullName, out Settings.DataField fieldSetting)))
+            if (!(fieldSettings.Settings.TryGetValue(type.FullName, out Settings.DataField fieldSetting)))
             {
 
                 fieldSetting = new Settings.DataField { Enabled = true, };
@@ -118,8 +118,10 @@ namespace DashMenu.FieldManager
                 fieldSetting.Override.Decimal.OverrideValue = fieldInstance.Data.Decimal;
                 fieldSetting.Override.DayNightColorScheme.DayModeColor.OverrideValue = fieldInstance.Data.Color.Clone();
                 fieldSetting.Override.DayNightColorScheme.NightModeColor.OverrideValue = fieldInstance.Data.Color.Clone();
-                settings.Add(type.FullName, fieldSetting);
+                fieldSettings.Settings.Add(type.FullName, fieldSetting);
             }
+
+            if (!fieldSettings.Order.Contains(type.FullName) && !fieldSetting.Hide) fieldSettings.Order.Add(type.FullName);
 
             //Make sure that empty field can't be disabled.
             if (fieldInstance.GetType().FullName == EmptyField.FullName) fieldSetting.Enabled = true;
@@ -140,11 +142,12 @@ namespace DashMenu.FieldManager
             fieldSetting.SupportedGames = fieldInstance.SupportedGames;
             fieldSetting.Description = fieldInstance.Description;
 
-            AllFields.Add(new FieldComponent<IDataFieldExtension, IDataField>(fieldInstance) { Enabled = fieldSetting.Enabled });
+            var field = new FieldComponent<IDataFieldExtension, IDataField>(fieldInstance) { Enabled = fieldSetting.Enabled };
+            AllFields.Add(field);
 
-            UpdateNameOverride(fieldSetting);
-            UpdateColorOveride(fieldSetting);
-            UpdateDecimalOverride(fieldSetting);
+            UpdateNameOverride(fieldSetting, field);
+            UpdateColorOveride(fieldSetting, field);
+            UpdateDecimalOverride(fieldSetting, field);
         }
 
         public void AddField()
@@ -166,51 +169,69 @@ namespace DashMenu.FieldManager
             foreach (var field in AllFields)
             {
                 if (!(settings.TryGetValue(field.GetType().FullName, out var fieldSettings))) continue;
-                UpdateColorOveride(fieldSettings);
+                UpdateColorOveride(fieldSettings, field);
             }
         }
 
         internal void UpdateProperties(Settings.IDataField settings, PropertyChangedEventArgs e)
         {
+            var field = AllFields.First(x => x.FullName == settings.FullName) ?? throw new ArgumentException($"Field not found! {settings.FullName}");
 
             switch (e.PropertyName)
             {
                 case nameof(settings.Override.Name):
-                    UpdateNameOverride(settings);
+                    UpdateNameOverride(settings, field);
                     return;
                 case nameof(settings.Override.Decimal):
-                    UpdateDecimalOverride(settings);
+                    UpdateDecimalOverride(settings, field);
                     return;
                 case nameof(settings.Override.DayNightColorScheme):
-                    UpdateColorOveride(settings);
+                    UpdateColorOveride(settings, field);
+                    return;
+                case nameof(settings.Enabled):
+                    UpdateEnabledProperties(settings, field);
+                    return;
+                case nameof(settings.Hide):
+                    UpdateOrder(settings, fieldOrder);
                     return;
                 default:
-                    UpdateProperties(settings);
                     return;
             }
         }
 
-        private void UpdateProperties(Settings.IDataField settings)
+        private void UpdateOrder(Settings.IDataField dataField, in IList<string> order)
         {
-            var field = AllFields.First(x => x.FullName == settings.FullName) ?? throw new ArgumentException($"Field not found! {settings.FullName}");
-
-            field.Enabled = settings.Enabled;
-            if (SelectedFields.Any(x => x.GetType().FullName == field.FullName))
+            if (dataField.Hide)
             {
-                for (int i = 0; i < SelectedFields.Count; i++)
+                order.Remove(dataField.FullName);
+            }
+            else
+            {
+                order.Add(dataField.FullName);
+            }
+
+        }
+
+        private void UpdateEnabledProperties(Settings.IDataField settings, IFieldComponent<IDataFieldExtension, IDataField> field)
+        {
+            if (!settings.Enabled && field.Enabled)
+            {
+                if (SelectedFields.Any(x => x.GetType().FullName == field.FullName))
                 {
-                    if (!field.Enabled && SelectedFields[i].GetType().FullName == field.FullName)
+                    for (int i = 0; i < SelectedFields.Count; i++)
                     {
-                        SelectedFields[i] = AllFields.First(x => x.FullName == EmptyField.FullName).FieldExtension;
+                        if (!field.Enabled && SelectedFields[i].GetType().FullName == field.FullName)
+                        {
+                            SelectedFields[i] = AllFields.First(x => x.FullName == EmptyField.FullName).FieldExtension;
+                        }
                     }
                 }
             }
+            field.Enabled = settings.Enabled;
         }
 
-        private void UpdateColorOveride(Settings.IDataField settings)
+        private void UpdateColorOveride(Settings.IDataField settings, IFieldComponent<IDataFieldExtension, IDataField> field)
         {
-            var field = AllFields.First(x => x.FullName == settings.FullName) ?? throw new ArgumentException($"Field not found! {settings.FullName}");
-
             if (!settings.Override.DayNightColorScheme.DayModeColor.Override)
             {
                 settings.Override.DayNightColorScheme.NightModeColor.Override = false;
@@ -230,19 +251,15 @@ namespace DashMenu.FieldManager
             field.FieldExtension.Data.Color = settings.Override.DayNightColorScheme.DayModeColor.OverrideValue;
         }
 
-        private void UpdateDecimalOverride(Settings.IDataField settings)
+        private void UpdateDecimalOverride(Settings.IDataField settings, IFieldComponent<IDataFieldExtension, IDataField> field)
         {
-            var field = AllFields.First(x => x.FullName == settings.FullName) ?? throw new ArgumentException($"Field not found! {settings.FullName}");
-
             field.FieldExtension.Data.Decimal = settings.Override.Decimal.Override
                 ? settings.Override.Decimal.OverrideValue
                 : settings.Override.Decimal.DefaultValue;
         }
 
-        private void UpdateNameOverride(Settings.IDataField settings)
+        private void UpdateNameOverride(Settings.IDataField settings, IFieldComponent<IDataFieldExtension, IDataField> field)
         {
-            var field = AllFields.First(x => x.FullName == settings.FullName) ?? throw new ArgumentException($"Field not found! {settings.FullName}");
-
             field.FieldExtension.Data.Name = settings.Override.Name.Override
                 ? settings.Override.Name.OverrideValue
                 : settings.Override.Name.DefaultValue;
@@ -253,20 +270,22 @@ namespace DashMenu.FieldManager
             if (index < 0 || index > SelectedFields.Count - 1) throw new ArgumentOutOfRangeException($"{nameof(index)}");
 
             string fieldName = SelectedFields[index].GetType().FullName;
-            int allFieldIndex = AllFields.IndexOf(AllFields.First(x => x.FullName == fieldName));
+            int fieldIndex = fieldOrder.IndexOf(fieldName);
+            IFieldComponent<IDataFieldExtension, IDataField> field;
 
             do
             {
-                allFieldIndex++;
-                if (allFieldIndex >= AllFields.Count)
+                fieldIndex++;
+                if (fieldIndex >= fieldOrder.Count)
                 {
-                    allFieldIndex = 0;
+                    fieldIndex = 0;
                 }
-            } while (!AllFields[allFieldIndex].Enabled);
+                field = AllFields.First(x => x.FullName == fieldOrder[fieldIndex]);
+            } while (!field.Enabled);
 
-            SelectedFields[index] = AllFields[allFieldIndex].FieldExtension;
+            SelectedFields[index] = field.FieldExtension;
 
-            SelectedFieldsChanged?.Invoke(SelectedFields.Select(field => field.GetType().FullName).ToList());
+            SelectedFieldsChanged?.Invoke(SelectedFields.Select(x => x.GetType().FullName).ToList());
         }
 
         public void PrevSelectedField(int index)
@@ -274,19 +293,21 @@ namespace DashMenu.FieldManager
             if (index < 0 || index > SelectedFields.Count - 1) throw new ArgumentOutOfRangeException($"{nameof(index)}");
 
             string fieldName = SelectedFields[index].GetType().FullName;
-            int allFieldIndex = AllFields.IndexOf(AllFields.First(x => x.FullName == fieldName));
+            int fieldIndex = fieldOrder.IndexOf(fieldName);
+            IFieldComponent<IDataFieldExtension, IDataField> field;
 
             do
             {
-                allFieldIndex--;
-                if (allFieldIndex < 0)
+                fieldIndex--;
+                if (fieldIndex < 0)
                 {
-                    allFieldIndex = AllFields.Count - 1;
+                    fieldIndex = fieldOrder.Count - 1;
                 }
-            } while (!AllFields[allFieldIndex].Enabled);
-            SelectedFields[index] = AllFields[allFieldIndex].FieldExtension;
+                field = AllFields.First(x => x.FullName == fieldOrder[fieldIndex]);
+            } while (!field.Enabled);
+            SelectedFields[index] = field.FieldExtension;
 
-            SelectedFieldsChanged?.Invoke(SelectedFields.Select(field => field.GetType().FullName).ToList());
+            SelectedFieldsChanged?.Invoke(SelectedFields.Select(x => x.GetType().FullName).ToList());
         }
     }
 }

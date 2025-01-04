@@ -83,8 +83,8 @@ namespace DashMenu
 
             LoadSettings();
 
-            DataFieldManager = new FieldManager.DataFieldManager(pluginManager, GetType());
-            GaugeFieldManager = new FieldManager.GaugeFieldManager(pluginManager, GetType());
+            DataFieldManager = new FieldManager.DataFieldManager(pluginManager, GetType(), Settings.GetCurrentGameSettings().DataFields.Order);
+            GaugeFieldManager = new FieldManager.GaugeFieldManager(pluginManager, GetType(), Settings.GetCurrentGameSettings().GaugeFields.Order);
             AlertManager = new FieldManager.AlertManager();
 
             DataFieldManager.AddExtensionField(typeof(EmptyField), Settings.GetCurrentGameSettings().DataFields);
@@ -94,7 +94,7 @@ namespace DashMenu
             ExtensionSettingsCleanUp();
 
             AlertManager.AddAlerts(DataFieldManager.AllFields, Settings.GetCurrentGameSettings().Alerts);
-            AlertManager.UpdateSelectedAlerts(Settings.GetCurrentGameSettings().DataFields, Settings.GetCurrentGameSettings().Alerts);
+            AlertManager.UpdateSelectedAlerts(Settings.GetCurrentGameSettings().DataFields.Settings, Settings.GetCurrentGameSettings().Alerts);
 
             MenuConfiguration.ChangeDataFieldNext += DataFieldManager.NextSelectedField;
             MenuConfiguration.ChangeDataFieldPrev += DataFieldManager.PrevSelectedField;
@@ -134,6 +134,8 @@ namespace DashMenu
 
             SimHub.Logging.Current.Info("Plugin started");
         }
+
+
 
         /// <summary>
         /// Called one time per game data update, contains all normalized game data,
@@ -175,8 +177,8 @@ namespace DashMenu
         public void ExtensionSettingsCleanUp()
         {
             var gameSettings = Settings.GetCurrentGameSettings();
-            CleanUpSettings(gameSettings.DataFields, DataFieldManager.AllFields.Select(x => x.FullName));
-            CleanUpSettings(gameSettings.GaugeFields, GaugeFieldManager.AllFields.Select(x => x.FullName));
+            CleanUpSettings(gameSettings.DataFields.Settings, DataFieldManager.AllFields.Select(x => x.FullName));
+            CleanUpSettings(gameSettings.GaugeFields.Settings, GaugeFieldManager.AllFields.Select(x => x.FullName));
             CleanUpSettings(gameSettings.Alerts, AlertManager.AllAlerts.Select(x => x.FullName));
         }
 
@@ -205,8 +207,8 @@ namespace DashMenu
 
         private void DayNightMode_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            DataFieldManager.DayNightModeChanged(Settings.GetCurrentGameSettings().DataFields);
-            GaugeFieldManager.DayNightModeChanged(Settings.GetCurrentGameSettings().GaugeFields);
+            DataFieldManager.DayNightModeChanged(Settings.GetCurrentGameSettings().DataFields.Settings);
+            GaugeFieldManager.DayNightModeChanged(Settings.GetCurrentGameSettings().GaugeFields.Settings);
         }
 
         private static IEnumerable<Type> GetExtensionFieldsType(string sub_dir)

@@ -6,28 +6,26 @@ namespace DashMenu.FieldManager
 {
     internal abstract class FieldManagerBase
     {
-        public FieldManagerBase()
+        public FieldManagerBase(PluginManager pluginManager, Type pluginType, IList<string> fieldOrder, string fieldTypeName)
         {
-            gameName = SimHub.Plugins.PluginManager.GetInstance().GameName;
-        }
+            gameName = PluginManager.GetInstance().GameName;
 
-        public FieldManagerBase(PluginManager pluginManager, Type pluginType) : this()
-        {
             this.pluginManager = pluginManager;
             this.pluginType = pluginType;
-        }
+            this.fieldOrder = fieldOrder;
 
-        public FieldManagerBase(PluginManager pluginManager, Type pluginType, string fieldTypeName) : this(pluginManager, pluginType)
-        {
             amountOfFieldName = $"AmountOf{fieldTypeName}Fields";
         }
 
         protected readonly PluginManager pluginManager;
         protected readonly Type pluginType;
         protected readonly string gameName;
+        /// <summary>
+        /// Ref to Field settings order.
+        /// </summary>
+        protected readonly IList<string> fieldOrder;
         private readonly string amountOfFieldName;
         protected string AmountOfFieldName { get => amountOfFieldName; }
-
 
         internal delegate void SelectedFieldsChangedEventHandler(IList<string> selectedFields);
     }

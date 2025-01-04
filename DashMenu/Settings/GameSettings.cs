@@ -14,8 +14,8 @@ namespace DashMenu.Settings
     {
         public GameSettings()
         {
-            DataFields.CollectionChanged += DataFields_CollectionChanged;
-            GaugeFields.CollectionChanged += GaugeFields_CollectionChanged;
+            DataFields.Settings.CollectionChanged += DataFields_CollectionChanged;
+            GaugeFields.Settings.CollectionChanged += GaugeFields_CollectionChanged;
             Alerts.CollectionChanged += Alerts_CollectionChanged;
         }
 
@@ -195,9 +195,9 @@ namespace DashMenu.Settings
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-        public ObservableDictionary<string, DataField> DataFields { get; set; } = new ObservableDictionary<string, DataField>();
+        public FieldSettings<DataField> DataFields { get; set; } = new FieldSettings<DataField>();
 
-        public ObservableDictionary<string, GaugeField> GaugeFields { get; set; } = new ObservableDictionary<string, GaugeField>();
+        public FieldSettings<GaugeField> GaugeFields { get; set; } = new FieldSettings<GaugeField>();
 
         public ObservableDictionary<string, Alert> Alerts { get; set; } = new ObservableDictionary<string, Alert>();
 
@@ -238,7 +238,7 @@ namespace DashMenu.Settings
         {
             if (sender is Alert alert)
             {
-                AlertSettingsChanged?.Invoke(DataFields[alert.FullName], alert, e);
+                AlertSettingsChanged?.Invoke(DataFields.Settings[alert.FullName], alert, e);
             }
         }
 
