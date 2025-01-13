@@ -163,9 +163,13 @@
       <DependentUpon>ColorSchemeItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\ColorStringToColorConverter.cs" />
+    <Compile Include="UI\DataFieldPicker.xaml.cs">
+      <DependentUpon>DataFieldPicker.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\DataFieldSettingsItem.xaml.cs">
       <DependentUpon>DataFieldSettingsItem.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\DefaultFieldInformation.cs" />
     <Compile Include="UI\GaugeFieldSettingsItem.xaml.cs">
       <DependentUpon>GaugeFieldSettingsItem.xaml</DependentUpon>
     </Compile>
@@ -207,6 +211,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\ColorSchemeItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\DataFieldPicker.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

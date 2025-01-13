@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace DashMenu.FieldManager
 {
-    internal interface IFieldManager<TSettingsField> where TSettingsField : new()
+    internal interface IFieldManager<TSettingsField> where TSettingsField : Settings.IBasicSettings, new()
     {
         void AddExtensionField(Type type, FieldSettings<TSettingsField> settings);
         void DayNightModeChanged(IDictionary<string, TSettingsField> settings);

@@ -114,14 +114,24 @@ namespace DashMenu.Settings
                                 });
         }
 
-        private IList<string> DefaultDataFieldsList()
+        internal IList<string> DefaultDataFieldsList()
         {
-            return new List<string>(Enumerable.Repeat(EmptyField.FullName, DefaultAmountOfDataFields));
+            return DefaultDataFieldsList(DefaultAmountOfDataFields);
         }
 
-        private IList<string> DefaultGaugeFieldsList()
+        private static IList<string> DefaultDataFieldsList(int amountOfFields)
         {
-            return new List<string>(Enumerable.Repeat(EmptyField.FullName, DefaultAmountOfGaugeFields));
+            return new List<string>(Enumerable.Repeat(EmptyField.FullName, amountOfFields));
+        }
+
+        internal IList<string> DefaultGaugeFieldsList()
+        {
+            return DefaultGaugeFieldsList(DefaultAmountOfGaugeFields);
+        }
+
+        private IList<string> DefaultGaugeFieldsList(int amountOfFields)
+        {
+            return new List<string>(Enumerable.Repeat(EmptyField.FullName, amountOfFields));
         }
         #endregion
 

@@ -392,12 +392,12 @@
                         <styles:SHTabItem Header="Order">
                             <ScrollViewer VerticalScrollBarVisibility="Auto">
                                 <styles:SHListBox x:Name="GaugeFieldOrderListBox"
-                                         ItemsSource="{Binding GaugeFields.Order}"
-                                         PreviewMouseLeftButtonDown="GaugeFieldOrderListBox_PreviewMouseLeftButtonDown"
-                                         PreviewMouseMove="GaugeFieldOrderListBox_PreviewMouseMove"
-                                         AllowDrop="True"
-                                         Drop="FieldOrderListBox_Drop"
-                                         DragOver="FieldOrderListBox_DragOver" />
+                                                  ItemsSource="{Binding GaugeFields.Order}"
+                                                  PreviewMouseLeftButtonDown="GaugeFieldOrderListBox_PreviewMouseLeftButtonDown"
+                                                  PreviewMouseMove="GaugeFieldOrderListBox_PreviewMouseMove"
+                                                  AllowDrop="True"
+                                                  Drop="FieldOrderListBox_Drop"
+                                                  DragOver="FieldOrderListBox_DragOver" />
                             </ScrollViewer>
                         </styles:SHTabItem>
                     </styles:SHTabControl>
@@ -412,12 +412,19 @@
                     <!--Default data fields-->
                     <StackPanel Grid.ColumnSpan="2">
                         <styles:SHSubSectionTitle Content="Default data fields" />
-                        <styles:SHLinkButton Click="ButtonForgetDefaultDataFields_Click"
+                        <styles:SHLinkButton Name="ButtonForgetDefaultDataFields"
+                                             Click="ButtonForgetDefaultDataFields_Click"
                                              VerticalAlignment="Center"
                                              HorizontalAlignment="Right"
                                              Content="Forget default fields"
                                              Margin="0,0,4,0" />
-                        <ItemsControl ItemsSource="{Binding DefaultDataFields}"
+                        <styles:SHLinkButton Name="ButtonMakeDefaultDataFields"
+                                             Click="ButtonMakeDefaultDataFields_Click"
+                                             VerticalAlignment="Center"
+                                             HorizontalAlignment="Right"
+                                             Content="Make default fields"
+                                             Margin="0,0,4,0" />
+                        <ItemsControl Name="ItemsControlDefaultDataField"
                                       Grid.ColumnSpan="2"
                                       Margin="12,0,0,0">
                             <ItemsControl.ItemsPanel>
@@ -431,9 +438,24 @@
                                             CornerRadius="6"
                                             Background="{DynamicResource GrayBrush8}"
                                             Margin="4">
-                                        <Label Content="{Binding}"
-                                               Margin="5"
-                                               Padding="5" />
+                                        <FrameworkElement.ContextMenu>
+                                            <ContextMenu>
+                                                <MenuItem Header="Change field"
+                                                          Click="DefaultDataFieldItem_Click" />
+                                            </ContextMenu>
+                                        </FrameworkElement.ContextMenu>
+                                        <StackPanel Orientation="Vertical">
+                                            <Label Content="{Binding Namespace}"
+                                                   Margin="5,0,5,0"
+                                                   FontSize="12"
+                                                   HorizontalAlignment="Center"
+                                                   Foreground="{DynamicResource GrayBrush5}" />
+                                            <Label Content="{Binding Name}"
+                                                   Margin="5,-5,5,2"
+                                                   FontSize="16"
+                                                   FontWeight="Bold"
+                                                   HorizontalAlignment="Center" />
+                                        </StackPanel>
                                     </Border>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
@@ -443,12 +465,19 @@
                     <StackPanel Grid.ColumnSpan="2">
 
                         <styles:SHSubSectionTitle Content="Default gauge fields" />
-                        <styles:SHLinkButton Click="ButtonForgetDefaultGaugeFields_Click"
+                        <styles:SHLinkButton Name="ButtonForgetDefaultGaugeFields"
+                                             Click="ButtonForgetDefaultGaugeFields_Click"
                                              VerticalAlignment="Center"
                                              HorizontalAlignment="Right"
                                              Content="Forget default fields"
                                              Margin="0,0,4,0" />
-                        <ItemsControl ItemsSource="{Binding DefaultGaugeFields}"
+                        <styles:SHLinkButton Name="ButtonMakeDefaultGaugeFields"
+                                             Click="ButtonMakeDefaultGaugeFields_Click"
+                                             VerticalAlignment="Center"
+                                             HorizontalAlignment="Right"
+                                             Content="Make default fields"
+                                             Margin="0,0,4,0" />
+                        <ItemsControl Name="ItemsControlDefaultGaugeField"
                                       Grid.ColumnSpan="2"
                                       Margin="12,0,0,0">
                             <ItemsControl.ItemsPanel>
@@ -462,9 +491,24 @@
                                             CornerRadius="6"
                                             Background="{DynamicResource GrayBrush8}"
                                             Margin="4">
-                                        <Label Content="{Binding}"
-                                               Margin="5"
-                                               Padding="5" />
+                                        <FrameworkElement.ContextMenu>
+                                            <ContextMenu>
+                                                <MenuItem Header="Change field"
+                                                          Click="DefaultGaugeFieldItem_Click" />
+                                            </ContextMenu>
+                                        </FrameworkElement.ContextMenu>
+                                        <StackPanel Orientation="Vertical">
+                                            <Label Content="{Binding Namespace}"
+                                                   Margin="5,0,5,0"
+                                                   FontSize="12"
+                                                   HorizontalAlignment="Center"
+                                                   Foreground="{DynamicResource GrayBrush5}" />
+                                            <Label Content="{Binding Name}"
+                                                   Margin="5,-5,5,2"
+                                                   FontSize="16"
+                                                   FontWeight="Bold"
+                                                   HorizontalAlignment="Center" />
+                                        </StackPanel>
                                     </Border>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
@@ -523,7 +567,7 @@
                                 Margin="4"
                                 Grid.Column="1"
                                 Grid.Row="1"
-                                Visibility="{Binding ElementName=FirstCarDataFieldSetting, Path=SelectedValue.Value, Converter={IsNotNullToCollapsedConverter}}">
+                                Visibility="{Binding ElementName=FirstCarDataFieldSetting, Path=SelectedValue, Converter={IsNotNullToCollapsedConverter}}">
                             <StackPanel VerticalAlignment="Center">
                                 <Label VerticalAlignment="Center"
                                        HorizontalAlignment="Center"
@@ -539,7 +583,8 @@
                                 Visibility="{Binding ElementName=FirstCarDataFieldSetting, Path=SelectedValue, Converter={IsNullToCollapsedConverter}}">
                             <ScrollViewer HorizontalScrollBarVisibility="Auto"
                                           VerticalScrollBarVisibility="Auto">
-                                <local:CarFieldSettingItem Visibility="{Binding ElementName=FirstCarDataFieldSetting, Path=SelectedValue, Converter={IsNullToCollapsedConverter}}"
+                                <local:CarFieldSettingItem x:Name="CarFieldSettingItem" 
+                                                           Visibility="{Binding ElementName=FirstCarDataFieldSetting, Path=SelectedValue, Converter={IsNullToCollapsedConverter}}"
                                                            DataContext="{Binding ElementName=FirstCarDataFieldSetting, Path=SelectedValue.Value}" />
                             </ScrollViewer>
                         </Border>

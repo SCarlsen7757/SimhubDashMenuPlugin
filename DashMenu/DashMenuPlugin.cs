@@ -154,7 +154,7 @@ namespace DashMenu
 
         /// <summary>
         /// Called at plugin manager stop, close/dispose anything needed here!
-        /// Plugins are rebuilt at game change.
+        /// Plugins are rebuild at game change.
         /// </summary>
         /// <param name="pluginManager"></param>
         public void End(PluginManager pluginManager)

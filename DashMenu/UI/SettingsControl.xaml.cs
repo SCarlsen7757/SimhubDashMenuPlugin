@@ -2,7 +2,10 @@
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
@@ -22,10 +25,23 @@ namespace DashMenu.UI
         ICollectionView alertView;
         ICollectionView gaugeFieldView;
 
+        /// <summary>
+        /// Ref to the settings object.
+        /// </summary>
+        readonly Settings.GameSettings settings;
+
         internal SettingsControl(Settings.GameSettings settings)
         {
+            this.settings = settings;
+
             InitializeComponent();
             DataContext = settings;
+
+            settings.DefaultDataFields.CollectionChanged += DefaultDataFields_CollectionChanged;
+            DefaultDataFields_CollectionChanged();
+
+            settings.DefaultGaugeFields.CollectionChanged += DefaultGaugeFields_CollectionChanged;
+            DefaultGaugeFields_CollectionChanged();
 
             foreach (var dataField in settings.DataFields.Settings.Values)
             {
@@ -44,6 +60,55 @@ namespace DashMenu.UI
                 gaugeField.PropertyChanged += GaugeFieldPropertyChanged;
             }
             RefreshGaugeFieldList();
+
+            CarFieldSettingItem.Settings = settings;
+        }
+
+        private void DefaultDataFields_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            DefaultDataFields_CollectionChanged();
+        }
+
+        private void DefaultDataFields_CollectionChanged()
+        {
+            DefaultFieldButtonBehavior(settings.DefaultDataFields, ButtonMakeDefaultDataFields, ButtonForgetDefaultDataFields);
+            ItemsControlDefaultDataField.ItemsSource = DefaultFieldItemsControl(settings.DefaultDataFields, settings.DataFields);
+        }
+
+        private void DefaultGaugeFields_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            DefaultGaugeFields_CollectionChanged();
+        }
+
+        private void DefaultGaugeFields_CollectionChanged()
+        {
+            DefaultFieldButtonBehavior(settings.DefaultGaugeFields, ButtonMakeDefaultGaugeFields, ButtonForgetDefaultGaugeFields);
+            ItemsControlDefaultGaugeField.ItemsSource = DefaultFieldItemsControl(settings.DefaultGaugeFields, settings.GaugeFields);
+        }
+
+        private static void DefaultFieldButtonBehavior(IList<string> fields, UIElement makeDefaultButton, UIElement forgetDefaultButton)
+        {
+            makeDefaultButton.Visibility = fields.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+            forgetDefaultButton.Visibility = fields.Count != 0 ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private static IEnumerable DefaultFieldItemsControl<FieldType>(IList<string> defaultFields, Settings.FieldSettings<FieldType> fieldSettings) where FieldType : Settings.IBasicSettings, new()
+        {
+            var fields = new List<DefaultFieldInformation>();
+
+            for (int i = 0; i < defaultFields.Count; i++)
+            {
+                var fieldDetails = fieldSettings.Settings[defaultFields[i]];
+                var info = new DefaultFieldInformation()
+                {
+                    Index = i,
+                    Namespace = fieldDetails.Namespace,
+                    Name = fieldDetails.Name
+                };
+                fields.Add(info);
+            }
+
+            return fields;
         }
 
         private void DataFieldPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -84,18 +149,26 @@ namespace DashMenu.UI
 
         private void ButtonForgetAllCars_Click(object sender, RoutedEventArgs e)
         {
-            var settings = (Settings.GameSettings)DataContext;
             settings.RemoveCar();
         }
 
         private void ButtonForgetDefaultDataFields_Click(object sender, RoutedEventArgs e)
         {
-            var settings = (Settings.GameSettings)DataContext;
             settings.DefaultDataFields.Clear();
         }
+
+        private void ButtonMakeDefaultDataFields_Click(object sender, RoutedEventArgs e)
+        {
+            settings.DefaultDataFields = new ObservableCollection<string>(settings.DefaultDataFieldsList());
+        }
+
+        private void ButtonMakeDefaultGaugeFields_Click(object sender, RoutedEventArgs e)
+        {
+            settings.DefaultGaugeFields = new ObservableCollection<string>(settings.DefaultGaugeFieldsList());
+        }
+
         private void ButtonForgetDefaultGaugeFields_Click(object sender, RoutedEventArgs e)
         {
-            var settings = (Settings.GameSettings)DataContext;
             settings.DefaultGaugeFields.Clear();
         }
 
@@ -117,8 +190,6 @@ namespace DashMenu.UI
         {
             if (DesignerProperties.GetIsInDesignMode(this)) return;
 
-            var settings = (Settings.GameSettings)DataContext;
-
             dataFieldView = CollectionViewSource.GetDefaultView(settings.DataFields.Settings.Values.ToList());
             dataFieldView.Filter = item => ContainsFilter(DataFieldFilter.Text, DataFieldHide.IsChecked ?? false, item as IBasicSettings);
             dataFieldView.GroupDescriptions.Add(new PropertyGroupDescription("Namespace"));
@@ -132,8 +203,6 @@ namespace DashMenu.UI
         {
             if (DesignerProperties.GetIsInDesignMode(this)) return;
 
-            var settings = (Settings.GameSettings)DataContext;
-
             alertView = CollectionViewSource.GetDefaultView(settings.Alerts.Values.ToList());
             alertView.GroupDescriptions.Add(new PropertyGroupDescription("Namespace"));
             alertView.Filter = item => ContainsFilter(AlertFilter.Text, AlertHide.IsChecked ?? false, item as IBasicSettings);
@@ -146,8 +215,6 @@ namespace DashMenu.UI
         private void RefreshGaugeFieldList()
         {
             if (DesignerProperties.GetIsInDesignMode(this)) return;
-
-            var settings = (Settings.GameSettings)DataContext;
 
             gaugeFieldView = CollectionViewSource.GetDefaultView(settings.GaugeFields.Settings.Values.ToList());
             gaugeFieldView.Filter = item => ContainsFilter(GaugeFieldFilter.Text, GaugeFieldHide.IsChecked ?? false, item as IBasicSettings);
@@ -249,6 +316,31 @@ namespace DashMenu.UI
             if (!(sender is ListBox listBox) || listBox.SelectedItem == null) return;
 
             DragDrop.DoDragDrop(listBox, listBox.SelectedItem, DragDropEffects.Move);
+        }
+
+        private async void DefaultDataFieldItem_Click(object sender, RoutedEventArgs e)
+        {
+            FieldPicker dialog = new FieldPicker(settings.DataFields.Order);
+            if (await dialog.ShowDialogAsync(this, SimHub.Plugins.UI.DialogOptions.CenterPrimaryScreen) != System.Windows.Forms.DialogResult.OK) return;
+
+            // Get the MenuItem that was clicked
+            var menuItem = sender as MenuItem;
+            var info = menuItem?.DataContext as DefaultFieldInformation;
+            if (menuItem == null && info == null) return;
+
+            settings.DefaultDataFields[info.Index] = dialog.SelectedDataField;
+        }
+
+        private async void DefaultGaugeFieldItem_Click(object sender, RoutedEventArgs e)
+        {
+            FieldPicker dialog = new FieldPicker(settings.GaugeFields.Order);
+            if (await dialog.ShowDialogAsync(this, SimHub.Plugins.UI.DialogOptions.CenterPrimaryScreen) != System.Windows.Forms.DialogResult.OK) return;
+
+            var menuItem = sender as MenuItem;
+            var info = menuItem?.DataContext as DefaultFieldInformation;
+            if (menuItem == null && info == null) return;
+
+            settings.DefaultGaugeFields[info.Index] = dialog.SelectedDataField;
         }
     }
 }
