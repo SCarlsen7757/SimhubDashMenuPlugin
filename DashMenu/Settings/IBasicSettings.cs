@@ -2,11 +2,13 @@
 {
     internal interface IBasicSettings
     {
-        string Description { get; }
         string FullName { get; }
-        string Name { get; }
         string Namespace { get; }
-
+        string Name { get; }
+        string Description { get; }
+        bool Enabled { get; set; }
+        bool GameSupported { get; }
+        string SupportedGames { get; }
         bool Hide { get; }
     }
 }

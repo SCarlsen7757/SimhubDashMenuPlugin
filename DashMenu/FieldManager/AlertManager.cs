@@ -68,6 +68,9 @@ namespace DashMenu.FieldManager
                 alertSettings.Name = type.Name;
                 alertSettings.FullName = type.FullName;
 
+                alertSettings.SupportedGames = dataField.FieldExtension.SupportedGames;
+                alertSettings.Description = dataField.FieldExtension.Description;
+
                 allAlerts.Add(dataField);
             }
         }

@@ -53,20 +53,13 @@
             <!--Data fields-->
             <styles:SHSubSectionTitle Content="Displayed Data Fields"
                                       Grid.ColumnSpan="2" />
-            <styles:SHLinkButton VerticalAlignment="Top"
-                                 Margin="4"
-                                 Height="15"
-                                 HorizontalAlignment="Right"
-                                 Grid.ColumnSpan="2"
-                                 Content="Make default data field from this car"
-                                 ToolTip="Make the data fields from this car, the default data fields for new cars."
-                                 Click="DefaultDataFields_Click" />
-            <ItemsControl ItemsSource="{Binding DisplayedDataFields}"
-                          Grid.ColumnSpan="2"
+
+            <ItemsControl Name="ItemsControlDataFields"
+                          IsEnabled="{Binding Path=IsActive, Converter={StaticResource InvertedBooleanConverter}}"
                           Margin="12,0,0,0">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <StackPanel />
+                        <WrapPanel Orientation="Horizontal" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
@@ -75,30 +68,63 @@
                                 CornerRadius="6"
                                 Background="{DynamicResource GrayBrush8}"
                                 Margin="4">
-                            <Label Content="{Binding}"
-                                   Margin="5"
-                                   Padding="5" />
+                            <FrameworkElement.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Change field"
+                                              Click="DataFieldItem_Click" />
+                                    <MenuItem Header="Remove field"
+                                              Click="RemoveDataFieldItem_Click" />
+                                </ContextMenu>
+                            </FrameworkElement.ContextMenu>
+                            <StackPanel Orientation="Vertical">
+                                <Label Content="{Binding Namespace}"
+                                       Margin="5,0,5,0"
+                                       FontSize="12"
+                                       HorizontalAlignment="Center"
+                                       Foreground="{DynamicResource GrayBrush5}" />
+                                <Label Content="{Binding Name}"
+                                       Margin="5,-5,5,2"
+                                       FontSize="16"
+                                       FontWeight="Bold"
+                                       HorizontalAlignment="Center" />
+                            </StackPanel>
                         </Border>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
+            <StackPanel>
+                <styles:SHLinkButtonSmall VerticalAlignment="Top"
+                                     Margin="4"
+                                     Height="15"
+                                     HorizontalAlignment="Right"
+                                     Content="Make default data field from this car"
+                                     ToolTip="Make the data fields from this car, the default data fields for new cars."
+                                     Click="MakeDefaultDataFields_Click" />
+                <styles:SHLinkButtonSmall VerticalAlignment="Top"
+                                          Margin="4"
+                                          Height="15"
+                                          HorizontalAlignment="Right"
+                                          Content="Use default data field for this car"
+                                          Visibility="{Binding Path=IsActive, Converter={SHBoolToVisibilityConverter Invert=True}}"
+                                          Click="UseDefaultDataFields_Click" />
+                <styles:SHLinkButtonSmall VerticalAlignment="Top"
+                                          Margin="4"
+                                          Height="15"
+                                          HorizontalAlignment="Right"
+                                          Content="Use data field from another car"
+                                          Visibility="{Binding Path=IsActive, Converter={SHBoolToVisibilityConverter Invert=True}}"
+                                          Click="UseDataFieldsFromOtherCar_Click" />
+            </StackPanel>
             <!--Gauge fields-->
             <styles:SHSubSectionTitle Content="Displayed Gauge Fields"
                                       Grid.ColumnSpan="2" />
-            <styles:SHLinkButton VerticalAlignment="Top"
-                                 Margin="4"
-                                 Height="15"
-                                 HorizontalAlignment="Right"
-                                 Grid.ColumnSpan="2"
-                                 Content="Make default gauge field from this car"
-                                 ToolTip="Make the gauge fields from this car, the default gauge fields for new cars."
-                                 Click="DefaultGaugeFields_Click" />
-            <ItemsControl ItemsSource="{Binding DisplayedGaugeFields}"
-                          Grid.ColumnSpan="2"
+
+            <ItemsControl Name="ItemsControlGaugeFields"
+                          IsEnabled="{Binding Path=IsActive, Converter={StaticResource InvertedBooleanConverter}}"
                           Margin="12,0,0,0">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <StackPanel />
+                        <WrapPanel Orientation="Horizontal" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
@@ -107,13 +133,53 @@
                                 CornerRadius="6"
                                 Background="{DynamicResource GrayBrush8}"
                                 Margin="4">
-                            <Label Content="{Binding}"
-                                   Margin="5"
-                                   Padding="5" />
+                            <FrameworkElement.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Change field"
+                                              Click="GaugeFieldItem_Click" />
+                                    <MenuItem Header="Remove field"
+                                              Click="RemoveGaugeFieldItem_Click" />
+                                </ContextMenu>
+                            </FrameworkElement.ContextMenu>
+                            <StackPanel Orientation="Vertical">
+                                <Label Content="{Binding Namespace}"
+                                       Margin="5,0,5,0"
+                                       FontSize="12"
+                                       HorizontalAlignment="Center"
+                                       Foreground="{DynamicResource GrayBrush5}" />
+                                <Label Content="{Binding Name}"
+                                       Margin="5,-5,5,2"
+                                       FontSize="16"
+                                       FontWeight="Bold"
+                                       HorizontalAlignment="Center" />
+                            </StackPanel>
                         </Border>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
+            <StackPanel>
+                <styles:SHLinkButtonSmall VerticalAlignment="Top"
+                                     Margin="4"
+                                     Height="15"
+                                     HorizontalAlignment="Right"
+                                     Content="Make default gauge field from this car"
+                                     ToolTip="Make the gauge fields from this car, the default gauge fields for new cars."
+                                     Click="MakeDefaultGaugeFields_Click" />
+                <styles:SHLinkButtonSmall VerticalAlignment="Top"
+                                          Margin="4"
+                                          Height="15"
+                                          HorizontalAlignment="Right"
+                                          Content="Use default gauge field for this car"
+                                          Visibility="{Binding Path=IsActive, Converter={SHBoolToVisibilityConverter Invert=True}}"
+                                          Click="UseDefaultGaugeFields_Click" />
+                <styles:SHLinkButtonSmall VerticalAlignment="Top"
+                                          Margin="4"
+                                          Height="15"
+                                          HorizontalAlignment="Right"
+                                          Content="Use gauge field from another car"
+                                          Visibility="{Binding Path=IsActive, Converter={SHBoolToVisibilityConverter Invert=True}}"
+                                          Click="UseGaugeFieldsFromOtherCar_Click" />
+            </StackPanel>
         </AutoGrid>
     </Border>
 </UserControl>

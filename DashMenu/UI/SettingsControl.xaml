@@ -517,7 +517,7 @@
                     <!--Car fields-->
                     <Grid Grid.ColumnSpan="2">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="400" />
+                            <ColumnDefinition Width="auto"/>
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
@@ -548,7 +548,7 @@
                                                     Margin="-4,-4,1,-4"
                                                     Visibility="{Binding Path=Value.IsActive, 
                                                 Converter={SHBoolToVisibilityConverter Hide=true}}" />
-                                            <StackPanel Margin="0,0,0,0">
+                                            <StackPanel Margin="12,4">
                                                 <Label Padding="0"
                                                        Content="{Binding Path=Value.CarModel}" />
                                                 <Label Padding="0"

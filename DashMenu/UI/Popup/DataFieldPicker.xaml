@@ -1,4 +1,4 @@
-﻿<ui:SHDialogContentBase  x:Class="DashMenu.UI.FieldPicker"
+﻿<ui:SHDialogContentBase  x:Class="DashMenu.UI.Popup.FieldPicker"
                          xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                          xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
                          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -7,14 +7,12 @@
                          xmlns:styles="clr-namespace:SimHub.Plugins.Styles;assembly=SimHub.Plugins"
                          xmlns:ui="clr-namespace:SimHub.Plugins.UI;assembly=SimHub.Plugins"
                          xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks">
-
-    <StackPanel Orientation="Vertical">
-        <styles:SHListBox Name="ListBoxFields">
-
-        </styles:SHListBox>
-
+    <StackPanel>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <styles:SHListBox Name="ListBoxFields" />
+        </ScrollViewer>
         <StackPanel Orientation="Horizontal">
-            <styles:SHButtonPrimary Content="Save"
+            <styles:SHButtonPrimary Content="Select"
                                     Click="Select_Click" />
             <styles:SHButtonSecondary Content="Close"
                                       Click="Close_Click" />

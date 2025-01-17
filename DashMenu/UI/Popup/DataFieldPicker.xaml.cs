@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Windows.Markup;
 
-namespace DashMenu.UI
+namespace DashMenu.UI.Popup
 {
     /// <summary>
     /// Interaction logic for DataFieldPicker.xaml
     /// </summary>
     public partial class FieldPicker : SHDialogContentBase, IComponentConnector
     {
-        public FieldPicker(IList<string> fields)
+        public FieldPicker(IEnumerable<string> fields)
         {
             InitializeComponent();
             ListBoxFields.ItemsSource = fields;

@@ -1,8 +1,8 @@
 ﻿using DashMenu.Settings;
+using DashMenu.UI.Popup;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -72,7 +72,7 @@ namespace DashMenu.UI
         private void DefaultDataFields_CollectionChanged()
         {
             DefaultFieldButtonBehavior(settings.DefaultDataFields, ButtonMakeDefaultDataFields, ButtonForgetDefaultDataFields);
-            ItemsControlDefaultDataField.ItemsSource = DefaultFieldItemsControl(settings.DefaultDataFields, settings.DataFields);
+            ItemsControlDefaultDataField.ItemsSource = FieldInformation.ItemsControlSource(settings.DefaultDataFields, settings.DataFields);
         }
 
         private void DefaultGaugeFields_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -83,7 +83,7 @@ namespace DashMenu.UI
         private void DefaultGaugeFields_CollectionChanged()
         {
             DefaultFieldButtonBehavior(settings.DefaultGaugeFields, ButtonMakeDefaultGaugeFields, ButtonForgetDefaultGaugeFields);
-            ItemsControlDefaultGaugeField.ItemsSource = DefaultFieldItemsControl(settings.DefaultGaugeFields, settings.GaugeFields);
+            ItemsControlDefaultGaugeField.ItemsSource = FieldInformation.ItemsControlSource(settings.DefaultGaugeFields, settings.GaugeFields);
         }
 
         private static void DefaultFieldButtonBehavior(IList<string> fields, UIElement makeDefaultButton, UIElement forgetDefaultButton)
@@ -91,26 +91,6 @@ namespace DashMenu.UI
             makeDefaultButton.Visibility = fields.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
             forgetDefaultButton.Visibility = fields.Count != 0 ? Visibility.Visible : Visibility.Collapsed;
         }
-
-        private static IEnumerable DefaultFieldItemsControl<FieldType>(IList<string> defaultFields, Settings.FieldSettings<FieldType> fieldSettings) where FieldType : Settings.IBasicSettings, new()
-        {
-            var fields = new List<DefaultFieldInformation>();
-
-            for (int i = 0; i < defaultFields.Count; i++)
-            {
-                var fieldDetails = fieldSettings.Settings[defaultFields[i]];
-                var info = new DefaultFieldInformation()
-                {
-                    Index = i,
-                    Namespace = fieldDetails.Namespace,
-                    Name = fieldDetails.Name
-                };
-                fields.Add(info);
-            }
-
-            return fields;
-        }
-
         private void DataFieldPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (sender is Settings.DataField)
@@ -192,9 +172,9 @@ namespace DashMenu.UI
 
             dataFieldView = CollectionViewSource.GetDefaultView(settings.DataFields.Settings.Values.ToList());
             dataFieldView.Filter = item => ContainsFilter(DataFieldFilter.Text, DataFieldHide.IsChecked ?? false, item as IBasicSettings);
-            dataFieldView.GroupDescriptions.Add(new PropertyGroupDescription("Namespace"));
-            dataFieldView.SortDescriptions.Add(new SortDescription("Namespace", ListSortDirection.Ascending));
-            dataFieldView.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
+            dataFieldView.GroupDescriptions.Add(new PropertyGroupDescription(nameof(Settings.IBasicSettings.Namespace)));
+            dataFieldView.SortDescriptions.Add(new SortDescription(nameof(Settings.IBasicSettings.Namespace), ListSortDirection.Ascending));
+            dataFieldView.SortDescriptions.Add(new SortDescription(nameof(Settings.IBasicSettings.Name), ListSortDirection.Ascending));
 
             FieldDataSettings.ItemsSource = dataFieldView;
         }
@@ -204,10 +184,10 @@ namespace DashMenu.UI
             if (DesignerProperties.GetIsInDesignMode(this)) return;
 
             alertView = CollectionViewSource.GetDefaultView(settings.Alerts.Values.ToList());
-            alertView.GroupDescriptions.Add(new PropertyGroupDescription("Namespace"));
             alertView.Filter = item => ContainsFilter(AlertFilter.Text, AlertHide.IsChecked ?? false, item as IBasicSettings);
-            alertView.SortDescriptions.Add(new SortDescription("Namespace", ListSortDirection.Ascending));
-            alertView.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
+            alertView.GroupDescriptions.Add(new PropertyGroupDescription(nameof(Settings.IBasicSettings.Namespace)));
+            alertView.SortDescriptions.Add(new SortDescription(nameof(Settings.IBasicSettings.Namespace), ListSortDirection.Ascending));
+            alertView.SortDescriptions.Add(new SortDescription(nameof(Settings.IBasicSettings.Name), ListSortDirection.Ascending));
 
             AlertSettings.ItemsSource = alertView;
         }
@@ -218,9 +198,9 @@ namespace DashMenu.UI
 
             gaugeFieldView = CollectionViewSource.GetDefaultView(settings.GaugeFields.Settings.Values.ToList());
             gaugeFieldView.Filter = item => ContainsFilter(GaugeFieldFilter.Text, GaugeFieldHide.IsChecked ?? false, item as IBasicSettings);
-            gaugeFieldView.GroupDescriptions.Add(new PropertyGroupDescription("Namespace"));
-            gaugeFieldView.SortDescriptions.Add(new SortDescription("Namespace", ListSortDirection.Ascending));
-            gaugeFieldView.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
+            gaugeFieldView.GroupDescriptions.Add(new PropertyGroupDescription(nameof(Settings.IBasicSettings.Namespace)));
+            gaugeFieldView.SortDescriptions.Add(new SortDescription(nameof(Settings.IBasicSettings.Namespace), ListSortDirection.Ascending));
+            gaugeFieldView.SortDescriptions.Add(new SortDescription(nameof(Settings.IBasicSettings.Name), ListSortDirection.Ascending));
 
             FieldGaugeSettings.ItemsSource = gaugeFieldView;
         }
@@ -320,12 +300,12 @@ namespace DashMenu.UI
 
         private async void DefaultDataFieldItem_Click(object sender, RoutedEventArgs e)
         {
-            FieldPicker dialog = new FieldPicker(settings.DataFields.Order);
+            FieldPicker dialog = new FieldPicker(settings.DataFields.EnabledFieldsSortedByOrder()) { Title = "Select Data field" };
             if (await dialog.ShowDialogAsync(this, SimHub.Plugins.UI.DialogOptions.CenterPrimaryScreen) != System.Windows.Forms.DialogResult.OK) return;
 
             // Get the MenuItem that was clicked
             var menuItem = sender as MenuItem;
-            var info = menuItem?.DataContext as DefaultFieldInformation;
+            var info = menuItem?.DataContext as FieldInformation;
             if (menuItem == null && info == null) return;
 
             settings.DefaultDataFields[info.Index] = dialog.SelectedDataField;
@@ -333,11 +313,11 @@ namespace DashMenu.UI
 
         private async void DefaultGaugeFieldItem_Click(object sender, RoutedEventArgs e)
         {
-            FieldPicker dialog = new FieldPicker(settings.GaugeFields.Order);
+            FieldPicker dialog = new FieldPicker(settings.GaugeFields.EnabledFieldsSortedByOrder()) { Title = "Select Gauge field" };
             if (await dialog.ShowDialogAsync(this, SimHub.Plugins.UI.DialogOptions.CenterPrimaryScreen) != System.Windows.Forms.DialogResult.OK) return;
 
             var menuItem = sender as MenuItem;
-            var info = menuItem?.DataContext as DefaultFieldInformation;
+            var info = menuItem?.DataContext as FieldInformation;
             if (menuItem == null && info == null) return;
 
             settings.DefaultGaugeFields[info.Index] = dialog.SelectedDataField;

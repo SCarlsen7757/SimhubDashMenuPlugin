@@ -139,6 +139,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Settings\Alert.cs" />
+    <Compile Include="Settings\BasicSettings.cs" />
     <Compile Include="Settings\ColorSchemePropertyOverride.cs" />
     <Compile Include="Settings\DayNightColorScheme.cs" />
     <Compile Include="Settings\CarFields.cs" />
@@ -163,13 +164,16 @@
       <DependentUpon>ColorSchemeItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\ColorStringToColorConverter.cs" />
-    <Compile Include="UI\DataFieldPicker.xaml.cs">
+    <Compile Include="UI\Popup\CarPickerWithFields.xaml.cs">
+      <DependentUpon>CarPickerWithFields.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Popup\DataFieldPicker.xaml.cs">
       <DependentUpon>DataFieldPicker.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\DataFieldSettingsItem.xaml.cs">
       <DependentUpon>DataFieldSettingsItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\DefaultFieldInformation.cs" />
+    <Compile Include="UI\FieldInformation.cs" />
     <Compile Include="UI\GaugeFieldSettingsItem.xaml.cs">
       <DependentUpon>GaugeFieldSettingsItem.xaml</DependentUpon>
     </Compile>
@@ -214,7 +218,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\DataFieldPicker.xaml">
+    <Page Include="UI\Popup\CarPickerWithFields.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Popup\DataFieldPicker.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

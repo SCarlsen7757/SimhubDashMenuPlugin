@@ -17,6 +17,36 @@ namespace DashMenu.Settings
             DataFields.Settings.CollectionChanged += DataFields_CollectionChanged;
             GaugeFields.Settings.CollectionChanged += GaugeFields_CollectionChanged;
             Alerts.CollectionChanged += Alerts_CollectionChanged;
+            PropertyChanged += DefaultAmountOfFields_PropertyChanged;
+        }
+
+
+        private void DefaultAmountOfFields_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(DefaultAmountOfDataFields))
+            {
+                ChangeDefaultField(DefaultAmountOfDataFields, DefaultDataFields);
+            }
+            else if (e.PropertyName == nameof(DefaultAmountOfGaugeFields))
+            {
+                ChangeDefaultField(DefaultAmountOfGaugeFields, DefaultGaugeFields);
+            }
+        }
+
+        private static void ChangeDefaultField(int amount, IList<string> fields)
+        {
+            if (amount == fields.Count) return;
+            do
+            {
+                if (fields.Count < amount)
+                {
+                    fields.Add(EmptyField.FullName);
+                }
+                else
+                {
+                    fields.RemoveAt(fields.Count - 1);
+                }
+            } while (fields.Count != amount);
         }
 
         #region Default amount of fields

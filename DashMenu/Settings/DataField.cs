@@ -1,58 +1,13 @@
 ﻿using Newtonsoft.Json;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 
 namespace DashMenu.Settings
 {
-    internal class DataField : INotifyPropertyChanged, IDataField
+    internal class DataField : BasicSettings, INotifyPropertyChanged, IDataField
     {
         public DataField()
         {
             Override = new OverrideProperties(this);
-        }
-
-        [JsonIgnore]
-        public string Namespace { get; internal set; }
-
-        [JsonIgnore]
-        public string Name { get; internal set; }
-
-        [JsonIgnore]
-        public string FullName { get; internal set; }
-
-        [JsonIgnore]
-        public bool GameSupported { get; internal set; }
-
-        [JsonIgnore]
-        public string SupportedGames { get; internal set; }
-
-        [JsonIgnore]
-        public string Description { get; internal set; }
-
-        private bool enabled = true;
-
-        private bool hide = false;
-
-        public bool Hide
-        {
-            get => hide;
-            set
-            {
-                if (value == hide) return;
-                hide = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public bool Enabled
-        {
-            get => enabled;
-            set
-            {
-                if (value == enabled) return;
-                enabled = value;
-                OnPropertyChanged();
-            }
         }
 
         private bool isDecimal = false;
@@ -107,9 +62,5 @@ namespace DashMenu.Settings
 
             private void ColorScheme_PropertyChanged(object sender, PropertyChangedEventArgs e) => ColorSchemePropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DayNightColorScheme)));
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }
