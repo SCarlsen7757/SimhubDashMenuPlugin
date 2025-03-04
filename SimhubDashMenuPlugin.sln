@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RrreExtensionFields", "Rrre
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccExtensionFields", "AccExtensionFields\AccExtensionFields.csproj", "{CDE8FCFA-7FC0-4678-B1C1-555C3A5450E8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaExtensionFields", "MediaExtensionFields\MediaExtensionFields.csproj", "{6901A73B-3074-4E9C-B91C-C0C6AA0979F1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{CDE8FCFA-7FC0-4678-B1C1-555C3A5450E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CDE8FCFA-7FC0-4678-B1C1-555C3A5450E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CDE8FCFA-7FC0-4678-B1C1-555C3A5450E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6901A73B-3074-4E9C-B91C-C0C6AA0979F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6901A73B-3074-4E9C-B91C-C0C6AA0979F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6901A73B-3074-4E9C-B91C-C0C6AA0979F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6901A73B-3074-4E9C-B91C-C0C6AA0979F1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
