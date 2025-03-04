@@ -54,6 +54,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="RoadTemperature.cs" />
+    <Compile Include="AirTemperature.cs" />
     <Compile Include="TC2Level.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WiperLevel.cs" />
