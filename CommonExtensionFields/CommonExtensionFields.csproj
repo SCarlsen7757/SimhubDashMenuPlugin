@@ -53,6 +53,15 @@
     <Compile Include="ABSLevel.cs" />
     <Compile Include="Brake.cs" />
     <Compile Include="BrakeBias.cs" />
+    <Compile Include="TyresWearMax.cs" />
+    <Compile Include="TyresWearMin.cs" />
+    <Compile Include="TyresWearAvg.cs" />
+    <Compile Include="TyresTemperatureMax.cs" />
+    <Compile Include="TyresTemperatureMin.cs" />
+    <Compile Include="TyresTemperatureAvg.cs" />
+    <Compile Include="BrakesTemperatureMax.cs" />
+    <Compile Include="BrakesTemperatureMin.cs" />
+    <Compile Include="BrakesTemperatureAvg.cs" />
     <Compile Include="Clutch.cs" />
     <Compile Include="EngineMap.cs" />
     <Compile Include="FuelProcent.cs" />
