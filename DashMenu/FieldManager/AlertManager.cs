@@ -13,32 +13,32 @@ namespace DashMenu.FieldManager
         public AlertManager()
         {
             SimhubHelper.AddNCalcFunction($"dashalertshow",
-                "Returns true of an alert is aktiv.",
+                "Returns true of an alert is active.",
                 string.Empty,
                 engine => (Func<bool>)AlertShow);
 
             SimhubHelper.AddNCalcFunction($"dashalertname",
-                "Returns the name of the aktiv alert.",
+                "Returns the name of the active alert.",
                 string.Empty,
                 engine => (Func<string>)AlertName);
 
             SimhubHelper.AddNCalcFunction($"dashalertvalue",
-                "Returns the value of the aktiv alert.",
+                "Returns the value of the active alert.",
                 string.Empty,
                 engine => (Func<string>)AlertValue);
 
             SimhubHelper.AddNCalcFunction($"dashalertunit",
-                "Returns the unit of the aktiv alert.",
+                "Returns the unit of the active alert.",
                 string.Empty,
                 engine => (Func<string>)AlertUnit);
 
             SimhubHelper.AddNCalcFunction($"dashalertcolorprimary",
-                "Returns the primary color of the aktiv alert.",
+                "Returns the primary color of the active alert.",
                 string.Empty,
                 engine => (Func<string>)AlertColorPrimary);
 
             SimhubHelper.AddNCalcFunction($"dashalertcoloraccent",
-                "Returns the accent color of the aktiv alert.",
+                "Returns the accent color of the active alert.",
                 string.Empty,
                 engine => (Func<string>)AlertColorAccent);
         }
