@@ -19,34 +19,35 @@ namespace DashMenu.FieldManager
             SelectedFields.CollectionChanged += SelectedFields_CollectionChanged;
 
             SimhubHelper.AddNCalcFunction($"dashfield{FIELD_TYPE_NAME.ToLower()}name",
-                "Returns the name of the field of the specified field.",
+                "Gets the name of the field at the specified index.",
                 "index",
                 engine => (Func<int, string>)(index => GetField(index - 1).Name));
 
             SimhubHelper.AddNCalcFunction($"dashfield{FIELD_TYPE_NAME.ToLower()}value",
-                "Returns the value of the field of the specified field.",
+                "Gets the value of the field at the specified index.",
                 "index",
                 engine => (Func<int, string>)(index => GetField(index - 1).Value));
 
             SimhubHelper.AddNCalcFunction($"dashfield{FIELD_TYPE_NAME.ToLower()}decimal",
-                "Returns the number of decimals the value has of the field of the specified field.",
+                "Gets the number of decimal places for the field at the specified index.",
                 "index",
                 engine => (Func<int, int>)(index => GetField(index - 1).Decimal));
 
             SimhubHelper.AddNCalcFunction($"dashfield{FIELD_TYPE_NAME.ToLower()}unit",
-                "Returns the unit of the  field of the specified field.",
+                "Gets the unit of measurement for the field at the specified index.",
                 "index",
                 engine => (Func<int, string>)(index => GetField(index - 1).Unit));
 
             SimhubHelper.AddNCalcFunction($"dashfield{FIELD_TYPE_NAME.ToLower()}colorprimary",
-                "Returns the primary color of the field of the specified field.",
+                "Gets the primary color of the field at the specified index.",
                 "index",
                 engine => (Func<int, string>)(index => GetField(index - 1).Color.Primary));
 
             SimhubHelper.AddNCalcFunction($"dashfield{FIELD_TYPE_NAME.ToLower()}coloraccent",
-                "Returns the accent color of the field of the specified field.",
+                "Gets the accent color of the field at the specified index.",
                 "index",
                 engine => (Func<int, string>)(index => GetField(index - 1).Color.Accent));
+
 
         }
         internal ObservableCollection<IDataFieldExtension> SelectedFields { get; private set; } = new ObservableCollection<IDataFieldExtension>();

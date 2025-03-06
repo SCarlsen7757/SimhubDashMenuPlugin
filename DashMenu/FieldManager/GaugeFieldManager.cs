@@ -19,49 +19,51 @@ namespace DashMenu.FieldManager
             SelectedFields.CollectionChanged += SelectedFields_CollectionChanged;
 
             SimhubHelper.AddNCalcFunction($"dashfield{FIELD_TYPE_NAME.ToLower()}name",
-                "Returns the name of the field of the specified field.",
+                "Gets the name of the specified field.",
                 "index",
                 engine => (Func<int, string>)(index => GetField(index - 1).Name));
 
             SimhubHelper.AddNCalcFunction($"dashfield{FIELD_TYPE_NAME.ToLower()}value",
-                "Returns the value of the field of the specified field.",
+                "Gets the value of the specified field.",
                 "index",
                 engine => (Func<int, string>)(index => GetField(index - 1).Value));
 
             SimhubHelper.AddNCalcFunction($"dashfield{FIELD_TYPE_NAME.ToLower()}decimal",
-                "Returns the number of decimals the value has of the field of the specified field.",
+                "Gets the number of decimal places for the specified field's value.",
                 "index",
                 engine => (Func<int, int>)(index => GetField(index - 1).Decimal));
 
             SimhubHelper.AddNCalcFunction($"dashfield{FIELD_TYPE_NAME.ToLower()}unit",
-                "Returns the unit of the  field of the specified field.",
+                "Gets the unit of measurement for the specified field.",
                 "index",
                 engine => (Func<int, string>)(index => GetField(index - 1).Unit));
 
             SimhubHelper.AddNCalcFunction($"dashfield{FIELD_TYPE_NAME.ToLower()}colorprimary",
-                "Returns the primary color of the field of the specified field.",
+                "Gets the primary color of the specified field.",
                 "index",
                 engine => (Func<int, string>)(index => GetField(index - 1).Color.Primary));
 
             SimhubHelper.AddNCalcFunction($"dashfield{FIELD_TYPE_NAME.ToLower()}coloraccent",
-                "Returns the accent color of the field of the specified field.",
+                "Gets the accent color of the specified field.",
                 "index",
                 engine => (Func<int, string>)(index => GetField(index - 1).Color.Accent));
 
             SimhubHelper.AddNCalcFunction($"dashfield{FIELD_TYPE_NAME.ToLower()}maximum",
-                "Return the maximum value of the field of the specified field.",
+                "Gets the maximum value of the specified field.",
                 "index",
                 engine => (Func<int, string>)(index => GetField(index - 1).Maximum));
 
             SimhubHelper.AddNCalcFunction($"dashfield{FIELD_TYPE_NAME.ToLower()}minimum",
-                "Return the minimum value of the field of the specified field.",
+                "Gets the minimum value of the specified field.",
                 "index",
                 engine => (Func<int, string>)(index => GetField(index - 1).Minimum));
 
             SimhubHelper.AddNCalcFunction($"dashfield{FIELD_TYPE_NAME.ToLower()}step",
-                "Return the step value of the field of the specified field.",
+                "Gets the step value of the specified field.",
                 "index",
-                engine => (Func<int, string>)(index => GetField(index - 1).Step));
+                engine => (Func < int, s
+
+
         }
 
         internal ObservableCollection<IGaugeFieldExtension> SelectedFields { get; private set; } = new ObservableCollection<IGaugeFieldExtension>();

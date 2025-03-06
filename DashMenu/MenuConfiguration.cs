@@ -22,14 +22,12 @@ namespace DashMenu
             this.pluginManager.AddProperty(PropertyNames.FieldType, this.pluginType, FieldType.ToString());
 
             SimhubHelper.AddNCalcFunction("dashfielddataactive",
-                "Returns true of the data field is active for configuration.",
+                "Returns true if the data field is active for configuration.",
                 "index",
                 engine => (Func<int, bool>)(index => DataFieldActive(index)));
 
-
-
             SimhubHelper.AddNCalcFunction("dashfieldgaugeactive",
-                "Returns true of the gauge field is active for configuration.",
+                "Returns true if the gauge field is active for configuration.",
                 "index",
                 engine => (Func<int, bool>)(index => GaugeFieldActive(index)));
         }
