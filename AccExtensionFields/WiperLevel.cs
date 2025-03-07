@@ -16,7 +16,7 @@ namespace AccExtensionFields
             Data.PropertyChanged += DataAlert_PropertyChanged;
         }
 
-        public string Description => "TC 2 Level.";
+        public string Description => "Wipers Level.";
 
         protected override bool GameSupported(string gameName)
         {
