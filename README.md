@@ -2,6 +2,8 @@
 
 This plugin allows you to create and display customizable data fields on the dashboard. These fields are easy to change, even during a race, eliminating the need for multiple dashboards for different car types.
 
+This project uses a set of abbreviated names for fields (e.g., ABS, TC, BB, MAP). You can find the full list with descriptions [here](./Docs/AbbreviatedName.md). These abbreviations are used default names for the fields.
+
 ![Dashboard that implements this plugin](./Image/Dashboard.png)
 *This is the layout of a dashboard that uses this plugin. The five fields at the bottom (ABS, TC, BB, MAP, FUEL) are data fields, which can be swapped out with other data fields as needed. The two gauges in the center are gauge fields and can also be replaced with other gauge options. You can find this dashboard setup in the [repository](./Dash%20menu%20dash.simhubdash).*
 
