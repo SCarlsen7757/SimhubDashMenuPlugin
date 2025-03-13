@@ -12,6 +12,8 @@ namespace CommonExtensionFields
             {
                 Name = "TWMAX",
                 Unit = "%",
+                IsDecimalNumber = true,
+                Decimal = 1,
                 Color = new ColorScheme("#00ed96")
             };
         }
@@ -21,7 +23,7 @@ namespace CommonExtensionFields
         public void Update(PluginManager pluginManager, ref GameData data)
         {
             if (!data.GameRunning) return;
-            Data.Value = data.NewData.TyresWearMax.ToString();
+            Data.Value = DecimalValue(data.NewData.TyresWearMax);
         }
     }
 }

@@ -11,6 +11,8 @@ namespace CommonExtensionFields
             Data = new DataField()
             {
                 Name = "BTMIN",
+                IsDecimalNumber = true,
+                Decimal = 0,
                 Color = new ColorScheme("#ed6b00")
             };
         }
@@ -20,7 +22,7 @@ namespace CommonExtensionFields
         public void Update(PluginManager pluginManager, ref GameData data)
         {
             if (!data.GameRunning) return;
-            Data.Value = data.NewData.BrakesTemperatureMin.ToString();
+            Data.Value = DecimalValue(data.NewData.BrakesTemperatureMin);
             Data.Unit = "°" + data.NewData.TemperatureUnit[0];
         }
     }
