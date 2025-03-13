@@ -61,9 +61,7 @@ namespace DashMenu.FieldManager
             SimhubHelper.AddNCalcFunction($"dashfield{FIELD_TYPE_NAME.ToLower()}step",
                 "Gets the step value of the specified field.",
                 "index",
-                engine => (Func < int, s
-
-
+                engine => (Func<int, string>)(index => GetField(index - 1).Step));
         }
 
         internal ObservableCollection<IGaugeFieldExtension> SelectedFields { get; private set; } = new ObservableCollection<IGaugeFieldExtension>();
