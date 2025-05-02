@@ -53,6 +53,9 @@
     <Compile Include="ABSLevel.cs" />
     <Compile Include="Brake.cs" />
     <Compile Include="BrakeBias.cs" />
+    <Compile Include="ShakeIt\Wind\OutputRight.cs" />
+    <Compile Include="ShakeIt\Wind\OutputLeft.cs" />
+    <Compile Include="ShakeIt\Wind\OutputCenter.cs" />
     <Compile Include="TyresWearMax.cs" />
     <Compile Include="TyresWearMin.cs" />
     <Compile Include="TyresWearAvg.cs" />
