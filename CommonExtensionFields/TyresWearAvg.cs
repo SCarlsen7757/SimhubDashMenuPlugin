@@ -13,7 +13,7 @@ namespace CommonExtensionFields
                 Name = "TWAVG",
                 Unit = "%",
                 IsDecimalNumber = true,
-                Decimal = 1
+                Decimal = 1,
                 Color = new ColorScheme("#00ed96")
             };
         }
