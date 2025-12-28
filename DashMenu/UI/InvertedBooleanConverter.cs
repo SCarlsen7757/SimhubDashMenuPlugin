@@ -4,7 +4,7 @@ using System.Windows.Data;
 
 namespace DashMenu.UI
 {
-    public class InvertedBooleanConverter : IValueConverter
+    public sealed class InvertedBooleanConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

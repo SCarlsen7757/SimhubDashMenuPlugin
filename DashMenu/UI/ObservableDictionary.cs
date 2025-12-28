@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace DashMenu.UI
 {
-    public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, INotifyCollectionChanged, INotifyPropertyChanged
+    public sealed class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, INotifyCollectionChanged, INotifyPropertyChanged
     {
         private readonly Dictionary<TKey, TValue> _dictionary;
         private readonly object _lock = new object(); // Lock object for thread safety

@@ -1,4 +1,4 @@
-﻿using DashMenu.Data;
+﻿using DashMenu.Data.Interfaces;
 using System.ComponentModel;
 
 namespace DashMenu

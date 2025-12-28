@@ -50,33 +50,33 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ABSLevel.cs" />
-    <Compile Include="Brake.cs" />
-    <Compile Include="BrakeBias.cs" />
+    <Compile Include="Electronics\ABSLevel.cs" />
+    <Compile Include="UserInputs\Brake.cs" />
+    <Compile Include="Electronics\BrakeBias.cs" />
     <Compile Include="ShakeIt\Wind\OutputRight.cs" />
     <Compile Include="ShakeIt\Wind\OutputLeft.cs" />
     <Compile Include="ShakeIt\Wind\OutputCenter.cs" />
-    <Compile Include="TyresWearMax.cs" />
-    <Compile Include="TyresWearMin.cs" />
-    <Compile Include="TyresWearAvg.cs" />
-    <Compile Include="TyresTemperatureMax.cs" />
-    <Compile Include="TyresTemperatureMin.cs" />
-    <Compile Include="TyresTemperatureAvg.cs" />
-    <Compile Include="BrakesTemperatureMax.cs" />
-    <Compile Include="BrakesTemperatureMin.cs" />
-    <Compile Include="BrakesTemperatureAvg.cs" />
-    <Compile Include="Clutch.cs" />
-    <Compile Include="EngineMap.cs" />
-    <Compile Include="FuelProcent.cs" />
-    <Compile Include="FuelVolume.cs" />
-    <Compile Include="HeartRate.cs" />
-    <Compile Include="OilPressure.cs" />
-    <Compile Include="OilTemperature.cs" />
+    <Compile Include="Tyres\TyresWearMax.cs" />
+    <Compile Include="Tyres\TyresWearMin.cs" />
+    <Compile Include="Tyres\TyresWearAvg.cs" />
+    <Compile Include="Tyres\TyresTemperatureMax.cs" />
+    <Compile Include="Tyres\TyresTemperatureMin.cs" />
+    <Compile Include="Tyres\TyresTemperatureAvg.cs" />
+    <Compile Include="Brakes\BrakesTemperatureMax.cs" />
+    <Compile Include="Brakes\BrakesTemperatureMin.cs" />
+    <Compile Include="Brakes\BrakesTemperatureAvg.cs" />
+    <Compile Include="UserInputs\Clutch.cs" />
+    <Compile Include="Electronics\EngineMap.cs" />
+    <Compile Include="Engine\FuelProcent.cs" />
+    <Compile Include="Engine\FuelVolume.cs" />
+    <Compile Include="Driver\HeartRate.cs" />
+    <Compile Include="Engine\OilPressure.cs" />
+    <Compile Include="Engine\OilTemperature.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Rpm.cs" />
-    <Compile Include="TCLevel.cs" />
-    <Compile Include="Throttle.cs" />
-    <Compile Include="WaterTemperature.cs" />
+    <Compile Include="Engine\Rpm.cs" />
+    <Compile Include="Electronics\TCLevel.cs" />
+    <Compile Include="UserInputs\Throttle.cs" />
+    <Compile Include="Engine\WaterTemperature.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DashMenu\DashMenu.csproj">

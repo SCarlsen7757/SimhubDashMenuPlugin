@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using DashMenu.Data.Interfaces;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace DashMenu.Data

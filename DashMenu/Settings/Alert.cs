@@ -1,9 +1,10 @@
-﻿using System;
+﻿using DashMenu.Settings.Interfaces;
+using System;
 using System.ComponentModel;
 
 namespace DashMenu.Settings
 {
-    internal class Alert : BasicSettings, IAlert, INotifyPropertyChanged
+    internal sealed class Alert : BasicSettings, IAlertSettings, INotifyPropertyChanged
     {
         private TimeSpan time = TimeSpan.FromMilliseconds(700);
 

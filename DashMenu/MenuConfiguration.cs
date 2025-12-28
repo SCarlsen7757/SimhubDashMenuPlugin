@@ -1,10 +1,10 @@
-﻿using DashMenu.Extensions;
+﻿using DashMenu.Utilities;
 using SimHub.Plugins;
 using System;
 
 namespace DashMenu
 {
-    internal class MenuConfiguration
+    internal sealed class MenuConfiguration
     {
         internal static class PropertyNames
         {

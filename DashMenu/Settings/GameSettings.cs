@@ -1,4 +1,5 @@
 ﻿using DashMenu.Extensions;
+using DashMenu.Settings.Interfaces;
 using DashMenu.UI;
 using System;
 using System.Collections.Generic;
@@ -170,7 +171,7 @@ namespace DashMenu.Settings
 
         internal string CurrentCarModel { get; private set; } = null;
 
-        public delegate void CarFieldChangedEventHandler(ICarFields carFields);
+        public delegate void CarFieldChangedEventHandler(ICarFieldsSettings carFields);
 
         public event CarFieldChangedEventHandler CurrentCarFieldChanged;
 
@@ -219,11 +220,11 @@ namespace DashMenu.Settings
         #endregion
 
         #region Field and Alert settings
-        public delegate void DataFieldSettingsChangedEventHandler(IDataField dataField, PropertyChangedEventArgs e);
+        public delegate void DataFieldSettingsChangedEventHandler(IDataFieldSettings dataField, PropertyChangedEventArgs e);
 
-        public delegate void GaugeFieldSettingsChangedEventHandler(IGaugeField gaugeField, PropertyChangedEventArgs e);
+        public delegate void GaugeFieldSettingsChangedEventHandler(IGaugeFieldSettings gaugeField, PropertyChangedEventArgs e);
 
-        public delegate void AlertSettingsChangedEventHandler(IDataField dataField, IAlert alert, PropertyChangedEventArgs e);
+        public delegate void AlertSettingsChangedEventHandler(IDataFieldSettings dataField, IAlertSettings alert, PropertyChangedEventArgs e);
 
         public event DataFieldSettingsChangedEventHandler DataFieldSettingsChanged;
 

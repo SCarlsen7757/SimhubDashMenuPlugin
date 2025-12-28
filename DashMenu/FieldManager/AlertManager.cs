@@ -1,5 +1,6 @@
-﻿using DashMenu.Data;
+﻿using DashMenu.Data.Interfaces;
 using DashMenu.Extensions;
+using DashMenu.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,7 +9,7 @@ using System.Linq;
 
 namespace DashMenu.FieldManager
 {
-    internal class AlertManager
+    internal sealed class AlertManager
     {
         public AlertManager()
         {
@@ -43,18 +44,18 @@ namespace DashMenu.FieldManager
                 engine => (Func<string>)AlertColorAccent);
         }
 
-        internal ObservableCollection<IAlert> SelectedAlerts { get; private set; } = new ObservableCollection<IAlert>();
+        internal ObservableCollection<Data.Interfaces.IAlert> SelectedAlerts { get; private set; } = new ObservableCollection<Data.Interfaces.IAlert>();
 
-        private readonly ObservableCollection<IFieldComponent<IDataFieldExtension, IDataField>> allAlerts = new ObservableCollection<IFieldComponent<IDataFieldExtension, IDataField>>();
+        private readonly ObservableCollection<IFieldComponent<IDataFieldExtension, Data.Interfaces.IDataField>> allAlerts = new ObservableCollection<IFieldComponent<IDataFieldExtension, Data.Interfaces.IDataField>>();
 
-        public IList<IFieldComponent<IDataFieldExtension, IDataField>> AllAlerts { get => allAlerts; }
+        public IList<IFieldComponent<IDataFieldExtension, Data.Interfaces.IDataField>> AllAlerts { get => allAlerts; }
 
-        internal void AddAlerts(IList<IFieldComponent<IDataFieldExtension, IDataField>> allDataFields, IDictionary<string, Settings.Alert> settings)
+        internal void AddAlerts(IList<IFieldComponent<IDataFieldExtension, Data.Interfaces.IDataField>> allDataFields, IDictionary<string, Settings.Alert> settings)
         {
             foreach (var dataField in allDataFields)
             {
                 Type type = dataField.FieldExtension.GetType();
-                if (!type.ContainsInterface(typeof(IAlert))) continue;
+                if (!type.ContainsInterface(typeof(Data.Interfaces.IAlert))) continue;
                 if (!settings.TryGetValue(dataField.FullName, out var alertSettings))
                 {
                     alertSettings = new Settings.Alert()
@@ -85,14 +86,14 @@ namespace DashMenu.FieldManager
                 if (dataFieldSetting.Enabled && alertSetting.Enabled)
                 {
                     var alert = AllAlerts.First(x => x.FullName == alertSetting.FullName) ?? throw new ArgumentException($"Alert not found! {key}.");
-                    SelectedAlerts.Add((IAlert)alert.FieldExtension);
+                    SelectedAlerts.Add((Data.Interfaces.IAlert)alert.FieldExtension);
 
                     UpdateShowTimeDuration(alertSetting);
                 }
             }
         }
 
-        internal void UpdateProperties(Settings.IDataField dataFieldSettings, Settings.IAlert alertSettings, PropertyChangedEventArgs e)
+        internal void UpdateProperties(Settings.Interfaces.IDataFieldSettings dataFieldSettings, Settings.Interfaces.IAlertSettings alertSettings, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
             {
@@ -107,29 +108,29 @@ namespace DashMenu.FieldManager
             }
         }
 
-        private void UpdateProperties(Settings.IDataField dataFieldSettings, Settings.IAlert alertSettings)
+        private void UpdateProperties(Settings.Interfaces.IDataFieldSettings dataFieldSettings, Settings.Interfaces.IAlertSettings alertSettings)
         {
             var field = AllAlerts.First(x => x.FullName == alertSettings.FullName);
             if (field == null) return;
 
             if (dataFieldSettings.Enabled && alertSettings.Enabled)
             {
-                SelectedAlerts.Add((IAlert)AllAlerts.First(x => x.FullName == field.FullName).FieldExtension);
+                SelectedAlerts.Add((Data.Interfaces.IAlert)AllAlerts.First(x => x.FullName == field.FullName).FieldExtension);
             }
             else
             {
-                SelectedAlerts.Remove((IAlert)AllAlerts.First(x => x.FullName == field.FullName).FieldExtension);
+                SelectedAlerts.Remove((Data.Interfaces.IAlert)AllAlerts.First(x => x.FullName == field.FullName).FieldExtension);
             }
         }
 
-        private void UpdateShowTimeDuration(Settings.IAlert settings)
+        private void UpdateShowTimeDuration(Settings.Interfaces.IAlertSettings settings)
         {
             var field = AllAlerts.First(x => x.FullName == settings.FullName) ?? throw new ArgumentException($"Alert not found! {settings.FullName}");
-            var fieldExtionsion = (IAlert)field.FieldExtension;
+            var fieldExtionsion = (Data.Interfaces.IAlert)field.FieldExtension;
             fieldExtionsion.ShowTimeDuration = settings.ShowTimeDuration;
         }
 
-        private IAlert LatestAlert()
+        private Data.Interfaces.IAlert LatestAlert()
         {
             return SelectedAlerts
             .Where(x => x.Show)

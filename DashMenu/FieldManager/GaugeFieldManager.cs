@@ -1,5 +1,7 @@
-﻿using DashMenu.Data;
-using DashMenu.Extensions;
+﻿using DashMenu.Data.Interfaces;
+using DashMenu.FieldManager.Interfaces;
+using DashMenu.Settings.Interfaces;
+using DashMenu.Utilities;
 using SimHub.Plugins;
 using SimHub.Plugins.BrightnessControl;
 using System;
@@ -10,7 +12,7 @@ using System.Linq;
 
 namespace DashMenu.FieldManager
 {
-    internal class GaugeFieldManager : FieldManagerBase, IFieldManager<Settings.GaugeField>
+    internal sealed class GaugeFieldManager : FieldManagerBase, IFieldManager<Settings.GaugeField>
     {
         private const string FIELD_TYPE_NAME = "Gauge";
         internal GaugeFieldManager(PluginManager pluginManager, Type pluginType, IList<string> gaugeFieldOrder) : base(pluginManager, pluginType, gaugeFieldOrder, FIELD_TYPE_NAME)
@@ -65,7 +67,7 @@ namespace DashMenu.FieldManager
         }
 
         internal ObservableCollection<IGaugeFieldExtension> SelectedFields { get; private set; } = new ObservableCollection<IGaugeFieldExtension>();
-        protected readonly ObservableCollection<IFieldComponent<IGaugeFieldExtension, IGaugeField>> allFields = new ObservableCollection<IFieldComponent<IGaugeFieldExtension, IGaugeField>>();
+        private readonly ObservableCollection<IFieldComponent<IGaugeFieldExtension, IGaugeField>> allFields = new ObservableCollection<IFieldComponent<IGaugeFieldExtension, IGaugeField>>();
         internal ObservableCollection<IFieldComponent<IGaugeFieldExtension, IGaugeField>> AllFields { get => allFields; }
 
         internal event SelectedFieldsChangedEventHandler SelectedFieldsChanged;
@@ -83,18 +85,18 @@ namespace DashMenu.FieldManager
             }
         }
 
-        protected IGaugeField GetField(int index)
+        private IGaugeField GetField(int index)
         {
             if (index < 0 || index >= SelectedFields.Count) return EmptyField.Field.Data;
             return SelectedFields[index].Data;
         }
 
-        public void UpdateSelectedFields(Settings.ICarFields carFields)
+        public void UpdateSelectedFields(ICarFieldsSettings carFields)
         {
             UpdateSelectedFields(carFields.DisplayedGaugeFields);
         }
 
-        protected void UpdateSelectedFields(IList<string> selectedFields)
+        private void UpdateSelectedFields(IList<string> selectedFields)
         {
             SelectedFields.Clear();
             for (int i = 0; i < selectedFields.Count; i++)
@@ -199,7 +201,7 @@ namespace DashMenu.FieldManager
             }
         }
 
-        internal void UpdateProperties(Settings.IGaugeField settings, PropertyChangedEventArgs e)
+        internal void UpdateProperties(IGaugeFieldSettings settings, PropertyChangedEventArgs e)
         {
             var field = AllFields.First(x => x.FullName == settings.FullName) ?? throw new ArgumentException($"Field not found! {settings.FullName}");
 
@@ -234,7 +236,7 @@ namespace DashMenu.FieldManager
             }
         }
 
-        private void UpdateOrder(Settings.IDataField dataField, in IList<string> order)
+        private void UpdateOrder(IDataFieldSettings dataField, in IList<string> order)
         {
             if (dataField.Hide)
             {
@@ -246,7 +248,7 @@ namespace DashMenu.FieldManager
             }
         }
 
-        private void UpdateProperties(Settings.IGaugeField settings, IFieldComponent<IGaugeFieldExtension, IGaugeField> field)
+        private void UpdateProperties(IGaugeFieldSettings settings, IFieldComponent<IGaugeFieldExtension, IGaugeField> field)
         {
             if (!settings.Enabled && field.Enabled)
             {
@@ -264,7 +266,7 @@ namespace DashMenu.FieldManager
             field.Enabled = settings.Enabled;
         }
 
-        private void UpdateColorOveride(Settings.IGaugeField settings, IFieldComponent<IGaugeFieldExtension, IGaugeField> field)
+        private void UpdateColorOveride(IGaugeFieldSettings settings, IFieldComponent<IGaugeFieldExtension, IGaugeField> field)
         {
             if (!settings.Override.DayNightColorScheme.DayModeColor.Override)
             {
@@ -285,35 +287,35 @@ namespace DashMenu.FieldManager
             field.FieldExtension.Data.Color = settings.Override.DayNightColorScheme.DayModeColor.OverrideValue;
         }
 
-        private void UpdateDecimalOverride(Settings.IGaugeField settings, IFieldComponent<IGaugeFieldExtension, IGaugeField> field)
+        private void UpdateDecimalOverride(IGaugeFieldSettings settings, IFieldComponent<IGaugeFieldExtension, IGaugeField> field)
         {
             field.FieldExtension.Data.Decimal = settings.Override.Decimal.Override
                 ? settings.Override.Decimal.OverrideValue
                 : settings.Override.Decimal.DefaultValue;
         }
 
-        private void UpdateNameOverride(Settings.IGaugeField settings, IFieldComponent<IGaugeFieldExtension, IGaugeField> field)
+        private void UpdateNameOverride(IGaugeFieldSettings settings, IFieldComponent<IGaugeFieldExtension, IGaugeField> field)
         {
             field.FieldExtension.Data.Name = settings.Override.Name.Override
                 ? settings.Override.Name.OverrideValue
                 : settings.Override.Name.DefaultValue;
         }
 
-        private void UpdateMaximumOverride(Settings.IGaugeField settings, IFieldComponent<IGaugeFieldExtension, IGaugeField> field)
+        private void UpdateMaximumOverride(IGaugeFieldSettings settings, IFieldComponent<IGaugeFieldExtension, IGaugeField> field)
         {
             field.FieldExtension.Data.Maximum = settings.Override.Maximum.Override
                 ? settings.Override.Maximum.OverrideValue
                 : settings.Override.Maximum.DefaultValue;
         }
 
-        private void UpdateMinimumOverride(Settings.IGaugeField settings, IFieldComponent<IGaugeFieldExtension, IGaugeField> field)
+        private void UpdateMinimumOverride(IGaugeFieldSettings settings, IFieldComponent<IGaugeFieldExtension, IGaugeField> field)
         {
             field.FieldExtension.Data.Minimum = settings.Override.Minimum.Override
                 ? settings.Override.Minimum.OverrideValue
                 : settings.Override.Minimum.DefaultValue;
         }
 
-        private void UpdateStepOverride(Settings.IGaugeField settings, IFieldComponent<IGaugeFieldExtension, IGaugeField> field)
+        private void UpdateStepOverride(IGaugeFieldSettings settings, IFieldComponent<IGaugeFieldExtension, IGaugeField> field)
         {
             field.FieldExtension.Data.Step = settings.Override.Step.Override
                 ? settings.Override.Step.OverrideValue

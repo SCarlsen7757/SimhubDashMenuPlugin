@@ -1,6 +1,8 @@
-﻿namespace DashMenu.Data
+﻿using DashMenu.Data.Interfaces;
+
+namespace DashMenu.Data
 {
-    public class GaugeField : DataField, IGaugeField
+    public sealed class GaugeField : DataField, IGaugeField
     {
         public GaugeField() : base() { }
         public bool IsRangeLocked { get; set; } = false;

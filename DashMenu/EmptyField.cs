@@ -1,10 +1,11 @@
 ﻿using DashMenu.Data;
+using DashMenu.Data.Interfaces;
 using GameReaderCommon;
 using SimHub.Plugins;
 
 namespace DashMenu
 {
-    internal class EmptyField : FieldExtensionBase<IGaugeField>, IDataFieldExtension, IGaugeFieldExtension
+    internal sealed class EmptyField : FieldExtensionBase<IGaugeField>, IDataFieldExtension, IGaugeFieldExtension
     {
         public EmptyField(string gameName) : base(gameName)
         {

@@ -1,10 +1,11 @@
 ﻿using DashMenu.Data;
+using DashMenu.Data.Interfaces;
 using GameReaderCommon;
 using SimHub.Plugins;
 
 namespace MediaExtensionFields
 {
-    class Title : AlertBase, IDataFieldExtension, IAlert
+    public sealed class Title : AlertBase, IDataFieldExtension, IAlert
     {
         public Title(string gameName) : base(gameName)
         {

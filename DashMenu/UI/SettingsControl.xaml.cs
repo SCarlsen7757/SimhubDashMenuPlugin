@@ -1,4 +1,4 @@
-﻿using DashMenu.Settings;
+﻿using DashMenu.Settings.Interfaces;
 using DashMenu.UI.Popup;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
@@ -172,9 +172,9 @@ namespace DashMenu.UI
 
             dataFieldView = CollectionViewSource.GetDefaultView(settings.DataFields.Settings.Values.ToList());
             dataFieldView.Filter = item => ContainsFilter(DataFieldFilter.Text, DataFieldHide.IsChecked ?? false, item as IBasicSettings);
-            dataFieldView.GroupDescriptions.Add(new PropertyGroupDescription(nameof(Settings.IBasicSettings.Namespace)));
-            dataFieldView.SortDescriptions.Add(new SortDescription(nameof(Settings.IBasicSettings.Namespace), ListSortDirection.Ascending));
-            dataFieldView.SortDescriptions.Add(new SortDescription(nameof(Settings.IBasicSettings.Name), ListSortDirection.Ascending));
+            dataFieldView.GroupDescriptions.Add(new PropertyGroupDescription(nameof(IBasicSettings.Namespace)));
+            dataFieldView.SortDescriptions.Add(new SortDescription(nameof(IBasicSettings.Namespace), ListSortDirection.Ascending));
+            dataFieldView.SortDescriptions.Add(new SortDescription(nameof(IBasicSettings.Name), ListSortDirection.Ascending));
 
             FieldDataSettings.ItemsSource = dataFieldView;
         }
@@ -185,9 +185,9 @@ namespace DashMenu.UI
 
             alertView = CollectionViewSource.GetDefaultView(settings.Alerts.Values.ToList());
             alertView.Filter = item => ContainsFilter(AlertFilter.Text, AlertHide.IsChecked ?? false, item as IBasicSettings);
-            alertView.GroupDescriptions.Add(new PropertyGroupDescription(nameof(Settings.IBasicSettings.Namespace)));
-            alertView.SortDescriptions.Add(new SortDescription(nameof(Settings.IBasicSettings.Namespace), ListSortDirection.Ascending));
-            alertView.SortDescriptions.Add(new SortDescription(nameof(Settings.IBasicSettings.Name), ListSortDirection.Ascending));
+            alertView.GroupDescriptions.Add(new PropertyGroupDescription(nameof(IBasicSettings.Namespace)));
+            alertView.SortDescriptions.Add(new SortDescription(nameof(IBasicSettings.Namespace), ListSortDirection.Ascending));
+            alertView.SortDescriptions.Add(new SortDescription(nameof(IBasicSettings.Name), ListSortDirection.Ascending));
 
             AlertSettings.ItemsSource = alertView;
         }
@@ -198,9 +198,9 @@ namespace DashMenu.UI
 
             gaugeFieldView = CollectionViewSource.GetDefaultView(settings.GaugeFields.Settings.Values.ToList());
             gaugeFieldView.Filter = item => ContainsFilter(GaugeFieldFilter.Text, GaugeFieldHide.IsChecked ?? false, item as IBasicSettings);
-            gaugeFieldView.GroupDescriptions.Add(new PropertyGroupDescription(nameof(Settings.IBasicSettings.Namespace)));
-            gaugeFieldView.SortDescriptions.Add(new SortDescription(nameof(Settings.IBasicSettings.Namespace), ListSortDirection.Ascending));
-            gaugeFieldView.SortDescriptions.Add(new SortDescription(nameof(Settings.IBasicSettings.Name), ListSortDirection.Ascending));
+            gaugeFieldView.GroupDescriptions.Add(new PropertyGroupDescription(nameof(IBasicSettings.Namespace)));
+            gaugeFieldView.SortDescriptions.Add(new SortDescription(nameof(IBasicSettings.Namespace), ListSortDirection.Ascending));
+            gaugeFieldView.SortDescriptions.Add(new SortDescription(nameof(IBasicSettings.Name), ListSortDirection.Ascending));
 
             FieldGaugeSettings.ItemsSource = gaugeFieldView;
         }

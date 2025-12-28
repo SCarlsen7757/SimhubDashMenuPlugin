@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using DashMenu.Settings.Interfaces;
+using Newtonsoft.Json;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 

@@ -1,10 +1,11 @@
 ﻿using DashMenu.Data;
+using DashMenu.Data.Interfaces;
 using GameReaderCommon;
 using SimHub.Plugins;
 
 namespace MediaExtensionFields
 {
-    public class Artist : AlertBase, IDataFieldExtension, IAlert
+    public sealed class Artist : AlertBase, IDataFieldExtension, IAlert
     {
         public Artist(string gameName) : base(gameName)
         {

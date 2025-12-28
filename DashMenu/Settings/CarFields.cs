@@ -1,4 +1,5 @@
 ﻿using DashMenu.Extensions;
+using DashMenu.Settings.Interfaces;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,7 +10,7 @@ using System.Windows;
 
 namespace DashMenu.Settings
 {
-    internal class CarFields : INotifyPropertyChanged, ICarFields
+    internal sealed class CarFields : INotifyPropertyChanged, ICarFieldsSettings
     {
         public CarFields()
         {

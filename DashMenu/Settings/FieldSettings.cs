@@ -1,4 +1,5 @@
-﻿using DashMenu.UI;
+﻿using DashMenu.Settings.Interfaces;
+using DashMenu.UI;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;

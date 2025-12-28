@@ -1,10 +1,10 @@
-﻿using DashMenu.Data;
+﻿using DashMenu.Data.Interfaces;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace DashMenu
 {
-    internal class FieldComponent<TFieldExtension, TField> : IFieldComponent<TFieldExtension, TField>
+    internal sealed class FieldComponent<TFieldExtension, TField> : IFieldComponent<TFieldExtension, TField>
         where TFieldExtension : class, IFieldExtensionBasic<TField>
         where TField : class, IDataField
     {
@@ -13,7 +13,7 @@ namespace DashMenu
             FieldExtension = fieldExtension;
         }
 
-        protected bool enabled = true;
+        private bool enabled = true;
         private string fullName = null;
         public bool Enabled
         {

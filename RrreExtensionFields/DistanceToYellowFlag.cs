@@ -1,10 +1,11 @@
 ﻿using DashMenu.Data;
+using DashMenu.Data.Interfaces;
 using GameReaderCommon;
 using SimHub.Plugins;
 
 namespace RrreExtensionFields
 {
-    class DistanceToYellowFlag : FieldExtensionBase<IGaugeField>, IDataFieldExtension, IGaugeFieldExtension
+    public sealed class DistanceToYellowFlag : FieldExtensionBase<IGaugeField>, IDataFieldExtension, IGaugeFieldExtension
     {
         public DistanceToYellowFlag(string gameName) : base(gameName, "RRRE")
         {

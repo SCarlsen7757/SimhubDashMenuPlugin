@@ -1,9 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using DashMenu.Settings.Interfaces;
+using Newtonsoft.Json;
 using System.ComponentModel;
 
 namespace DashMenu.Settings
 {
-    internal class DataField : BasicSettings, INotifyPropertyChanged, IDataField
+    internal class DataField : BasicSettings, INotifyPropertyChanged, IDataFieldSettings
     {
         public DataField()
         {

@@ -1,5 +1,7 @@
-﻿using DashMenu.Data;
-using DashMenu.Extensions;
+﻿using DashMenu.Data.Interfaces;
+using DashMenu.FieldManager.Interfaces;
+using DashMenu.Settings.Interfaces;
+using DashMenu.Utilities;
 using SimHub.Plugins;
 using SimHub.Plugins.BrightnessControl;
 using System;
@@ -10,7 +12,7 @@ using System.Linq;
 
 namespace DashMenu.FieldManager
 {
-    internal class DataFieldManager : FieldManagerBase, IFieldManager<Settings.DataField>
+    internal sealed class DataFieldManager : FieldManagerBase, IFieldManager<Settings.DataField>
     {
         private const string FIELD_TYPE_NAME = "Data";
         internal DataFieldManager(PluginManager pluginManager, Type pluginType, IList<string> dataFieldOrder) : base(pluginManager, pluginType, dataFieldOrder, FIELD_TYPE_NAME)
@@ -51,7 +53,7 @@ namespace DashMenu.FieldManager
 
         }
         internal ObservableCollection<IDataFieldExtension> SelectedFields { get; private set; } = new ObservableCollection<IDataFieldExtension>();
-        protected readonly ObservableCollection<IFieldComponent<IDataFieldExtension, IDataField>> allFields = new ObservableCollection<IFieldComponent<IDataFieldExtension, IDataField>>();
+        private readonly ObservableCollection<IFieldComponent<IDataFieldExtension, IDataField>> allFields = new ObservableCollection<IFieldComponent<IDataFieldExtension, IDataField>>();
         internal ObservableCollection<IFieldComponent<IDataFieldExtension, IDataField>> AllFields { get => allFields; }
 
         internal event SelectedFieldsChangedEventHandler SelectedFieldsChanged;
@@ -68,18 +70,18 @@ namespace DashMenu.FieldManager
                     break;
             }
         }
-        protected IDataField GetField(int index)
+        private IDataField GetField(int index)
         {
             if (index < 0 || index >= SelectedFields.Count) return EmptyField.Field.Data;
             return SelectedFields[index].Data;
         }
 
-        public void UpdateSelectedFields(Settings.ICarFields carFields)
+        public void UpdateSelectedFields(ICarFieldsSettings carFields)
         {
             UpdateSelectedFields(carFields.DisplayedDataFields);
         }
 
-        protected void UpdateSelectedFields(IList<string> selectedFields)
+        private void UpdateSelectedFields(IList<string> selectedFields)
         {
             SelectedFields.Clear();
             for (int i = 0; i < selectedFields.Count; i++)
@@ -174,7 +176,7 @@ namespace DashMenu.FieldManager
             }
         }
 
-        internal void UpdateProperties(Settings.IDataField settings, PropertyChangedEventArgs e)
+        internal void UpdateProperties(IDataFieldSettings settings, PropertyChangedEventArgs e)
         {
             var field = AllFields.First(x => x.FullName == settings.FullName) ?? throw new ArgumentException($"Field not found! {settings.FullName}");
 
@@ -200,7 +202,7 @@ namespace DashMenu.FieldManager
             }
         }
 
-        private void UpdateOrder(Settings.IDataField dataField, in IList<string> order)
+        private void UpdateOrder(IDataFieldSettings dataField, in IList<string> order)
         {
             if (dataField.Hide)
             {
@@ -213,7 +215,7 @@ namespace DashMenu.FieldManager
 
         }
 
-        private void UpdateEnabledProperties(Settings.IDataField settings, IFieldComponent<IDataFieldExtension, IDataField> field)
+        private void UpdateEnabledProperties(IDataFieldSettings settings, IFieldComponent<IDataFieldExtension, IDataField> field)
         {
             if (!settings.Enabled && field.Enabled)
             {
@@ -231,7 +233,7 @@ namespace DashMenu.FieldManager
             field.Enabled = settings.Enabled;
         }
 
-        private void UpdateColorOveride(Settings.IDataField settings, IFieldComponent<IDataFieldExtension, IDataField> field)
+        private void UpdateColorOveride(IDataFieldSettings settings, IFieldComponent<IDataFieldExtension, IDataField> field)
         {
             if (!settings.Override.DayNightColorScheme.DayModeColor.Override)
             {
@@ -252,14 +254,14 @@ namespace DashMenu.FieldManager
             field.FieldExtension.Data.Color = settings.Override.DayNightColorScheme.DayModeColor.OverrideValue;
         }
 
-        private void UpdateDecimalOverride(Settings.IDataField settings, IFieldComponent<IDataFieldExtension, IDataField> field)
+        private void UpdateDecimalOverride(IDataFieldSettings settings, IFieldComponent<IDataFieldExtension, IDataField> field)
         {
             field.FieldExtension.Data.Decimal = settings.Override.Decimal.Override
                 ? settings.Override.Decimal.OverrideValue
                 : settings.Override.Decimal.DefaultValue;
         }
 
-        private void UpdateNameOverride(Settings.IDataField settings, IFieldComponent<IDataFieldExtension, IDataField> field)
+        private void UpdateNameOverride(IDataFieldSettings settings, IFieldComponent<IDataFieldExtension, IDataField> field)
         {
             field.FieldExtension.Data.Name = settings.Override.Name.Override
                 ? settings.Override.Name.OverrideValue

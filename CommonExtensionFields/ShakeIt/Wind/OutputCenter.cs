@@ -1,10 +1,11 @@
 ﻿using DashMenu.Data;
+using DashMenu.Data.Interfaces;
 using GameReaderCommon;
 using SimHub.Plugins;
 
 namespace CommonExtensionFields.ShakeIt.Wind
 {
-    public class OutputCenter : FieldExtensionBase<IGaugeField>, IDataFieldExtension, IGaugeFieldExtension
+    public sealed class OutputCenter : FieldExtensionBase<IGaugeField>, IDataFieldExtension, IGaugeFieldExtension
     {
         private bool shakeItWindPluginLoaded = true;
 

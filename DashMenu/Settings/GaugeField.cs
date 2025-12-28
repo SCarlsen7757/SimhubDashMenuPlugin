@@ -1,10 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿using DashMenu.Settings.Interfaces;
+using Newtonsoft.Json;
 using System.ComponentModel;
 
 
 namespace DashMenu.Settings
 {
-    internal class GaugeField : DataField, IGaugeField
+    internal class GaugeField : DataField, IGaugeFieldSettings
     {
         public GaugeField() : base()
         {

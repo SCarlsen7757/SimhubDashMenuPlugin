@@ -1,4 +1,4 @@
-﻿using DashMenu.Data;
+﻿using DashMenu.Data.Interfaces;
 using DashMenu.Extensions;
 using GameReaderCommon;
 using SimHub.Plugins;
@@ -15,7 +15,7 @@ namespace DashMenu
     [PluginDescription("Plugin to manage dash menus.")]
     [PluginAuthor("Mark Carlsen")]
     [PluginName("Dash menu")]
-    public class DashMenuPlugin : IPlugin, IDataPlugin, IWPFSettingsV2, ISettingPlugin
+    public sealed class DashMenuPlugin : IPlugin, IDataPlugin, IWPFSettingsV2, ISettingPlugin
     {
         public DashMenuPlugin() { }
 

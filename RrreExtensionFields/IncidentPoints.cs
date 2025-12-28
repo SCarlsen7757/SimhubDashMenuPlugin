@@ -1,10 +1,11 @@
 ﻿using DashMenu.Data;
+using DashMenu.Data.Interfaces;
 using GameReaderCommon;
 using SimHub.Plugins;
 
 namespace RrreExtensionFields
 {
-    internal class IncidentPoints : FieldExtensionBase<IDataField>, IDataFieldExtension
+    public sealed class IncidentPoints : FieldExtensionBase<IDataField>, IDataFieldExtension
     {
         public IncidentPoints(string gameName) : base(gameName, "RRRE")
         {

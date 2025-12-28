@@ -4,7 +4,7 @@ using System.Windows.Data;
 
 namespace DashMenu.UI
 {
-    public class MillisecondsToTimeSpanConverter : IValueConverter
+    public sealed class MillisecondsToTimeSpanConverter : IValueConverter
     {
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {

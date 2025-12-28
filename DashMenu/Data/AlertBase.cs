@@ -1,4 +1,5 @@
-﻿using GameReaderCommon;
+﻿using DashMenu.Data.Interfaces;
+using GameReaderCommon;
 using SimHub.Plugins;
 using System;
 using System.ComponentModel;

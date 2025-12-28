@@ -5,7 +5,7 @@ using System.Windows.Media;
 
 namespace DashMenu.Data
 {
-    public class ColorScheme
+    public sealed class ColorScheme
     {
         public ColorScheme() { }
         public ColorScheme(string primary)
