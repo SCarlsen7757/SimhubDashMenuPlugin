@@ -26,24 +26,15 @@ namespace DashMenu
             return;
         }
 
-        private readonly static EmptyField @field = new EmptyField("");
+        private static readonly EmptyField instance = new EmptyField(string.Empty);
 
         /// <summary>
         /// Empty field
         /// </summary>
-        public static EmptyField Field => @field;
-        private static string fullname = null;
-        public static string FullName
-        {
-            get
-            {
-                if (fullname == null)
-                {
-                    fullname = Field.GetType().FullName;
-                }
-                return fullname;
-            }
-        }
+        public static EmptyField Field => instance;
 
+        private static string fullName;
+
+        public static string FullName => fullName ?? (fullName = Field.GetType().FullName);
     }
 }

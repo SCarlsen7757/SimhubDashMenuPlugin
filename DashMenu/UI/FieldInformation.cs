@@ -1,6 +1,6 @@
 ﻿using DashMenu.Settings.Interfaces;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DashMenu.UI
 {
@@ -10,31 +10,25 @@ namespace DashMenu.UI
         public string Namespace { get; set; }
         public int Index { get; set; }
 
-        internal static IEnumerable ItemsControlSource<FieldType>(IList<string> defaultFields, Settings.FieldSettings<FieldType> fieldSettings) where FieldType : IBasicSettings, new()
+        internal static IEnumerable<FieldInformation> ItemsControlSource<TFieldSettings>(
+            IList<string> defaultFields,
+            Settings.FieldSettings<TFieldSettings> fieldSettings) where TFieldSettings : IBasicSettings, new()
         {
-            var fields = new List<FieldInformation>();
-
-            for (int i = 0; i < defaultFields.Count; i++)
-            {
-                try
+            return defaultFields
+                .Select((fieldKey, index) => new { fieldKey, index })
+                .Select(item => new
                 {
-                    var fieldDetails = fieldSettings.Settings[defaultFields[i]];
-
-                    var info = new FieldInformation()
-                    {
-                        Index = i,
-                        Namespace = fieldDetails.Namespace,
-                        Name = fieldDetails.Name
-                    };
-                    fields.Add(info);
-                }
-                catch (KeyNotFoundException)
+                    item.index,
+                    found = fieldSettings.Settings.TryGetValue(item.fieldKey, out TFieldSettings settings),
+                    settings
+                })
+                .Where(item => item.found)
+                .Select(item => new FieldInformation
                 {
-                    defaultFields.Clear();
-                    break;
-                }
-            }
-            return fields;
+                    Index = item.index,
+                    Namespace = item.settings.Namespace,
+                    Name = item.settings.Name
+                });
         }
     }
 }

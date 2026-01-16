@@ -6,22 +6,22 @@ namespace DashMenu.UI
 {
     public sealed class MillisecondsToTimeSpanConverter : IValueConverter
     {
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value is double milliseconds)
-            {
-                return TimeSpan.FromMilliseconds(milliseconds);
-            }
-            return TimeSpan.Zero; // Default value if the input is not valid
-        }
-
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is TimeSpan timeSpan)
             {
-                return timeSpan.TotalMilliseconds; // Convert TimeSpan back to milliseconds
+                return timeSpan.TotalMilliseconds; // Convert TimeSpan to total milliseconds
             }
-            return 0; // Default value if the input is not valid
+            return 0.0; // Default value if the input is not valid
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is double milliseconds)
+            {
+                return TimeSpan.FromMilliseconds(milliseconds); // Convert milliseconds to TimeSpan
+            }
+            return TimeSpan.Zero; // Default value if the input is not valid
         }
     }
 }

@@ -37,17 +37,16 @@ namespace DashMenu.Settings
         private static void ChangeDefaultField(int amount, IList<string> fields)
         {
             if (amount == fields.Count) return;
-            do
+
+            while (fields.Count < amount)
             {
-                if (fields.Count < amount)
-                {
-                    fields.Add(EmptyField.FullName);
-                }
-                else
-                {
-                    fields.RemoveAt(fields.Count - 1);
-                }
-            } while (fields.Count != amount);
+                fields.Add(EmptyField.FullName);
+            }
+
+            while (fields.Count > amount)
+            {
+                fields.RemoveAt(fields.Count - 1);
+            }
         }
 
         #region Default amount of fields
@@ -93,22 +92,7 @@ namespace DashMenu.Settings
                     }
                 });
             }
-            set => Application.Current.Dispatcher.Invoke(() =>
-                                {
-                                    lock (collectionDataFieldLock)
-                                    {
-                                        // Only clear and repopulate if the incoming value is different
-                                        if (value != null && !defaultDataFields.SequenceEqual(value))
-                                        {
-                                            defaultDataFields.Clear();
-                                            foreach (string field in value)
-                                            {
-                                                defaultDataFields.Add(field);
-                                            }
-                                            OnPropertyChanged();
-                                        }
-                                    }
-                                });
+            set => SetDefaultFields(value, defaultDataFields, collectionDataFieldLock);
         }
 
         private readonly object collectionGaugeFieldLock = new object();
@@ -127,40 +111,38 @@ namespace DashMenu.Settings
                     }
                 });
             }
-            set => Application.Current.Dispatcher.Invoke(() =>
-                                {
-                                    lock (collectionGaugeFieldLock)
-                                    {
-                                        // Only clear and repopulate if the incoming value is different
-                                        if (value != null && !defaultGaugeFields.SequenceEqual(value))
-                                        {
-                                            defaultGaugeFields.Clear();
-                                            foreach (string field in value)
-                                            {
-                                                defaultGaugeFields.Add(field);
-                                            }
-                                            OnPropertyChanged();
-                                        }
-                                    }
-                                });
+            set => SetDefaultFields(value, defaultGaugeFields, collectionGaugeFieldLock);
+        }
+
+        private void SetDefaultFields(ObservableCollection<string> value, ObservableCollection<string> target, object lockObject)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                lock (lockObject)
+                {
+                    if (value == null || target.SequenceEqual(value)) return;
+
+                    target.Clear();
+                    foreach (string field in value)
+                    {
+                        target.Add(field);
+                    }
+                    OnPropertyChanged();
+                }
+            });
         }
 
         internal IList<string> DefaultDataFieldsList()
         {
-            return DefaultDataFieldsList(DefaultAmountOfDataFields);
-        }
-
-        private static IList<string> DefaultDataFieldsList(int amountOfFields)
-        {
-            return new List<string>(Enumerable.Repeat(EmptyField.FullName, amountOfFields));
+            return CreateDefaultFieldsList(DefaultAmountOfDataFields);
         }
 
         internal IList<string> DefaultGaugeFieldsList()
         {
-            return DefaultGaugeFieldsList(DefaultAmountOfGaugeFields);
+            return CreateDefaultFieldsList(DefaultAmountOfGaugeFields);
         }
 
-        private IList<string> DefaultGaugeFieldsList(int amountOfFields)
+        private static IList<string> CreateDefaultFieldsList(int amountOfFields)
         {
             return new List<string>(Enumerable.Repeat(EmptyField.FullName, amountOfFields));
         }
@@ -193,12 +175,12 @@ namespace DashMenu.Settings
             CurrentCarId = pluginManager.LastCarId;
             CurrentCarModel = pluginManager.GameManager.CarManager.LastCarSettings.CarModel;
 
-            if (!(CarFields.ContainsKey(CurrentCarId)))
+            if (!CarFields.ContainsKey(CurrentCarId))
             {
-                var defualtDataField = DefaultDataFields.Count > 0 ? DefaultDataFields : DefaultDataFieldsList();
+                var defaultDataField = DefaultDataFields.Count > 0 ? DefaultDataFields : DefaultDataFieldsList();
                 var defaultGaugeField = DefaultGaugeFields.Count > 0 ? DefaultGaugeFields : DefaultGaugeFieldsList();
 
-                CarFields newCar = new CarFields(CurrentCarId, CurrentCarModel, defualtDataField, defaultGaugeField);
+                CarFields newCar = new CarFields(CurrentCarId, CurrentCarModel, defaultDataField, defaultGaugeField);
                 CarFields.Add(CurrentCarId, newCar);
             }
 
