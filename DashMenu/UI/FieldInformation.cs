@@ -16,14 +16,23 @@ namespace DashMenu.UI
 
             for (int i = 0; i < defaultFields.Count; i++)
             {
-                var fieldDetails = fieldSettings.Settings[defaultFields[i]];
-                var info = new FieldInformation()
+                try
                 {
-                    Index = i,
-                    Namespace = fieldDetails.Namespace,
-                    Name = fieldDetails.Name
-                };
-                fields.Add(info);
+                    var fieldDetails = fieldSettings.Settings[defaultFields[i]];
+
+                    var info = new FieldInformation()
+                    {
+                        Index = i,
+                        Namespace = fieldDetails.Namespace,
+                        Name = fieldDetails.Name
+                    };
+                    fields.Add(info);
+                }
+                catch (KeyNotFoundException)
+                {
+                    defaultFields.Clear();
+                    break;
+                }
             }
             return fields;
         }
